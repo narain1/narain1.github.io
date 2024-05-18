@@ -5,6 +5,17 @@
     <link>/tags/</link>
     <description>Recent content in Tags on Narain</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nlp</title>
+      <link>/tags/nlp/</link>
+      <pubDate>Wed, 15 May 2024 04:56:12 -0700</pubDate>
+      
+      <guid>/tags/nlp/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
   </channel>
 </rss>

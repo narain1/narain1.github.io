@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Narain</title>
-    <link>/</link>
-    <description>Recent content on Narain</description>
+    <title>Posts on Narain</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on Narain</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Sentencepiece Tokenizer</title>
       <link>/posts/sentencepiece-tokenizer/</link>
@@ -265,28 +265,6 @@ the centroid. cluster centroids are usually determined by KMeans algorithm&lt;/p
     </item>
     
     <item>
-      <title>About</title>
-      <link>/about/</link>
-      <pubDate>Fri, 05 Apr 2024 21:11:49 -0700</pubDate>
-      
-      <guid>/about/</guid>
-      <description>Hello! I’m Narain. I tinker with machine learning models for a living, diving into the nuts and bolts of deep learning, GPU acceleration, and cloud infrastructures. When I&amp;rsquo;m not busy breaking stuff, I might be pushing the boundaries of what should (or shouldn’t) be done in C++.
-Beyond the screen, I&amp;rsquo;m a karate instructor and an open-source enthusiast. Whether it&amp;rsquo;s enhancing AI frameworks or mentoring the next generation of tech enthusiasts, I&amp;rsquo;m all about making a difference.</description>
-      <content>
-&lt;img src=&#34;/images/narain1.jpg&#34;  alt=&#34;Hello Friend&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px; width: 300px; height: auto;&#34;    /&gt;
-
-
-&lt;p&gt;Hello! I’m Narain. I tinker with machine learning models for a living, diving into the nuts and bolts of deep learning,
-GPU acceleration, and cloud infrastructures. When I&amp;rsquo;m not busy breaking stuff, I might be pushing the boundaries
-of what should (or shouldn’t) be done in C++.&lt;/p&gt;
-&lt;p&gt;Beyond the screen, I&amp;rsquo;m a karate instructor and an open-source enthusiast. Whether it&amp;rsquo;s enhancing AI frameworks
-or mentoring the next generation of tech enthusiasts, I&amp;rsquo;m all about making a difference. When I&amp;rsquo;m looking to
-unwind, I enjoy exploring culinary arts and capturing life’s moments through my lens—usually involving scenes
-from nature or candid shots of daily life.&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
       <title>State_of_compute</title>
       <link>/posts/state_of_compute/</link>
       <pubDate>Thu, 21 Mar 2024 16:33:52 -0700</pubDate>
@@ -330,134 +308,6 @@ from nature or candid shots of daily life.&lt;/p&gt;
 &lt;h2 id=&#34;tensor-parallelism&#34;&gt;Tensor parallelism&lt;/h2&gt;
 &lt;h2 id=&#34;deepspeed&#34;&gt;Deepspeed&lt;/h2&gt;
 &lt;h2 id=&#34;deepspeed-zero&#34;&gt;Deepspeed zero&lt;/h2&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Showcase</title>
-      <link>/showcase/</link>
-      <pubDate>Thu, 21 Mar 2024 15:10:37 -0700</pubDate>
-      
-      <guid>/showcase/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>List100</title>
-      <link>/list100/</link>
-      <pubDate>Thu, 21 Mar 2024 15:05:13 -0700</pubDate>
-      
-      <guid>/list100/</guid>
-      <description>List 100 a list of things i would do
-List 100 a list of things i would do
-⛔ Learn French. ⛔ Live in other country. ⛔ Start a non profit organization. ⛔ read 1000 Books.from 2020 🤣 ⛔ Guest lecture a masters Level course. ⛔ Live in Siberia. ⛔ Have a salad from my own garden. ⛔ Start Baking. In my own kitchen. ⛔ Have a date on top of eifel tower.</description>
-      <content>&lt;h1 id=&#34;list-100&#34;&gt;List 100&lt;/h1&gt;
-&lt;p&gt;a list of things i would do&lt;/p&gt;
-&lt;h1 id=&#34;list-100-1&#34;&gt;List 100&lt;/h1&gt;
-&lt;p&gt;a list of things i would do&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;⛔ Learn French.&lt;/li&gt;
-&lt;li&gt;⛔ Live in other country.&lt;/li&gt;
-&lt;li&gt;⛔ Start a non profit organization.&lt;/li&gt;
-&lt;li&gt;⛔ read 1000 Books.from 2020 🤣&lt;/li&gt;
-&lt;li&gt;⛔ Guest lecture a masters Level course.&lt;/li&gt;
-&lt;li&gt;⛔ Live in Siberia.&lt;/li&gt;
-&lt;li&gt;⛔ Have a salad from my own garden.&lt;/li&gt;
-&lt;li&gt;⛔ Start Baking. In my own kitchen.&lt;/li&gt;
-&lt;li&gt;⛔ Have a date on top of eifel tower.&lt;/li&gt;
-&lt;li&gt;✔ Start teaching karate again.&lt;/li&gt;
-&lt;li&gt;⛔ Build my own home.&lt;/li&gt;
-&lt;li&gt;✔ Fall in Love.&lt;/li&gt;
-&lt;li&gt;⛔ Go up in a hot air Balloon.&lt;/li&gt;
-&lt;li&gt;⛔ Travel across the Atlantic in a sail.&lt;/li&gt;
-&lt;li&gt;✔ Run a half marathon. ⛔ Run a full marathon&lt;/li&gt;
-&lt;li&gt;⛔ Scuba Diving.&lt;/li&gt;
-&lt;li&gt;⛔ Learn to Ski.&lt;/li&gt;
-&lt;li&gt;⛔ Play piano in a concert.&lt;/li&gt;
-&lt;li&gt;✔ Take a walk in the rain.&lt;/li&gt;
-&lt;li&gt;✔ complete all John le Carr� books.&lt;/li&gt;
-&lt;li&gt;⛔ Ask a stranger out.&lt;/li&gt;
-&lt;li&gt;⛔ Sleep in an old castle.&lt;/li&gt;
-&lt;li&gt;✔ Sleep outside on the beach under the stars.&lt;/li&gt;
-&lt;li&gt;⛔ See the auroras.&lt;/li&gt;
-&lt;li&gt;⛔ Go on an African Safari.&lt;/li&gt;
-&lt;li&gt;⛔ Learn to Dance.&lt;/li&gt;
-&lt;li&gt;⛔ Complete up-to Base camp 1.&lt;/li&gt;
-&lt;li&gt;⛔ Hitchhike across Europe.&lt;/li&gt;
-&lt;li&gt;⛔ Drink vodka in Russia.&lt;/li&gt;
-&lt;li&gt;⛔ Surf in Costa Rica.&lt;/li&gt;
-&lt;li&gt;⛔ Visit 100 Countries.&lt;/li&gt;
-&lt;li&gt;⛔ Go to north pole for christmas.&lt;/li&gt;
-&lt;li&gt;⛔ Oktober fest, Germany.&lt;/li&gt;
-&lt;li&gt;⛔ Burning man, US.&lt;/li&gt;
-&lt;li&gt;⛔ Marry a person I love.&lt;/li&gt;
-&lt;li&gt;⛔ Carnival in Brazil.&lt;/li&gt;
-&lt;li&gt;⛔ Pashut festival , Israel.&lt;/li&gt;
-&lt;li&gt;⛔ Loas’ new year.&lt;/li&gt;
-&lt;li&gt;⛔ watch bull fight in Spain.&lt;/li&gt;
-&lt;li&gt;⛔ Speak at TED.&lt;/li&gt;
-&lt;li&gt;⛔ I need a canine.&lt;/li&gt;
-&lt;li&gt;⛔ Stay in Yakutsk for six months&lt;/li&gt;
-&lt;li&gt;⛔ Don’t work in Bangalore 🥺.&lt;/li&gt;
-&lt;li&gt;⛔ Have a library in MY House&lt;/li&gt;
-&lt;li&gt;⛔ fishing in the middle of sea [full moon night]&lt;/li&gt;
-&lt;li&gt;⛔ learn celestial navigation&lt;/li&gt;
-&lt;li&gt;⛔ create an 8-bit bread board computer&lt;/li&gt;
-&lt;li&gt;⛔ win a night in a fight club&lt;/li&gt;
-&lt;li&gt;⛔ Buy an island near bora bora&lt;/li&gt;
-&lt;li&gt;⛔ board a train up to ooty&lt;/li&gt;
-&lt;li&gt;⛔ travel in the glacier express&lt;/li&gt;
-&lt;li&gt;⛔ cruise the atlantic ocean&lt;/li&gt;
-&lt;li&gt;⛔ cycle up kolli hills in 3 hours&lt;/li&gt;
-&lt;li&gt;⛔ travel in a flight during rains&lt;/li&gt;
-&lt;li&gt;⛔ crack a walnut inbetween fingers&lt;/li&gt;
-&lt;li&gt;⛔ make ice-cream at home&lt;/li&gt;
-&lt;li&gt;⛔ fishing on a canoe in Seychelles&lt;/li&gt;
-&lt;li&gt;⛔ taste the rarest black diamond and white ghost&lt;/li&gt;
-&lt;li&gt;⛔ Mountain of hell les 2 alpes&lt;/li&gt;
-&lt;li&gt;⛔ visit abandoned water park Hue vietnam&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;/ol&gt;
 </content>
     </item>
     
