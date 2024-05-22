@@ -1,465 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Narain</title>
-    <link>/</link>
-    <description>Recent content on Narain</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Sentencepiece Tokenizer</title>
-      <link>/posts/sentencepiece-tokenizer/</link>
-      <pubDate>Wed, 15 May 2024 04:56:12 -0700</pubDate>
-      
-      <guid>/posts/sentencepiece-tokenizer/</guid>
-      <description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description>
-      <content>&lt;h1 id=&#34;sentencepiece-tokenizer&#34;&gt;Sentencepiece tokenizer&lt;/h1&gt;
-&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Wed, 15 May 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
 hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
 the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can
 interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool
-that efficiently handles diverse languages without relying on predefined word boundaries.&lt;/p&gt;
-&lt;p&gt;Tokenization not only facilitates the understanding of language nuances by models but also plays a pivotal role
+that efficiently handles diverse languages without relying on predefined word boundaries.&lt;/p>
+&lt;p>Tokenization not only facilitates the understanding of language nuances by models but also plays a pivotal role
 in compressing textual inputs. This compression is essential, as it significantly reduces the dimensionality and complexity
 of the data, enabling quicker processing and more effective learning. SentencePiece, in particular employs a subword
 tokenization approach this is adept at managing vocabularies in a way that balances the granularity and the breadth of
-linguistic elements.&lt;/p&gt;
-&lt;p&gt;We will focus on the intricacies of tokenizers, with a focus on SentencePiece, exploring their indespensible role in the
+linguistic elements.&lt;/p>
+&lt;p>We will focus on the intricacies of tokenizers, with a focus on SentencePiece, exploring their indespensible role in the
 preprocessing of data for language models. We will discuss the general process of preprocessing, normalizing and
 post-processing involved in tokenization, shedding light on how these steps contribute to the robuest performance
-of language models.&lt;/p&gt;
-&lt;h2 id=&#34;understanding-tokenizers&#34;&gt;Understanding Tokenizers&lt;/h2&gt;
-&lt;p&gt;Tokenizers are the first point of interaction with text data in any nlp system. They transform the raw text into tokens,
+of language models.&lt;/p>
+&lt;h2 id="understanding-tokenizers">Understanding Tokenizers&lt;/h2>
+&lt;p>Tokenizers are the first point of interaction with text data in any nlp system. They transform the raw text into tokens,
 which are smaller pieces that can be more easily digested by language models. These tokenizers are essentially the building
 blocks of text analysis and model training. There are several types of tokenizers, each suited to different tasks and languages.
-Let&amp;rsquo;s explore the main types and provide examples for each.&lt;/p&gt;
-&lt;h2 id=&#34;steps-involved-in-tokenization&#34;&gt;Steps Involved in Tokenization&lt;/h2&gt;
-&lt;p&gt;Tokenization is not just about breaking text into smaller pieces; it involves a series of steps before,
-during and after the actual tokenization to ensure that the text is optimally prepared for further processing.
-These steps preprocessing, normalizing and post-processing (NLP) models. Here&amp;rsquo;s a breakdown of each stage with
-explanations of their importance of their importance and typical actions taken.&lt;/p&gt;
-&lt;h3 id=&#34;preprocessing&#34;&gt;Preprocessing&lt;/h3&gt;
-&lt;p&gt;preprocessing is a critical initial step in the text handling pipeline, aimed at preparing and cleaning the text data
+Let&amp;rsquo;s explore the main types and provide examples for each.&lt;/p>
+&lt;h3 id="preprocessing">Preprocessing&lt;/h3>
+&lt;p>preprocessing is a critical initial step in the text handling pipeline, aimed at preparing and cleaning the text data
 before it undergoes tokenization and further analysis. The main goal of preprocessing is to standardize the text to
 reduce variability that is&amp;rsquo;nt relavent for the subsequent process or analyses. This step ensures that the input to the
 model is as clean and uniform as possible, improving the model&amp;rsquo;s ability to learn and make accurate predictions.
-Here are some key techniques typically employed during the preprocessing phase.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Lowercasing: Converting all characters in the text to lowercase helps in standardizing the data. This means that words like
-House and house are treated the same preventing the model from treating them as different tokens unnecassarily.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Removing special Characters and punctuation: Text often contains various punctuation marks and special characters, which
-may not be necassary for many NLP tasks. Removing these elements helps focus the model on the content of words rather than formatting.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Expanding Contractions: In english and many other languages, contractions such as &amp;ldquo;Can&amp;rsquo;t&amp;rdquo;, &amp;ldquo;don&amp;rsquo;t&amp;rdquo;. and &amp;ldquo;it&amp;rsquo;s&amp;rdquo; are common.
-Expanding these to &amp;ldquo;cannot&amp;rdquo; &amp;ldquo;do not.&amp;rdquo; and &amp;ldquo;it is&amp;rdquo; helps maintain consistency in verb forms and reduces ambiguity in parsing the text.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Removing stopwords: common words such as &amp;ldquo;and&amp;rdquo;, &amp;ldquo;is&amp;rdquo;, and &amp;ldquo;but&amp;rdquo; can be filtered out during preprocessing. These words are usually frequent
-and carry less meaningful content for many NLP tasks, such as sentiment analysis or topic modelling.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Trimming spaces: Excess whitespaces, including spaces, tabs and new lines can be normalized by trimming them to a single space or removing
-them entirely, which helps in maintaining consistency in text format&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The above text format are not specifically related to sentencepiece model but are some of the common techniques used for preprocessing.&lt;/p&gt;
-&lt;h3 id=&#34;normalizing&#34;&gt;Normalizing&lt;/h3&gt;
-&lt;p&gt;Normalization deals with the way text is represented to ensure consistency. it is particularly important when dealing with different scripts
-or when the input data comes from various sources that might format text differently.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Unicode Normalization: Converts text to a consistent unicode format, resolving issues like different character encodings for the same
-characters. Used by BPE, SentencePiece&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Stemming and lemmatization: reduces  words to their base or root form, either through cutting off inflections (stemming) or by
-using lexical knowledge of the language (lemmatization).&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;byte-pair-encoding-bpe&#34;&gt;Byte Pair Encoding (BPE)&lt;/h2&gt;
-&lt;p&gt;BPE is another popular subword tokenization method originally developed for data compression. BPE iteratively merges the most frequent pairs
-of bytes (or characters) in a dataset to form new tokens, which effectively reduces the vocabulary size and handles the rare words more efficiently.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Vocabulary Independence: While both methods are effective at creating subword vocabularies, SentencePiece does not rely on
+Here are some key techniques typically employed during the preprocessing phase.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Lowercasing: Converting all characters in the text to lowercase helps in standardizing the data. This means that words like
+House and house are treated the same preventing the model from treating them as different tokens unnecassarily.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Removing special Characters and punctuation: Text often contains various punctuation marks and special characters, which
+may not be necassary for many NLP tasks. Removing these elements helps focus the model on the content of words rather than formatting.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Expanding Contractions: In english and many other languages, contractions such as &amp;ldquo;Can&amp;rsquo;t&amp;rdquo;, &amp;ldquo;don&amp;rsquo;t&amp;rdquo;. and &amp;ldquo;it&amp;rsquo;s&amp;rdquo; are common.
+Expanding these to &amp;ldquo;cannot&amp;rdquo; &amp;ldquo;do not.&amp;rdquo; and &amp;ldquo;it is&amp;rdquo; helps maintain consistency in verb forms and reduces ambiguity in parsing the text.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Removing stopwords: common words such as &amp;ldquo;and&amp;rdquo;, &amp;ldquo;is&amp;rdquo;, and &amp;ldquo;but&amp;rdquo; can be filtered out during preprocessing. These words are usually frequent
+and carry less meaningful content for many NLP tasks, such as sentiment analysis or topic modelling.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Trimming spaces: Excess whitespaces, including spaces, tabs and new lines can be normalized by trimming them to a single space or removing
+them entirely, which helps in maintaining consistency in text format&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>The above text format are not specifically related to sentencepiece model but are some of the common techniques used for preprocessing.&lt;/p>
+&lt;h3 id="normalizing">Normalizing&lt;/h3>
+&lt;p>Normalization deals with the way text is represented to ensure consistency. it is particularly important when dealing with different scripts
+or when the input data comes from various sources that might format text differently.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Unicode Normalization: Converts text to a consistent unicode format, resolving issues like different character encodings for the same
+characters. Used by BPE, SentencePiece&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Stemming and lemmatization: reduces words to their base or root form, either through cutting off inflections (stemming) or by
+using lexical knowledge of the language (lemmatization).&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="byte-pair-encoding-bpe">Byte Pair Encoding (BPE)&lt;/h2>
+&lt;p>BPE is another popular subword tokenization method originally developed for data compression. BPE iteratively merges the most frequent pairs
+of bytes (or characters) in a dataset to form new tokens, which effectively reduces the vocabulary size and handles the rare words more efficiently.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Vocabulary Independence: While both methods are effective at creating subword vocabularies, SentencePiece does not rely on
 pre-tokenized text, making it more flexible in handling raw text inputs. BPE typically starts with a base vocabulary of individual
-characters and builds up by merging frequent pairs.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Handling of Rare Words: Both SentencePiece and BPE help mitigate the issue of rare words through the use of subword units.
+characters and builds up by merging frequent pairs.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Handling of Rare Words: Both SentencePiece and BPE help mitigate the issue of rare words through the use of subword units.
 However, SentencePiece&amp;rsquo;s algorithm allows for more direct control over the tokenization granularity, which can be advantageous
-in balancing the vocabulary size against model performance.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Ease of Use: SentencePiece provides an easy-to-use implementation that integrates seamlessly with major machine learning
+in balancing the vocabulary size against model performance.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Ease of Use: SentencePiece provides an easy-to-use implementation that integrates seamlessly with major machine learning
 frameworks and supports direct text inputs. BPE often requires initial text processing and vocabulary building,
-which might add complexity to the pipeline.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Performance in Multilingual Settings: SentencePiece is particularly well-suited for multilingual environments
+which might add complexity to the pipeline.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Performance in Multilingual Settings: SentencePiece is particularly well-suited for multilingual environments
 because it treats the text as a sequence of raw Unicode characters, which naturally accommodates multiple languages
-without bias towards any particular language&amp;rsquo;s syntax or morphology.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;sentencepiece-tokenizer-1&#34;&gt;SentencePiece Tokenizer&lt;/h2&gt;
-&lt;p&gt;The SentencePiece tokenizer is a robust and flexible tool designed to efficiently manage the tokenization of
+without bias towards any particular language&amp;rsquo;s syntax or morphology.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="sentencepiece-tokenizer-1">SentencePiece Tokenizer&lt;/h2>
+&lt;p>The SentencePiece tokenizer is a robust and flexible tool designed to efficiently manage the tokenization of
 text without the need for pre-defined word boundaries. This makes it particularly suitable for languages where whitespace
 is not a reliable delimiter. Unlike traditional tokenization methods that rely on whitespace and pre-defined vocabularies,
-SentencePiece treats the input text as a raw stream of Unicode characters and learns a vocabulary of subword units directly from this text.&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;Language Agnosticism: SentencePiece is designed to be independent of the language being processed. It works
-effectively across various languages, including those that do not use spaces to separate words.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Subword Tokenization: It utilizes subword units, which can effectively capture common prefixes, suffixes, and
-roots, reducing the out-of-vocabulary issue and preserving meaningful linguistic units.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;End-to-End Tokenization: SentencePiece handles both the tokenization and detokenization processes, ensuring that
-the original text can be perfectly reconstructed from the tokens.&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Distributed training in Pytorch</title>
-      <link>/posts/torchdistributed/</link>
-      <pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate>
-      
-      <guid>/posts/torchdistributed/</guid>
-      <description>dp ddp mp different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now how does it differ from simple distributed computing regime like using mpi as of now dp does not support mp but mp doep
-in ddp each gpu is controlled by a worker process
-3 important environment variables WORLD_SIZE: defines the total number of workers n1 nodes n2 gpus = n1 * n2 WORLD_RANK: identifies the worker ranges from 0.</description>
-      <content>&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;dp ddp mp
-different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now
-how does it differ from simple distributed computing regime like using mpi
-as of now dp does not support mp but mp doep&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;in ddp each gpu is controlled by a worker process&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;3 important environment variables
-WORLD_SIZE: defines the total number of workers n1 nodes n2 gpus = n1 * n2
-WORLD_RANK: identifies the worker ranges from 0..(n1*n2)
-LOCAL_RANK: defines the id of a worker within a node or indirectly refers to the gpu rank&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;fsdp&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Tensor parallel in pytorch</title>
-      <link>/posts/tensorparallel/</link>
-      <pubDate>Sun, 07 Apr 2024 11:49:20 -0700</pubDate>
-      
-      <guid>/posts/tensorparallel/</guid>
-      <description>Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time
-TODO split the code into bite sized chunks for the whole create a gists
-Example of simple matrix multiplication on multiple gpus import torch import torch.distributed as dist n_gpus = torch.</description>
-      <content>&lt;p&gt;Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models
-unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time&lt;/p&gt;
-&lt;p&gt;TODO split the code into bite sized chunks for the whole create a gists&lt;/p&gt;
-&lt;h3 id=&#34;example-of-simple-matrix-multiplication-on-multiple-gpus&#34;&gt;Example of simple matrix multiplication on multiple gpus&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; torch
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; torch.distributed &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; dist
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;n_gpus &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;device_count()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Initialize matrices&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randn(&lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Example matrix A&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randn(&lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Example matrix B&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Split matrix A into two parts&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shape
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;n_gpus &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Tensors must be equally divisible accross gpus&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a1, a2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;n_gpus, dim&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Assume we have two GPUs, GPU0 and GPU1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Move the tensors to the respective GPUs&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a1_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a1&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move first half of A to GPU0&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b_gpu0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; b&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move B to GPU0&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a2_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move second half of A to GPU1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b_gpu1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; b&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Copy B to GPU1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Perform matrix multiplication in parallel&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c1_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;matmul(a1_gpu, b_gpu0)  &lt;span style=&#34;color:#75715e&#34;&gt;# Perform on GPU0&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c2_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;matmul(a2_gpu, b_gpu1)  &lt;span style=&#34;color:#75715e&#34;&gt;# Perform on GPU1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Combine the results&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Note: This step requires communication between GPUs which can be done using PyTorch&amp;#39;s distributed communication package or manually&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Here we&amp;#39;ll just simulate the combination by moving the results to CPU and concatenating&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c1_gpu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cpu()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c2_gpu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cpu()
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cat((c1, c2), dim&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Result of A x B using tensor parallelism:&amp;#34;&lt;/span&gt;, c)
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
-    </item>
-    
-    <item>
-      <title>Vectorsearch</title>
-      <link>/posts/vectorsearch/</link>
-      <pubDate>Sun, 07 Apr 2024 01:42:06 -0700</pubDate>
-      
-      <guid>/posts/vectorsearch/</guid>
-      <description>Vector Search Introduction In the era of big data where traditional databases often stumble to manage and retrieve high dimensional data effectively, vector databases emerge as a beacon of innovation. These specialized databases are designed to handle data in the form of vectors that represent various features of images and text to complex patterns.
-challenges with vector databases vector databases store data in the format computers love the most. They are stored as a collection of numbers.</description>
-      <content>&lt;h1 id=&#34;vector-search&#34;&gt;Vector Search&lt;/h1&gt;
-&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;In the era of big data where traditional databases often stumble to manage and retrieve high dimensional data effectively, vector databases emerge
-as a beacon of innovation. These specialized databases are designed to handle data in the form of vectors that represent various features of images
-and text to complex patterns.&lt;/p&gt;
-&lt;h2 id=&#34;challenges-with-vector-databases&#34;&gt;challenges with vector databases&lt;/h2&gt;
-&lt;p&gt;vector databases store data in the format computers love the most. They are stored as a collection of numbers.
-At the heart of vector databases lies their ability to perform similarity searches in a space where distances between vectors signify how similar or
-different the data objects are. Metrics such as cosine similarity, L1 Norm (manhattan distance) and L2 norm (euler distance) are crucial in defining
-the closeness between data points, influencing both the effectiveness and efficiency of searches.&lt;/p&gt;
-&lt;p&gt;Beyond just understanding these metrics, it&amp;rsquo;s essential to explore the methodologies that vector databases use to perform searches. While exact
-vector searches ensure precise results, they are computationally expensive and often impractical for large datasets. This is where approximate search
-techniques, such as Hierarchical Navigable Small World (HNSW) graphs, come into play, offering a balance between accuracy and speed by approximating
-the nearest neighbors.&lt;/p&gt;
-&lt;h2 id=&#34;metrics-of-vector-similarity&#34;&gt;Metrics of vector similarity&lt;/h2&gt;
-&lt;h2 id=&#34;types-of-vector-indices&#34;&gt;types of vector indices&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;hash based indexing&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;tree based indexing&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;cluster based or cluster indexing&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;graph based indexing&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;flat index O(n) search searches all elements&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;inverted file index or IVF
-ivf introduces a data structure into the vector search instead of searching over all the elements ivf partitions data and are linked together by
-the centroid. cluster centroids are usually determined by KMeans algorithm&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;quantization-for-data-bases&#34;&gt;Quantization for data bases&lt;/h2&gt;
-&lt;h2 id=&#34;what-it-means-to-be-approximate-nearest-neighbours&#34;&gt;what it means to be approximate nearest neighbours&lt;/h2&gt;
-&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;faiss &lt;a href=&#34;https://arxiv.org/pdf/1702.08734.pdf&#34;&gt;https://arxiv.org/pdf/1702.08734.pdf&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>/about/</link>
-      <pubDate>Fri, 05 Apr 2024 21:11:49 -0700</pubDate>
-      
-      <guid>/about/</guid>
-      <description>Hello! I’m Narain. I tinker with machine learning models for a living, diving into the nuts and bolts of deep learning, GPU acceleration, and cloud infrastructures. When I&amp;rsquo;m not busy breaking stuff, I might be pushing the boundaries of what should (or shouldn’t) be done in C++.
-Beyond the screen, I&amp;rsquo;m a karate instructor and an open-source enthusiast. Whether it&amp;rsquo;s enhancing AI frameworks or mentoring the next generation of tech enthusiasts, I&amp;rsquo;m all about making a difference.</description>
-      <content>
-&lt;img src=&#34;/images/narain1.jpg&#34;  alt=&#34;Hello Friend&#34;  class=&#34;center&#34;  style=&#34;border-radius: 8px; width: 300px; height: auto;&#34;    /&gt;
-
-
-&lt;p&gt;Hello! I’m Narain. I tinker with machine learning models for a living, diving into the nuts and bolts of deep learning,
-GPU acceleration, and cloud infrastructures. When I&amp;rsquo;m not busy breaking stuff, I might be pushing the boundaries
-of what should (or shouldn’t) be done in C++.&lt;/p&gt;
-&lt;p&gt;Beyond the screen, I&amp;rsquo;m a karate instructor and an open-source enthusiast. Whether it&amp;rsquo;s enhancing AI frameworks
-or mentoring the next generation of tech enthusiasts, I&amp;rsquo;m all about making a difference. When I&amp;rsquo;m looking to
-unwind, I enjoy exploring culinary arts and capturing life’s moments through my lens—usually involving scenes
-from nature or candid shots of daily life.&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>State_of_compute</title>
-      <link>/posts/state_of_compute/</link>
-      <pubDate>Thu, 21 Mar 2024 16:33:52 -0700</pubDate>
-      
-      <guid>/posts/state_of_compute/</guid>
-      <description>state of compute </description>
-      <content>&lt;h1 id=&#34;state-of-compute&#34;&gt;state of compute&lt;/h1&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>floating point numbers is all we need</title>
-      <link>/posts/float32/</link>
-      <pubDate>Thu, 21 Mar 2024 16:24:31 -0700</pubDate>
-      
-      <guid>/posts/float32/</guid>
-      <description>Common misconceptions how is it different from integer types how its range changes from integers how useful it is with respect to deep learning Efficiency to high precision calculations </description>
-      <content>&lt;h2 id=&#34;common-misconceptions&#34;&gt;Common misconceptions&lt;/h2&gt;
-&lt;h2 id=&#34;how-is-it-different-from-integer-types&#34;&gt;how is it different from integer types&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;how its range changes from integers&lt;/li&gt;
-&lt;li&gt;how useful it is with respect to deep learning&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;efficiency-to-high-precision-calculations&#34;&gt;Efficiency to high precision calculations&lt;/h2&gt;
-&lt;h2 id=&#34;heading&#34;&gt;&lt;/h2&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Distributed_dl</title>
-      <link>/posts/distributed_dl/</link>
-      <pubDate>Thu, 21 Mar 2024 16:24:23 -0700</pubDate>
-      
-      <guid>/posts/distributed_dl/</guid>
-      <description>Distributed Deep learning training Training routine Data Parallel model parallelism pipeline parallelism Tensor parallelism Deepspeed Deepspeed zero </description>
-      <content>&lt;h1 id=&#34;distributed-deep-learning-training&#34;&gt;Distributed Deep learning training&lt;/h1&gt;
-&lt;h2 id=&#34;training-routine&#34;&gt;Training routine&lt;/h2&gt;
-&lt;h2 id=&#34;data-parallel&#34;&gt;Data Parallel&lt;/h2&gt;
-&lt;h2 id=&#34;model-parallelism&#34;&gt;model parallelism&lt;/h2&gt;
-&lt;h2 id=&#34;pipeline-parallelism&#34;&gt;pipeline parallelism&lt;/h2&gt;
-&lt;h2 id=&#34;tensor-parallelism&#34;&gt;Tensor parallelism&lt;/h2&gt;
-&lt;h2 id=&#34;deepspeed&#34;&gt;Deepspeed&lt;/h2&gt;
-&lt;h2 id=&#34;deepspeed-zero&#34;&gt;Deepspeed zero&lt;/h2&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Showcase</title>
-      <link>/showcase/</link>
-      <pubDate>Thu, 21 Mar 2024 15:10:37 -0700</pubDate>
-      
-      <guid>/showcase/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>List100</title>
-      <link>/list100/</link>
-      <pubDate>Thu, 21 Mar 2024 15:05:13 -0700</pubDate>
-      
-      <guid>/list100/</guid>
-      <description>List 100 a list of things i would do
-List 100 a list of things i would do
-⛔ Learn French. ⛔ Live in other country. ⛔ Start a non profit organization. ⛔ read 1000 Books.from 2020 🤣 ⛔ Guest lecture a masters Level course. ⛔ Live in Siberia. ⛔ Have a salad from my own garden. ⛔ Start Baking. In my own kitchen. ⛔ Have a date on top of eifel tower.</description>
-      <content>&lt;h1 id=&#34;list-100&#34;&gt;List 100&lt;/h1&gt;
-&lt;p&gt;a list of things i would do&lt;/p&gt;
-&lt;h1 id=&#34;list-100-1&#34;&gt;List 100&lt;/h1&gt;
-&lt;p&gt;a list of things i would do&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;⛔ Learn French.&lt;/li&gt;
-&lt;li&gt;⛔ Live in other country.&lt;/li&gt;
-&lt;li&gt;⛔ Start a non profit organization.&lt;/li&gt;
-&lt;li&gt;⛔ read 1000 Books.from 2020 🤣&lt;/li&gt;
-&lt;li&gt;⛔ Guest lecture a masters Level course.&lt;/li&gt;
-&lt;li&gt;⛔ Live in Siberia.&lt;/li&gt;
-&lt;li&gt;⛔ Have a salad from my own garden.&lt;/li&gt;
-&lt;li&gt;⛔ Start Baking. In my own kitchen.&lt;/li&gt;
-&lt;li&gt;⛔ Have a date on top of eifel tower.&lt;/li&gt;
-&lt;li&gt;✔ Start teaching karate again.&lt;/li&gt;
-&lt;li&gt;⛔ Build my own home.&lt;/li&gt;
-&lt;li&gt;✔ Fall in Love.&lt;/li&gt;
-&lt;li&gt;⛔ Go up in a hot air Balloon.&lt;/li&gt;
-&lt;li&gt;⛔ Travel across the Atlantic in a sail.&lt;/li&gt;
-&lt;li&gt;✔ Run a half marathon. ⛔ Run a full marathon&lt;/li&gt;
-&lt;li&gt;⛔ Scuba Diving.&lt;/li&gt;
-&lt;li&gt;⛔ Learn to Ski.&lt;/li&gt;
-&lt;li&gt;⛔ Play piano in a concert.&lt;/li&gt;
-&lt;li&gt;✔ Take a walk in the rain.&lt;/li&gt;
-&lt;li&gt;✔ complete all John le Carr� books.&lt;/li&gt;
-&lt;li&gt;⛔ Ask a stranger out.&lt;/li&gt;
-&lt;li&gt;⛔ Sleep in an old castle.&lt;/li&gt;
-&lt;li&gt;✔ Sleep outside on the beach under the stars.&lt;/li&gt;
-&lt;li&gt;⛔ See the auroras.&lt;/li&gt;
-&lt;li&gt;⛔ Go on an African Safari.&lt;/li&gt;
-&lt;li&gt;⛔ Learn to Dance.&lt;/li&gt;
-&lt;li&gt;⛔ Complete up-to Base camp 1.&lt;/li&gt;
-&lt;li&gt;⛔ Hitchhike across Europe.&lt;/li&gt;
-&lt;li&gt;⛔ Drink vodka in Russia.&lt;/li&gt;
-&lt;li&gt;⛔ Surf in Costa Rica.&lt;/li&gt;
-&lt;li&gt;⛔ Visit 100 Countries.&lt;/li&gt;
-&lt;li&gt;⛔ Go to north pole for christmas.&lt;/li&gt;
-&lt;li&gt;⛔ Oktober fest, Germany.&lt;/li&gt;
-&lt;li&gt;⛔ Burning man, US.&lt;/li&gt;
-&lt;li&gt;⛔ Marry a person I love.&lt;/li&gt;
-&lt;li&gt;⛔ Carnival in Brazil.&lt;/li&gt;
-&lt;li&gt;⛔ Pashut festival , Israel.&lt;/li&gt;
-&lt;li&gt;⛔ Loas’ new year.&lt;/li&gt;
-&lt;li&gt;⛔ watch bull fight in Spain.&lt;/li&gt;
-&lt;li&gt;⛔ Speak at TED.&lt;/li&gt;
-&lt;li&gt;⛔ I need a canine.&lt;/li&gt;
-&lt;li&gt;⛔ Stay in Yakutsk for six months&lt;/li&gt;
-&lt;li&gt;⛔ Don’t work in Bangalore 🥺.&lt;/li&gt;
-&lt;li&gt;⛔ Have a library in MY House&lt;/li&gt;
-&lt;li&gt;⛔ fishing in the middle of sea [full moon night]&lt;/li&gt;
-&lt;li&gt;⛔ learn celestial navigation&lt;/li&gt;
-&lt;li&gt;⛔ create an 8-bit bread board computer&lt;/li&gt;
-&lt;li&gt;⛔ win a night in a fight club&lt;/li&gt;
-&lt;li&gt;⛔ Buy an island near bora bora&lt;/li&gt;
-&lt;li&gt;⛔ board a train up to ooty&lt;/li&gt;
-&lt;li&gt;⛔ travel in the glacier express&lt;/li&gt;
-&lt;li&gt;⛔ cruise the atlantic ocean&lt;/li&gt;
-&lt;li&gt;⛔ cycle up kolli hills in 3 hours&lt;/li&gt;
-&lt;li&gt;⛔ travel in a flight during rains&lt;/li&gt;
-&lt;li&gt;⛔ crack a walnut inbetween fingers&lt;/li&gt;
-&lt;li&gt;⛔ make ice-cream at home&lt;/li&gt;
-&lt;li&gt;⛔ fishing on a canoe in Seychelles&lt;/li&gt;
-&lt;li&gt;⛔ taste the rarest black diamond and white ghost&lt;/li&gt;
-&lt;li&gt;⛔ Mountain of hell les 2 alpes&lt;/li&gt;
-&lt;li&gt;⛔ visit abandoned water park Hue vietnam&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;li&gt;⛔&lt;/li&gt;
-&lt;/ol&gt;
-</content>
-    </item>
-    
-  </channel>
-</rss>
+SentencePiece treats the input text as a raw stream of Unicode characters and learns a vocabulary of subword units directly from this text.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Language Agnosticism: SentencePiece is designed to be independent of the language being processed. It works
+effectively across various languages, including those that do not use spaces to separate words.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Subword Tokenization: It utilizes subword units, which can effectively capture common prefixes, suffixes, and
+roots, reducing the out-of-vocabulary issue and preserving meaningful linguistic units.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>End-to-End Tokenization: SentencePiece handles both the tokenization and detokenization processes, ensuring that
+the original text can be perfectly reconstructed from the tokens.&lt;/p>
+&lt;/li>
+&lt;/ol></content></item></channel></rss>
