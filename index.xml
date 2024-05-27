@@ -1,4 +1,123 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Wed, 15 May 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 07 Apr 2024 12:44:46 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Online Softmax</title><link>/posts/online-softmax/</link><pubDate>Mon, 26 Feb 2024 16:32:46 -0700</pubDate><guid>/posts/online-softmax/</guid><description>One of the most important task in deep learning is classification. This involves predicting the class to which a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers. These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into probabilities that sum to one, making them interpretable</description><content>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
+a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers.
+These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be
+any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
+probabilities that sum to one, making them interpretable&lt;/p>
+&lt;h2 id="the-role-of-softmax-in-classification">The role of Softmax in Classification&lt;/h2>
+&lt;h3 id="why-softmax">Why softmax?&lt;/h3>
+&lt;p>Raw model outputs, or logits can lie anywhere within the floating-point number range, making them difficult to interpret. The
+Softmax function addresses this by normalizing the logits into a probability distribution. This allows us to understand the model&amp;rsquo;s
+confidence in its predictions.&lt;/p>
+&lt;h2 id="steps-to-calculate-sofmax">Steps to calculate Sofmax&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Normalizing by maximum logit:&lt;/p>
+&lt;ul>
+&lt;li>The first step involves calculating the maximum value among the model&amp;rsquo;s outputs. This helps in normalizing the outputs
+and prevents potential overflow issues during exponentiation.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Exponentiation:&lt;/p>
+&lt;ul>
+&lt;li>Next we subtract the maximum logit from each logit and calculate the exponent of these normalized values. This step transforms
+the logits into a form where they can be compared proportionally.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Division by sum of exponents:&lt;/p>
+&lt;ul>
+&lt;li>Finally we divide each exponentiated value by the sum of all exponentiated values. This step ensures that the resulting
+probabilities sum to one, providing a valid probability distribution.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="softmax-implementation-in-python">Softmax implementation in python&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">softmax&lt;/span>(x):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Compute softmax values for each set of scores in x.&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">not&lt;/span> isinstance(x, torch&lt;span style="color:#f92672">.&lt;/span>Tensor):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>tensor(x, dtype&lt;span style="color:#f92672">=&lt;/span>torch&lt;span style="color:#f92672">.&lt;/span>float32)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x_max &lt;span style="color:#f92672">=&lt;/span> x&lt;span style="color:#f92672">.&lt;/span>max(dim&lt;span style="color:#f92672">=-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, keepdim&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>values
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> e_x &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>exp(x &lt;span style="color:#f92672">-&lt;/span> x_max)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> e_x &lt;span style="color:#f92672">/&lt;/span> e_x&lt;span style="color:#f92672">.&lt;/span>sum(dim&lt;span style="color:#f92672">=-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, keepdim&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Example usage&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>input_tensor &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>tensor([&lt;span style="color:#ae81ff">1.0&lt;/span>, &lt;span style="color:#ae81ff">2.0&lt;/span>, &lt;span style="color:#ae81ff">3.0&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>softmax_output &lt;span style="color:#f92672">=&lt;/span> softmax(input_tensor)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(softmax_output)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As we can see, the standard Softmax algorithm has some drawbacks. One significant issue is that it requires multiple passes
+over the entire tensor to calculate the softmax, makind it less cache-friendly and potentially inefficient.&lt;/p>
+&lt;h2 id="introducing-online-softmax">Introducing Online Softmax&lt;/h2>
+&lt;p>To address these inefficiencies, we can explore an alternative approach known as online softmax. This method aims to
+improve computational efficiency and cache performance by processing the data in a more streamlined manner.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Single pass for maximum and sum calculation:&lt;/p>
+&lt;ul>
+&lt;li>Instead of first finding the maximum value in one pass and then computing the sum of exponentials in another,
+this code combines these operation. When a new maximum value is found the sum is adjusted accordingly, ensuring
+accuracy without additional passes.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Numerical Stability&lt;/p>
+&lt;ul>
+&lt;li>By subtracting the maximum value &lt;code>maxval&lt;/code> from each element before exponentiation, the code prevents potential overflow
+issues that could occur with large input values.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Efficiency:&lt;/p>
+&lt;ul>
+&lt;li>This approach is more cache-friendly as it reduces the number of passes over the data, thus maximising the number of times the
+data needs to be fetched from memory.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;math.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;float.h&amp;gt; // For FLT_MAX&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">softmax_forward_online_cpu&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> out, &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> inp, &lt;span style="color:#66d9ef">int&lt;/span> N, &lt;span style="color:#66d9ef">int&lt;/span> C) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// inp is (N, C)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// out is (N, C), each row of inp will get softmaxed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Iterate over each row
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> N; i&lt;span style="color:#f92672">++&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> inp_row &lt;span style="color:#f92672">=&lt;/span> inp &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">*&lt;/span> C; &lt;span style="color:#75715e">// Pointer to the current input row
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> out_row &lt;span style="color:#f92672">=&lt;/span> out &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">*&lt;/span> C; &lt;span style="color:#75715e">// Pointer to the current output row
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> maxval &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">-&lt;/span>FLT_MAX; &lt;span style="color:#75715e">// Initialize max value to a very small number
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span> sum &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0.0f&lt;/span>; &lt;span style="color:#75715e">// Initialize sum of exponentials to 0
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// First pass: find the max value and calculate the sum of exponentials
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> j &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; j &lt;span style="color:#f92672">&amp;lt;&lt;/span> C; j&lt;span style="color:#f92672">++&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> maxval_prev &lt;span style="color:#f92672">=&lt;/span> maxval; &lt;span style="color:#75715e">// Store previous max value
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (inp_row[j] &lt;span style="color:#f92672">&amp;gt;&lt;/span> maxval) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Update max value if current element is greater
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> maxval &lt;span style="color:#f92672">=&lt;/span> inp_row[j];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Adjust the sum with the new max value
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> sum &lt;span style="color:#f92672">=&lt;/span> sum &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(maxval_prev &lt;span style="color:#f92672">-&lt;/span> maxval) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Update sum if max value does not change
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> sum &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Second pass: calculate the softmax probabilities
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> j &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; j &lt;span style="color:#f92672">&amp;lt;&lt;/span> C; j&lt;span style="color:#f92672">++&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> out_row[j] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval) &lt;span style="color:#f92672">/&lt;/span> sum; &lt;span style="color:#75715e">// Normalize each element
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code becomes even more efficient when used on GPU&amp;rsquo;s as all tensor data can be moved to GPU&amp;rsquo;s shared memory&lt;/p>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/1805.02867">Online normalizer calculation for softmax Paper&lt;/a>&lt;/li>
+&lt;/ul></content></item><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
 hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
@@ -86,6 +205,42 @@ because it treats the text as a sequence of raw Unicode characters, which natura
 without bias towards any particular language&amp;rsquo;s syntax or morphology.&lt;/p>
 &lt;/li>
 &lt;/ol>
+&lt;h3 id="example">Example&lt;/h3>
+&lt;ul>
+&lt;li>Initial Text&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>ABABCABCD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Count frequency of pairs&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB: 3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BC: 2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Most frequent pair&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Replace &lt;code>ab&lt;/code> with a new symbol say `x'&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>New text: XAXCXCD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Count the frequency of pairs in new text:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>AX: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>XC: 2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CX: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Most frequent pair:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XC
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Repeat the same process until the desired number of tokens is achieved&lt;/li>
+&lt;/ul>
 &lt;h2 id="sentencepiece-tokenizer-1">SentencePiece Tokenizer&lt;/h2>
 &lt;p>The SentencePiece tokenizer is a robust and flexible tool designed to efficiently manage the tokenization of
 text without the need for pre-defined word boundaries. This makes it particularly suitable for languages where whitespace
@@ -104,4 +259,27 @@ roots, reducing the out-of-vocabulary issue and preserving meaningful linguistic
 &lt;p>End-to-End Tokenization: SentencePiece handles both the tokenization and detokenization processes, ensuring that
 the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;/li>
-&lt;/ol></content></item></channel></rss>
+&lt;/ol>
+&lt;h3 id="example-1">Example&lt;/h3>
+&lt;ul>
+&lt;li>Initial text&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>this is a simple example
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>segment the text into characters&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>t h i s _ i s _ a _ s i m p l e _ e x a m p l e
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>count the frequency of each character and pair of characters, then merge the most frequent pairs iteratively&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>assume the vocabulary learned contains&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>{&amp;#39;th&amp;#39;, &amp;#39;is&amp;#39;, &amp;#39;_&amp;#39;, &amp;#39;a&amp;#39;, &amp;#39;si&amp;#39;, &amp;#39;mple&amp;#39;, &amp;#39;ex&amp;#39;, &amp;#39;amp&amp;#39;, &amp;#39;le&amp;#39;}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Tokenize the text using learned vocabulary&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item></channel></rss>

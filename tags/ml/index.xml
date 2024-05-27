@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ml on Narain</title>
+    <link>//localhost:1313/tags/ml/</link>
+    <description>Recent content in Ml on Narain</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 07 Apr 2024 11:49:20 -0700</lastBuildDate><atom:link href="//localhost:1313/tags/ml/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tensor parallel in pytorch</title>
+      <link>//localhost:1313/posts/tensorparallel/</link>
+      <pubDate>Sun, 07 Apr 2024 11:49:20 -0700</pubDate>
+      
+      <guid>//localhost:1313/posts/tensorparallel/</guid>
+      <description>Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time
+As of now, PyTorch doesn&amp;rsquo;t support tensors to be directly split across multiple devices. However, as an alternative, we can partition large tensors and perform operations on them across multiple devices by splitting or tiling tensors.</description>
+      <content>&lt;p&gt;Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models
+unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time&lt;/p&gt;
+&lt;p&gt;As of now, PyTorch doesn&amp;rsquo;t support tensors to be directly split across multiple devices. However, as an alternative, we can partition
+large tensors and perform operations on them across multiple devices by splitting or tiling tensors. This approach helps reduce the time taken
+to complete performance-critical operations.&lt;/p&gt;
+&lt;h3 id=&#34;example-of-simple-matrix-multiplication-on-multiple-gpus&#34;&gt;Example of simple matrix multiplication on multiple gpus&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; torch
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; torch.distributed &lt;span style=&#34;color:#66d9ef&#34;&gt;as&lt;/span&gt; dist
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;n_gpus &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;device_count()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Initialize matrices&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randn(&lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Example matrix A&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;randn(&lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4096&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Example matrix B&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;split-the-matrix-a-into-two-parts&#34;&gt;Split the matrix A into two parts&lt;/h4&gt;
+&lt;p&gt;by splitting the matrix A into two parts we can multiply them separately in each of the device by dividing compute equally&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;s &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;shape
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;assert&lt;/span&gt; s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;n_gpus &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Tensors must be equally divisible accross gpus&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a1, a2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split(s[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;]&lt;span style=&#34;color:#f92672&#34;&gt;//&lt;/span&gt;n_gpus, dim&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Assume we have two GPUs, GPU0 and GPU1 Move the tensors to the respective GPUs&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a1_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a1&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move first half of A to GPU0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b_gpu0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; b&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move B to GPU0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;a2_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; a2&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Move second half of A to GPU1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;b_gpu1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; b&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cuda(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;)  &lt;span style=&#34;color:#75715e&#34;&gt;# Copy B to GPU1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;perform-matrix-multiplication-in-parallel&#34;&gt;Perform matrix multiplication in parallel&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c1_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;matmul(a1_gpu, b_gpu0)  &lt;span style=&#34;color:#75715e&#34;&gt;# Perform on GPU0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c2_gpu &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;matmul(a2_gpu, b_gpu1)  &lt;span style=&#34;color:#75715e&#34;&gt;# Perform on GPU1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;combining-the-results&#34;&gt;Combining the results&lt;/h4&gt;
+&lt;p&gt;Note: This step requires communication between GPUs which can be done using PyTorch&amp;rsquo;s distributed communication package or manually
+Here we&amp;rsquo;ll just simulate the combination by moving the results to CPU and concatenating&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c1_gpu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cpu()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; c2_gpu&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cpu()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;c &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; torch&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;cat((c1, c2), dim&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Result of A x B using tensor parallelism:&amp;#34;&lt;/span&gt;, c)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the operations are induvidually completed in each of the devices the can aggregated onto a single device or can stay on the same device if
+further operations are required&lt;/p&gt;
+&lt;h2 id=&#34;useful-links&#34;&gt;Useful Links&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pytorch/pytorch/blob/main/torch/distributed/_tensor/README.md&#34;&gt;Distributed tensor in pytorch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

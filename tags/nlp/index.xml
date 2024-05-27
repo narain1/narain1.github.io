@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nlp on Narain</title><link>/tags/nlp/</link><description>Recent content in Nlp on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 15 May 2024 04:56:12 -0700</lastBuildDate><atom:link href="/tags/nlp/index.xml" rel="self" type="application/rss+xml"/><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Wed, 15 May 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nlp on Narain</title><link>/tags/nlp/</link><description>Recent content in Nlp on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 15 Jan 2024 04:56:12 -0700</lastBuildDate><atom:link href="/tags/nlp/index.xml" rel="self" type="application/rss+xml"/><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
 hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
@@ -86,6 +86,42 @@ because it treats the text as a sequence of raw Unicode characters, which natura
 without bias towards any particular language&amp;rsquo;s syntax or morphology.&lt;/p>
 &lt;/li>
 &lt;/ol>
+&lt;h3 id="example">Example&lt;/h3>
+&lt;ul>
+&lt;li>Initial Text&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>ABABCABCD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Count frequency of pairs&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB: 3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BC: 2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Most frequent pair&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Replace &lt;code>ab&lt;/code> with a new symbol say `x'&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>New text: XAXCXCD
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Count the frequency of pairs in new text:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XA: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>AX: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>XC: 2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CX: 1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Most frequent pair:&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XC
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Repeat the same process until the desired number of tokens is achieved&lt;/li>
+&lt;/ul>
 &lt;h2 id="sentencepiece-tokenizer-1">SentencePiece Tokenizer&lt;/h2>
 &lt;p>The SentencePiece tokenizer is a robust and flexible tool designed to efficiently manage the tokenization of
 text without the need for pre-defined word boundaries. This makes it particularly suitable for languages where whitespace
@@ -104,4 +140,27 @@ roots, reducing the out-of-vocabulary issue and preserving meaningful linguistic
 &lt;p>End-to-End Tokenization: SentencePiece handles both the tokenization and detokenization processes, ensuring that
 the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;/li>
-&lt;/ol></content></item></channel></rss>
+&lt;/ol>
+&lt;h3 id="example-1">Example&lt;/h3>
+&lt;ul>
+&lt;li>Initial text&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>this is a simple example
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>segment the text into characters&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>t h i s _ i s _ a _ s i m p l e _ e x a m p l e
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>count the frequency of each character and pair of characters, then merge the most frequent pairs iteratively&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>assume the vocabulary learned contains&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>{&amp;#39;th&amp;#39;, &amp;#39;is&amp;#39;, &amp;#39;_&amp;#39;, &amp;#39;a&amp;#39;, &amp;#39;si&amp;#39;, &amp;#39;mple&amp;#39;, &amp;#39;ex&amp;#39;, &amp;#39;amp&amp;#39;, &amp;#39;le&amp;#39;}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>Tokenize the text using learned vocabulary&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item></channel></rss>
