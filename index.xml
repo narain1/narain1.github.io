@@ -9,6 +9,7 @@ probabilities that sum to one, making them interpretable&lt;/p>
 Softmax function addresses this by normalizing the logits into a probability distribution. This allows us to understand the model&amp;rsquo;s
 confidence in its predictions.&lt;/p>
 &lt;h2 id="steps-to-calculate-sofmax">Steps to calculate Sofmax&lt;/h2>
+&lt;p>&lt;a href="/posts/online-softmax/images/softmax_default.png">Softmax opertion&lt;/a>&lt;/p>
 &lt;ol>
 &lt;li>
 &lt;p>Normalizing by maximum logit:&lt;/p>

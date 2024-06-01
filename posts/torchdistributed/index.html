@@ -6,9 +6,9 @@
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="dp ddp mp different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now how does it differ from simple distributed computing regime like using mpi as of now dp does not support mp but mp doep
-in ddp each gpu is controlled by a worker process
-3 important environment variables WORLD_SIZE: defines the total number of workers n1 nodes n2 gpus = n1 * n2 WORLD_RANK: identifies the worker ranges from 0." />
+<meta name="description" content="Distributed training Gradient accumlation synchronous gradient descent asynchronous gradient descent worker nodes driver nodes horovod Hardparts batchnorm batch norm is a
+dp ddp mp different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now how does it differ from simple distributed computing regime like using mpi as of now dp does not support mp but mp doep
+in ddp each gpu is controlled by a worker process" />
 <meta name="keywords" content=", " />
 
   <meta name="robots" content="noodp" />
@@ -53,9 +53,9 @@ in ddp each gpu is controlled by a worker process
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Distributed training in Pytorch">
-<meta property="og:description" content="dp ddp mp different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now how does it differ from simple distributed computing regime like using mpi as of now dp does not support mp but mp doep
-in ddp each gpu is controlled by a worker process
-3 important environment variables WORLD_SIZE: defines the total number of workers n1 nodes n2 gpus = n1 * n2 WORLD_RANK: identifies the worker ranges from 0." />
+<meta property="og:description" content="Distributed training Gradient accumlation synchronous gradient descent asynchronous gradient descent worker nodes driver nodes horovod Hardparts batchnorm batch norm is a
+dp ddp mp different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now how does it differ from simple distributed computing regime like using mpi as of now dp does not support mp but mp doep
+in ddp each gpu is controlled by a worker process" />
 <meta property="og:url" content="//localhost:1313/posts/torchdistributed/" />
 <meta property="og:site_name" content="Narain" />
 
@@ -163,7 +163,21 @@ in ddp each gpu is controlled by a worker process
   
 
   <div class="post-content"><div>
-        <ul>
+        <h1 id="distributed-training">Distributed training<a href="#distributed-training" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<h2 id="gradient-accumlation">Gradient accumlation<a href="#gradient-accumlation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>synchronous gradient descent</li>
+<li>asynchronous gradient descent</li>
+<li>worker nodes</li>
+<li>driver nodes</li>
+<li>horovod</li>
+</ul>
+<h2 id="hardparts">Hardparts<a href="#hardparts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>
+<p>batchnorm
+batch norm is a</p>
+</li>
 <li>
 <p>dp ddp mp
 different training regimes how each does it speed up the process what is the difficulty of training regimes that exists now
