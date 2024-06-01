@@ -55,6 +55,7 @@ over the entire tensor to calculate the softmax, makind it less cache-friendly a
 &lt;h2 id="introducing-online-softmax">Introducing Online Softmax&lt;/h2>
 &lt;p>To address these inefficiencies, we can explore an alternative approach known as online softmax. This method aims to
 improve computational efficiency and cache performance by processing the data in a more streamlined manner.&lt;/p>
+&lt;p>&lt;img alt="static" src="/images/softmax-online.png">&lt;/p>
 &lt;ol>
 &lt;li>
 &lt;p>Single pass for maximum and sum calculation:&lt;/p>
