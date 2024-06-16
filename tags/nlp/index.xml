@@ -90,36 +90,48 @@ without bias towards any particular language&amp;rsquo;s syntax or morphology.&l
 &lt;ul>
 &lt;li>Initial Text&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>ABABCABCD
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>ABABCABCD&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Count frequency of pairs&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB: 3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BA: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>BC: 2
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CA: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>AB: 3
+BA: 1
+BC: 2
+CA: 1
+CD: 1&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Most frequent pair&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>AB
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>AB&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Replace &lt;code>ab&lt;/code> with a new symbol say `x'&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>New text: XAXCXCD
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>New text: XAXCXCD&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Count the frequency of pairs in new text:&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XA: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>AX: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>XC: 2
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CX: 1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CD: 1
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>XA: 1
+AX: 1
+XC: 2
+CX: 1
+CD: 1&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Most frequent pair:&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>XC
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>XC&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Repeat the same process until the desired number of tokens is achieved&lt;/li>
 &lt;/ul>
 &lt;h2 id="sentencepiece-tokenizer-1">SentencePiece Tokenizer&lt;/h2>
@@ -145,12 +157,16 @@ the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;ul>
 &lt;li>Initial text&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>this is a simple example
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>this is a simple example&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>segment the text into characters&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>t h i s _ i s _ a _ s i m p l e _ e x a m p l e
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>t h i s _ i s _ a _ s i m p l e _ e x a m p l e&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>
 &lt;p>count the frequency of each character and pair of characters, then merge the most frequent pairs iteratively&lt;/p>
 &lt;/li>
@@ -158,9 +174,12 @@ the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;p>assume the vocabulary learned contains&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>{&amp;#39;th&amp;#39;, &amp;#39;is&amp;#39;, &amp;#39;_&amp;#39;, &amp;#39;a&amp;#39;, &amp;#39;si&amp;#39;, &amp;#39;mple&amp;#39;, &amp;#39;ex&amp;#39;, &amp;#39;amp&amp;#39;, &amp;#39;le&amp;#39;}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;blockquote>
+&lt;p>{&amp;rsquo;th&amp;rsquo;, &amp;lsquo;is&amp;rsquo;, &amp;lsquo;_&amp;rsquo;, &amp;lsquo;a&amp;rsquo;, &amp;lsquo;si&amp;rsquo;, &amp;lsquo;mple&amp;rsquo;, &amp;rsquo;ex&amp;rsquo;, &amp;lsquo;amp&amp;rsquo;, &amp;rsquo;le&amp;rsquo;}&lt;/p>
+&lt;/blockquote>
+&lt;ul>
 &lt;li>Tokenize the text using learned vocabulary&lt;/li>
 &lt;/ul>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></content></item></channel></rss>
+&lt;blockquote>
+&lt;p>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]&lt;/p>
+&lt;/blockquote></content></item></channel></rss>
