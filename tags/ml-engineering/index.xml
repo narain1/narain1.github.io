@@ -16,7 +16,10 @@ technique used to optimize these models by mimicking a data representations. Dur
 parameters or weights based on the difference between its predictions and the actual outputs. This difference is qualified through a loss
 function, which measures the model performance. The backward pass of training involves updating these weights by calculating gradients, which
 are essentially directions and magnitudes for improving model predictions.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/deep-learning1.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/deep-learning1.png" alt="fully sharded data parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >conventional deep learning flow&lt;/figcaption>
+&lt;/figure>
 &lt;p>To manage these gradients, optimizers like Adam are employed. These optimizers not only update the weights based on the gradients but also
 keep track of past gradient values to make informed adjustments, enhancing the efficiency and stability of the learning process.&lt;/p>
 &lt;p>In the context of distributed deep learning, the training process is expanded across multiple machines. This setup requires a synchronized
@@ -40,7 +43,10 @@ on dividing the compute heavy tasks among multiple GPUs. This kind of splitting 
 &lt;li>data parallel&lt;/li>
 &lt;li>tensor parallel&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img alt="static" src="/images/deep-learning2.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/deep-learning2.png" alt="model parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Model Parallel&lt;/figcaption>
+&lt;/figure>
 &lt;p>model parallel is the easiest to implement as we dont have multiple replicas of the same parameter and no reduction is required. The only change
 required from the normal training routine is at some point the intermediate outputs need to be transferred from one GPU to the other.&lt;/p>
 &lt;h3 id="data-parallelism">Data Parallelism&lt;/h3>
@@ -59,7 +65,10 @@ but only updates the weights interleaved.&lt;/p>
 In this setup, a central server aggregates the gradients from all GPU&amp;rsquo;s. This method, however has scalability limitations. As the number of GPUs
 increases often going beyond ten the parameter server can become a bottleneck, straining under the heavy load of receiving and processing gradients
 from each unit. This can potentially halt the training process, affecting efficiency and scalability.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/paramter-server.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/paramter-server.png" alt="parameter server" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Parameter server&lt;/figcaption>
+&lt;/figure>
 &lt;p>Frameworks like tensorflow have addresed some of these issues by implementing advanced versions of the parameter server model, which are designed
 to handle large clussters more effectively. In addition to the challenges of gradient averaging, data parallelism must also manage synchronization
 issues that arise when nodes vary in computational speed. This variation can introduce a problem known as staleness, where the updates from
@@ -73,7 +82,10 @@ idle time that can significantly reduce overall system efficiency.&lt;/p>
 &lt;/blockquote>
 &lt;p>This staleness not only affect the synchronization step but can also impact the accuracy and convergence of the model. If gradients from slower
 nodes are outdated by the time they are integrated, they might not accurately represent the current state of the model leading to suboptimal updates.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/model-synchronization1.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/model-synchronization1.png" alt="Model synchronization" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Model Synchronization&lt;/figcaption>
+&lt;/figure>
 &lt;p>To mitigate these issues, various synchronization strategies are employed. One common approach is to use barrier synchronization, where all nodes
 must reach a certain point in the computation before any of them can proceed. This ensures that all gradient updates are based on the same version
 of the model, preventing staleness. However this method can lead to increased waiting times, as all nodes are forced to operate at the pace
@@ -89,7 +101,10 @@ parameter server and significantly reducing the communication overhead.&lt;/p>
 the efficiency of data synchronization across multiple GPUs by employing the ring allreduce algorithm. This method is specifically designed
 to minimize the communication overhead by reducing the number of simultaneous data transfers, thus avoiding bandwidth saturation and
 ensuring a stable and fast data exchange.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/ring-allreduce.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/ring-allreduce.png" alt="fully sharded data parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >ring all-reduce&lt;/figcaption>
+&lt;/figure>
 &lt;p>The ring-allreduce algorithm operates by organizing each GPU into a virtual ring topology. It begins by dividing the gradient data into
 equal segments and assigning each segment to a GPU. In this setup, each node is responsible for sending a segment of its data to its
 neighbor on the right and simultaneously recieving a segment from its neighbor on the left. Upon recieving a segment, a node quickly combines it

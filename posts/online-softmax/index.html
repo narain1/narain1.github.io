@@ -6,67 +6,75 @@ These models produce output predictions for all possible classes, but these pred
 any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
 probabilities that sum to one, making them interpretable</p><h2 id=the-role-of-softmax-in-classification>The role of Softmax in Classification<a href=#the-role-of-softmax-in-classification class=hanchor arialabel=Anchor>&#8983;</a></h2><h3 id=why-softmax>Why softmax?<a href=#why-softmax class=hanchor arialabel=Anchor>&#8983;</a></h3><p>Raw model outputs, or logits can lie anywhere within the floating-point number range, making them difficult to interpret. The
 Softmax function addresses this by normalizing the logits into a probability distribution. This allows us to understand the model&rsquo;s
-confidence in its predictions.</p><h2 id=steps-to-calculate-sofmax>Steps to calculate Sofmax<a href=#steps-to-calculate-sofmax class=hanchor arialabel=Anchor>&#8983;</a></h2><p><img alt=static src=/posts/online-softmax/images/softmax_default.png></p><ol><li><p>Normalizing by maximum logit:</p><ul><li>The first step involves calculating the maximum value among the model&rsquo;s outputs. This helps in normalizing the outputs
+confidence in its predictions.</p><h2 id=steps-to-calculate-sofmax>Steps to calculate Sofmax<a href=#steps-to-calculate-sofmax class=hanchor arialabel=Anchor>&#8983;</a></h2><figure class=center><img src=/images/softmax_default.png alt="default softmax function" style=border-radius:8px><figcaption class=center>Simple Softmax implementation</figcaption></figure><ol><li><p>Normalizing by maximum logit:</p><ul><li>The first step involves calculating the maximum value among the model&rsquo;s outputs. This helps in normalizing the outputs
 and prevents potential overflow issues during exponentiation.</li></ul></li><li><p>Exponentiation:</p><ul><li>Next we subtract the maximum logit from each logit and calculate the exponent of these normalized values. This step transforms
 the logits into a form where they can be compared proportionally.</li></ul></li><li><p>Division by sum of exponents:</p><ul><li>Finally we divide each exponentiated value by the sum of all exponentiated values. This step ensures that the resulting
-probabilities sum to one, providing a valid probability distribution.</li></ul></li></ol><h4 id=softmax-implementation-in-python>Softmax implementation in python<a href=#softmax-implementation-in-python class=hanchor arialabel=Anchor>&#8983;</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> torch
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>softmax</span>(x):
-</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Compute softmax values for each set of scores in x.&#34;&#34;&#34;</span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>not</span> isinstance(x, torch<span style=color:#f92672>.</span>Tensor):
-</span></span><span style=display:flex><span>        x <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor(x, dtype<span style=color:#f92672>=</span>torch<span style=color:#f92672>.</span>float32)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    x_max <span style=color:#f92672>=</span> x<span style=color:#f92672>.</span>max(dim<span style=color:#f92672>=-</span><span style=color:#ae81ff>1</span>, keepdim<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)<span style=color:#f92672>.</span>values
-</span></span><span style=display:flex><span>    e_x <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>exp(x <span style=color:#f92672>-</span> x_max)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> e_x <span style=color:#f92672>/</span> e_x<span style=color:#f92672>.</span>sum(dim<span style=color:#f92672>=-</span><span style=color:#ae81ff>1</span>, keepdim<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Example usage</span>
-</span></span><span style=display:flex><span>input_tensor <span style=color:#f92672>=</span> torch<span style=color:#f92672>.</span>tensor([<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>2.0</span>, <span style=color:#ae81ff>3.0</span>])
-</span></span><span style=display:flex><span>softmax_output <span style=color:#f92672>=</span> softmax(input_tensor)
-</span></span><span style=display:flex><span>print(softmax_output)
-</span></span></code></pre></div><p>As we can see, the standard Softmax algorithm has some drawbacks. One significant issue is that it requires multiple passes
+probabilities sum to one, providing a valid probability distribution.</li></ul></li></ol><div class=collapsable-code><input id=1 type=checkbox checked>
+<label for=1><span class=collapsable-code__language>python</span>
+<span class=collapsable-code__title>Softmax implementation pytorch</span>
+<span class=collapsable-code__toggle data-label-expand=show data-label-collapse=hide></span></label><pre class=language-python><code>
+import torch
+
+def softmax(x):
+    &#34;&#34;&#34;Compute softmax values for each set of scores in x.&#34;&#34;&#34;
+    if not isinstance(x, torch.Tensor):
+        x = torch.tensor(x, dtype=torch.float32)
+
+    x_max = x.max(dim=-1, keepdim=True).values
+    e_x = torch.exp(x - x_max)
+
+    return e_x / e_x.sum(dim=-1, keepdim=True)
+
+# Example usage
+input_tensor = torch.tensor([1.0, 2.0, 3.0])
+softmax_output = softmax(input_tensor)
+print(softmax_output)
+</code></pre></div><p>As we can see, the standard Softmax algorithm has some drawbacks. One significant issue is that it requires multiple passes
 over the entire tensor to calculate the softmax, makind it less cache-friendly and potentially inefficient.</p><h2 id=introducing-online-softmax>Introducing Online Softmax<a href=#introducing-online-softmax class=hanchor arialabel=Anchor>&#8983;</a></h2><p>To address these inefficiencies, we can explore an alternative approach known as online softmax. This method aims to
-improve computational efficiency and cache performance by processing the data in a more streamlined manner.</p><p><img alt=static src=/images/softmax-online.png></p><ol><li><p>Single pass for maximum and sum calculation:</p><ul><li>Instead of first finding the maximum value in one pass and then computing the sum of exponentials in another,
+improve computational efficiency and cache performance by processing the data in a more streamlined manner.</p><figure class=center><img src=/images/softmax-online.png alt="Online softmax" style=border-radius:8px><figcaption class=center>Online Softmax</figcaption></figure><ol><li><p>Single pass for maximum and sum calculation:</p><ul><li>Instead of first finding the maximum value in one pass and then computing the sum of exponentials in another,
 this code combines these operation. When a new maximum value is found the sum is adjusted accordingly, ensuring
 accuracy without additional passes.</li></ul></li><li><p>Numerical Stability</p><ul><li>By subtracting the maximum value <code>maxval</code> from each element before exponentiation, the code prevents potential overflow
 issues that could occur with large input values.</li></ul></li><li><p>Efficiency:</p><ul><li>This approach is more cache-friendly as it reduces the number of passes over the data, thus maximising the number of times the
-data needs to be fetched from memory.</li></ul></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;math.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;float.h&gt;  // For FLT_MAX</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>softmax_forward_online_cpu</span>(<span style=color:#66d9ef>float</span><span style=color:#f92672>*</span> out, <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>float</span><span style=color:#f92672>*</span> inp, <span style=color:#66d9ef>int</span> N, <span style=color:#66d9ef>int</span> C) {
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// inp is (N, C)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// out is (N, C), each row of inp will get softmaxed
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// Iterate over each row
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> N; i<span style=color:#f92672>++</span>) {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>float</span><span style=color:#f92672>*</span> inp_row <span style=color:#f92672>=</span> inp <span style=color:#f92672>+</span> i <span style=color:#f92672>*</span> C; <span style=color:#75715e>// Pointer to the current input row
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>float</span><span style=color:#f92672>*</span> out_row <span style=color:#f92672>=</span> out <span style=color:#f92672>+</span> i <span style=color:#f92672>*</span> C;       <span style=color:#75715e>// Pointer to the current output row
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>float</span> maxval <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>FLT_MAX; <span style=color:#75715e>// Initialize max value to a very small number
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>float</span> sum <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.0f</span>;        <span style=color:#75715e>// Initialize sum of exponentials to 0
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e>// First pass: find the max value and calculate the sum of exponentials
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> j <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; j <span style=color:#f92672>&lt;</span> C; j<span style=color:#f92672>++</span>) {
-</span></span><span style=display:flex><span>            <span style=color:#66d9ef>float</span> maxval_prev <span style=color:#f92672>=</span> maxval; <span style=color:#75715e>// Store previous max value
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#66d9ef>if</span> (inp_row[j] <span style=color:#f92672>&gt;</span> maxval) {
-</span></span><span style=display:flex><span>                <span style=color:#75715e>// Update max value if current element is greater
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                maxval <span style=color:#f92672>=</span> inp_row[j];
-</span></span><span style=display:flex><span>                <span style=color:#75715e>// Adjust the sum with the new max value
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                sum <span style=color:#f92672>=</span> sum <span style=color:#f92672>*</span> <span style=color:#a6e22e>expf</span>(maxval_prev <span style=color:#f92672>-</span> maxval) <span style=color:#f92672>+</span> <span style=color:#a6e22e>expf</span>(inp_row[j] <span style=color:#f92672>-</span> maxval);
-</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>                <span style=color:#75715e>// Update sum if max value does not change
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                sum <span style=color:#f92672>+=</span> <span style=color:#a6e22e>expf</span>(inp_row[j] <span style=color:#f92672>-</span> maxval);
-</span></span><span style=display:flex><span>            }
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e>// Second pass: calculate the softmax probabilities
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> j <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; j <span style=color:#f92672>&lt;</span> C; j<span style=color:#f92672>++</span>) {
-</span></span><span style=display:flex><span>            out_row[j] <span style=color:#f92672>=</span> <span style=color:#a6e22e>expf</span>(inp_row[j] <span style=color:#f92672>-</span> maxval) <span style=color:#f92672>/</span> sum; <span style=color:#75715e>// Normalize each element
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        }
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>This code becomes even more efficient when used on GPU&rsquo;s as all tensor data can be moved to GPU&rsquo;s shared memory</p><h1 id=references>References<a href=#references class=hanchor arialabel=Anchor>&#8983;</a></h1><ul><li><a href=https://arxiv.org/pdf/1805.02867>Online normalizer calculation for softmax Paper</a></li></ul></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><span class="button previous"><a href=/posts/torchdistributed/><span class=button__icon>←</span>
+data needs to be fetched from memory.</li></ul></li></ol><div class=collapsable-code><input id=2 type=checkbox checked>
+<label for=2><span class=collapsable-code__language>C</span>
+<span class=collapsable-code__title>Online Softmax implementation</span>
+<span class=collapsable-code__toggle data-label-expand=show data-label-collapse=hide></span></label><pre class=language-C><code>
+{#include &lt;math.h&gt;
+#include &lt;float.h&gt;  // For FLT_MAX
+
+void softmax_forward_online_cpu(float* out, const float* inp, int N, int C) {
+    // inp is (N, C)
+    // out is (N, C), each row of inp will get softmaxed
+
+    // Iterate over each row
+    for (int i = 0; i &lt; N; i&#43;&#43;) {
+        const float* inp_row = inp &#43; i * C; // Pointer to the current input row
+        float* out_row = out &#43; i * C;       // Pointer to the current output row
+
+        float maxval = -FLT_MAX; // Initialize max value to a very small number
+        float sum = 0.0f;        // Initialize sum of exponentials to 0
+
+        // First pass: find the max value and calculate the sum of exponentials
+        for (int j = 0; j &lt; C; j&#43;&#43;) {
+            float maxval_prev = maxval; // Store previous max value
+            if (inp_row[j] &gt; maxval) {
+                // Update max value if current element is greater
+                maxval = inp_row[j];
+                // Adjust the sum with the new max value
+                sum = sum * expf(maxval_prev - maxval) &#43; expf(inp_row[j] - maxval);
+            } else {
+                // Update sum if max value does not change
+                sum &#43;= expf(inp_row[j] - maxval);
+            }
+        }
+
+        // Second pass: calculate the softmax probabilities
+        for (int j = 0; j &lt; C; j&#43;&#43;) {
+            out_row[j] = expf(inp_row[j] - maxval) / sum; // Normalize each element
+        }
+    }
+}
+</code></pre></div><p>This code becomes even more efficient when used on GPU&rsquo;s as all tensor data can be moved to GPU&rsquo;s shared memory</p><h1 id=references>References<a href=#references class=hanchor arialabel=Anchor>&#8983;</a></h1><ul><li><a href=https://arxiv.org/pdf/1805.02867>Online normalizer calculation for softmax Paper</a></li></ul></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><span class="button previous"><a href=/posts/torchdistributed/><span class=button__icon>←</span>
 <span class=button__text>Distributed Training</span>
 </a></span><span class="button next"><a href=/posts/sentencepiece-tokenizer/><span class=button__text>Sentencepiece Tokenizer</span>
 <span class=button__icon>→</span></a></span></div></div></article></div><footer class=footer><div class=footer__inner><div class=copyright><span>© 2024 Powered by <a href=https://gohugo.io>Hugo</a></span>

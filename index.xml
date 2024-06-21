@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 07 Apr 2024 12:44:46 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 20 Jun 2024 01:10:00 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
 These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
 hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
 extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p>
@@ -16,7 +16,10 @@ technique used to optimize these models by mimicking a data representations. Dur
 parameters or weights based on the difference between its predictions and the actual outputs. This difference is qualified through a loss
 function, which measures the model performance. The backward pass of training involves updating these weights by calculating gradients, which
 are essentially directions and magnitudes for improving model predictions.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/deep-learning1.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/deep-learning1.png" alt="fully sharded data parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >conventional deep learning flow&lt;/figcaption>
+&lt;/figure>
 &lt;p>To manage these gradients, optimizers like Adam are employed. These optimizers not only update the weights based on the gradients but also
 keep track of past gradient values to make informed adjustments, enhancing the efficiency and stability of the learning process.&lt;/p>
 &lt;p>In the context of distributed deep learning, the training process is expanded across multiple machines. This setup requires a synchronized
@@ -40,7 +43,10 @@ on dividing the compute heavy tasks among multiple GPUs. This kind of splitting 
 &lt;li>data parallel&lt;/li>
 &lt;li>tensor parallel&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img alt="static" src="/images/deep-learning2.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/deep-learning2.png" alt="model parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Model Parallel&lt;/figcaption>
+&lt;/figure>
 &lt;p>model parallel is the easiest to implement as we dont have multiple replicas of the same parameter and no reduction is required. The only change
 required from the normal training routine is at some point the intermediate outputs need to be transferred from one GPU to the other.&lt;/p>
 &lt;h3 id="data-parallelism">Data Parallelism&lt;/h3>
@@ -59,7 +65,10 @@ but only updates the weights interleaved.&lt;/p>
 In this setup, a central server aggregates the gradients from all GPU&amp;rsquo;s. This method, however has scalability limitations. As the number of GPUs
 increases often going beyond ten the parameter server can become a bottleneck, straining under the heavy load of receiving and processing gradients
 from each unit. This can potentially halt the training process, affecting efficiency and scalability.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/paramter-server.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/paramter-server.png" alt="parameter server" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Parameter server&lt;/figcaption>
+&lt;/figure>
 &lt;p>Frameworks like tensorflow have addresed some of these issues by implementing advanced versions of the parameter server model, which are designed
 to handle large clussters more effectively. In addition to the challenges of gradient averaging, data parallelism must also manage synchronization
 issues that arise when nodes vary in computational speed. This variation can introduce a problem known as staleness, where the updates from
@@ -73,7 +82,10 @@ idle time that can significantly reduce overall system efficiency.&lt;/p>
 &lt;/blockquote>
 &lt;p>This staleness not only affect the synchronization step but can also impact the accuracy and convergence of the model. If gradients from slower
 nodes are outdated by the time they are integrated, they might not accurately represent the current state of the model leading to suboptimal updates.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/model-synchronization1.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/model-synchronization1.png" alt="Model synchronization" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Model Synchronization&lt;/figcaption>
+&lt;/figure>
 &lt;p>To mitigate these issues, various synchronization strategies are employed. One common approach is to use barrier synchronization, where all nodes
 must reach a certain point in the computation before any of them can proceed. This ensures that all gradient updates are based on the same version
 of the model, preventing staleness. However this method can lead to increased waiting times, as all nodes are forced to operate at the pace
@@ -89,7 +101,10 @@ parameter server and significantly reducing the communication overhead.&lt;/p>
 the efficiency of data synchronization across multiple GPUs by employing the ring allreduce algorithm. This method is specifically designed
 to minimize the communication overhead by reducing the number of simultaneous data transfers, thus avoiding bandwidth saturation and
 ensuring a stable and fast data exchange.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/ring-allreduce.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/ring-allreduce.png" alt="fully sharded data parallel" style="border-radius: 8px;" />
+&lt;figcaption class="center" >ring all-reduce&lt;/figcaption>
+&lt;/figure>
 &lt;p>The ring-allreduce algorithm operates by organizing each GPU into a virtual ring topology. It begins by dividing the gradient data into
 equal segments and assigning each segment to a GPU. In this setup, each node is responsible for sending a segment of its data to its
 neighbor on the right and simultaneously recieving a segment from its neighbor on the left. Upon recieving a segment, a node quickly combines it
@@ -159,7 +174,10 @@ probabilities that sum to one, making them interpretable&lt;/p>
 Softmax function addresses this by normalizing the logits into a probability distribution. This allows us to understand the model&amp;rsquo;s
 confidence in its predictions.&lt;/p>
 &lt;h2 id="steps-to-calculate-sofmax">Steps to calculate Sofmax&lt;/h2>
-&lt;p>&lt;img alt="static" src="/posts/online-softmax/images/softmax_default.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/softmax_default.png" alt="default softmax function" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Simple Softmax implementation&lt;/figcaption>
+&lt;/figure>
 &lt;ol>
 &lt;li>
 &lt;p>Normalizing by maximum logit:&lt;/p>
@@ -183,29 +201,37 @@ probabilities sum to one, providing a valid probability distribution.&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ol>
-&lt;h4 id="softmax-implementation-in-python">Softmax implementation in python&lt;/h4>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">def&lt;/span> &lt;span style="color:#a6e22e">softmax&lt;/span>(x):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&amp;#34;Compute softmax values for each set of scores in x.&amp;#34;&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">not&lt;/span> isinstance(x, torch&lt;span style="color:#f92672">.&lt;/span>Tensor):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>tensor(x, dtype&lt;span style="color:#f92672">=&lt;/span>torch&lt;span style="color:#f92672">.&lt;/span>float32)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x_max &lt;span style="color:#f92672">=&lt;/span> x&lt;span style="color:#f92672">.&lt;/span>max(dim&lt;span style="color:#f92672">=-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, keepdim&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)&lt;span style="color:#f92672">.&lt;/span>values
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> e_x &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>exp(x &lt;span style="color:#f92672">-&lt;/span> x_max)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> e_x &lt;span style="color:#f92672">/&lt;/span> e_x&lt;span style="color:#f92672">.&lt;/span>sum(dim&lt;span style="color:#f92672">=-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>, keepdim&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">True&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Example usage&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>input_tensor &lt;span style="color:#f92672">=&lt;/span> torch&lt;span style="color:#f92672">.&lt;/span>tensor([&lt;span style="color:#ae81ff">1.0&lt;/span>, &lt;span style="color:#ae81ff">2.0&lt;/span>, &lt;span style="color:#ae81ff">3.0&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>softmax_output &lt;span style="color:#f92672">=&lt;/span> softmax(input_tensor)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>print(softmax_output)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As we can see, the standard Softmax algorithm has some drawbacks. One significant issue is that it requires multiple passes
+&lt;div class="collapsable-code">
+&lt;input id="1" type="checkbox" checked />
+&lt;label for="1">
+&lt;span class="collapsable-code__language">python&lt;/span>
+&lt;span class="collapsable-code__title">Softmax implementation pytorch&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="show" data-label-collapse="hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-python" >&lt;code>
+import torch
+def softmax(x):
+&amp;#34;&amp;#34;&amp;#34;Compute softmax values for each set of scores in x.&amp;#34;&amp;#34;&amp;#34;
+if not isinstance(x, torch.Tensor):
+x = torch.tensor(x, dtype=torch.float32)
+x_max = x.max(dim=-1, keepdim=True).values
+e_x = torch.exp(x - x_max)
+return e_x / e_x.sum(dim=-1, keepdim=True)
+# Example usage
+input_tensor = torch.tensor([1.0, 2.0, 3.0])
+softmax_output = softmax(input_tensor)
+print(softmax_output)
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>As we can see, the standard Softmax algorithm has some drawbacks. One significant issue is that it requires multiple passes
 over the entire tensor to calculate the softmax, makind it less cache-friendly and potentially inefficient.&lt;/p>
 &lt;h2 id="introducing-online-softmax">Introducing Online Softmax&lt;/h2>
 &lt;p>To address these inefficiencies, we can explore an alternative approach known as online softmax. This method aims to
 improve computational efficiency and cache performance by processing the data in a more streamlined manner.&lt;/p>
-&lt;p>&lt;img alt="static" src="/images/softmax-online.png">&lt;/p>
+&lt;figure class="center" >
+&lt;img src="/images/softmax-online.png" alt="Online softmax" style="border-radius: 8px;" />
+&lt;figcaption class="center" >Online Softmax&lt;/figcaption>
+&lt;/figure>
 &lt;ol>
 &lt;li>
 &lt;p>Single pass for maximum and sum calculation:&lt;/p>
@@ -230,42 +256,47 @@ data needs to be fetched from memory.&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-C" data-lang="C">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;math.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;float.h&amp;gt; // For FLT_MAX&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">softmax_forward_online_cpu&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> out, &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> inp, &lt;span style="color:#66d9ef">int&lt;/span> N, &lt;span style="color:#66d9ef">int&lt;/span> C) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// inp is (N, C)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// out is (N, C), each row of inp will get softmaxed
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Iterate over each row
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> i &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; i &lt;span style="color:#f92672">&amp;lt;&lt;/span> N; i&lt;span style="color:#f92672">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> inp_row &lt;span style="color:#f92672">=&lt;/span> inp &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">*&lt;/span> C; &lt;span style="color:#75715e">// Pointer to the current input row
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span> out_row &lt;span style="color:#f92672">=&lt;/span> out &lt;span style="color:#f92672">+&lt;/span> i &lt;span style="color:#f92672">*&lt;/span> C; &lt;span style="color:#75715e">// Pointer to the current output row
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> maxval &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">-&lt;/span>FLT_MAX; &lt;span style="color:#75715e">// Initialize max value to a very small number
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">float&lt;/span> sum &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0.0f&lt;/span>; &lt;span style="color:#75715e">// Initialize sum of exponentials to 0
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// First pass: find the max value and calculate the sum of exponentials
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> j &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; j &lt;span style="color:#f92672">&amp;lt;&lt;/span> C; j&lt;span style="color:#f92672">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> maxval_prev &lt;span style="color:#f92672">=&lt;/span> maxval; &lt;span style="color:#75715e">// Store previous max value
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (inp_row[j] &lt;span style="color:#f92672">&amp;gt;&lt;/span> maxval) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Update max value if current element is greater
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> maxval &lt;span style="color:#f92672">=&lt;/span> inp_row[j];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Adjust the sum with the new max value
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> sum &lt;span style="color:#f92672">=&lt;/span> sum &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(maxval_prev &lt;span style="color:#f92672">-&lt;/span> maxval) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Update sum if max value does not change
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> sum &lt;span style="color:#f92672">+=&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Second pass: calculate the softmax probabilities
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">int&lt;/span> j &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; j &lt;span style="color:#f92672">&amp;lt;&lt;/span> C; j&lt;span style="color:#f92672">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> out_row[j] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">expf&lt;/span>(inp_row[j] &lt;span style="color:#f92672">-&lt;/span> maxval) &lt;span style="color:#f92672">/&lt;/span> sum; &lt;span style="color:#75715e">// Normalize each element
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code becomes even more efficient when used on GPU&amp;rsquo;s as all tensor data can be moved to GPU&amp;rsquo;s shared memory&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="2" type="checkbox" checked />
+&lt;label for="2">
+&lt;span class="collapsable-code__language">C&lt;/span>
+&lt;span class="collapsable-code__title">Online Softmax implementation&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="show" data-label-collapse="hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-C" >&lt;code>
+{#include &amp;lt;math.h&amp;gt;
+#include &amp;lt;float.h&amp;gt; // For FLT_MAX
+void softmax_forward_online_cpu(float* out, const float* inp, int N, int C) {
+// inp is (N, C)
+// out is (N, C), each row of inp will get softmaxed
+// Iterate over each row
+for (int i = 0; i &amp;lt; N; i&amp;#43;&amp;#43;) {
+const float* inp_row = inp &amp;#43; i * C; // Pointer to the current input row
+float* out_row = out &amp;#43; i * C; // Pointer to the current output row
+float maxval = -FLT_MAX; // Initialize max value to a very small number
+float sum = 0.0f; // Initialize sum of exponentials to 0
+// First pass: find the max value and calculate the sum of exponentials
+for (int j = 0; j &amp;lt; C; j&amp;#43;&amp;#43;) {
+float maxval_prev = maxval; // Store previous max value
+if (inp_row[j] &amp;gt; maxval) {
+// Update max value if current element is greater
+maxval = inp_row[j];
+// Adjust the sum with the new max value
+sum = sum * expf(maxval_prev - maxval) &amp;#43; expf(inp_row[j] - maxval);
+} else {
+// Update sum if max value does not change
+sum &amp;#43;= expf(inp_row[j] - maxval);
+}
+}
+// Second pass: calculate the softmax probabilities
+for (int j = 0; j &amp;lt; C; j&amp;#43;&amp;#43;) {
+out_row[j] = expf(inp_row[j] - maxval) / sum; // Normalize each element
+}
+}
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>This code becomes even more efficient when used on GPU&amp;rsquo;s as all tensor data can be moved to GPU&amp;rsquo;s shared memory&lt;/p>
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1805.02867">Online normalizer calculation for softmax Paper&lt;/a>&lt;/li>
