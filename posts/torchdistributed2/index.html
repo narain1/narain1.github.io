@@ -7,7 +7,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="In the ever-evolving landscape of artificial intelligence and machine learning, the demand for training larger and more complex models continues to grow. Traditional techniques such as data parallelism, model parallelism, and tensor parallelism have played crucial roles in enabling this growth by distributing the training workload across multiple GPUs and machines. These methods are foundational in making large-scale training feasible by addressing issues related to computation and memory distribution.
-Where did all the memory go?" />
+Memory Consumption in Neural Networks: Where Did All the Memory Go?" />
 <meta name="keywords" content=", " />
 
   <meta name="robots" content="noodp" />
@@ -53,7 +53,7 @@ Where did all the memory go?" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Distributed Training 2 (FSDP)">
 <meta property="og:description" content="In the ever-evolving landscape of artificial intelligence and machine learning, the demand for training larger and more complex models continues to grow. Traditional techniques such as data parallelism, model parallelism, and tensor parallelism have played crucial roles in enabling this growth by distributing the training workload across multiple GPUs and machines. These methods are foundational in making large-scale training feasible by addressing issues related to computation and memory distribution.
-Where did all the memory go?" />
+Memory Consumption in Neural Networks: Where Did All the Memory Go?" />
 <meta property="og:url" content="//localhost:1313/posts/torchdistributed2/" />
 <meta property="og:site_name" content="Narain" />
 
@@ -149,7 +149,7 @@ Where did all the memory go?" />
   
     <span class="post-tags">
       
-      #<a href="//localhost:1313/tags/"></a>&nbsp;
+      #<a href="//localhost:1313/tags/machine-learning/">machine learning</a>&nbsp;
       
       #<a href="//localhost:1313/tags/"></a>&nbsp;
       
@@ -167,9 +167,99 @@ techniques such as data parallelism, model parallelism, and tensor parallelism h
 played crucial roles in enabling this growth by distributing the training workload
 across multiple GPUs and machines. These methods are foundational in making large-scale
 training feasible by addressing issues related to computation and memory distribution.</p>
-<h2 id="where-did-all-the-memory-go">Where did all the memory go?<a href="#where-did-all-the-memory-go" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h2 id="memory-consumption-in-neural-networks-where-did-all-the-memory-go">Memory Consumption in Neural Networks: Where Did All the Memory Go?<a href="#memory-consumption-in-neural-networks-where-did-all-the-memory-go" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>When training large neural network models like GPT-2, understanding memory consumption
+is crucial. Let&rsquo;s breakdown where all the memory goes and how different techniques can help
+manage it more efficiently.</p>
+<h3 id="model-weights">Model Weights<a href="#model-weights" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>The essential parameter for any neural network it the weights required to compute the
+forward pass. Model weights can be stored in multiple formats including</p>
 <ul>
-<li>activation recomputation</li>
+<li><strong>single precision (fp32)</strong>: Typically used for high accuracy.</li>
+<li><strong>half precision</strong>: Used to reduce memory consumption and computational cost</li>
+</ul>
+<h3 id="model-inference">Model Inference<a href="#model-inference" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>During inference, the memory consumption is primarily due to:</p>
+<ul>
+<li><strong>Model memory</strong>: The storage required for model weights.</li>
+<li><strong>Activation memory</strong>: The intermediate values computed during the forward pass.</li>
+</ul>
+<h3 id="model-training">Model training<a href="#model-training" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Training a model involves additional memory overhead due to:</p>
+<ul>
+<li><strong>gradient Memory</strong>: storage for gradients computed during backpropagation.</li>
+<li><strong>optimizer memory</strong>: The intermediate values computed during the forward pass.</li>
+</ul>
+<h3 id="optimizer-memory-requirements">Optimizer memory requirements<a href="#optimizer-memory-requirements" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Different optimizers have different memory requirements.</p>
+<ul>
+<li><strong>SGD (Stochastic Gradient Descent)</strong>:  requires no additional memory beyond model weights.</li>
+<li><strong>SGD with momentum</strong>: Requires additional memory equal to the size of the weights.</li>
+<li><strong>Adam</strong>: Requires twice the memory of the weights (for maintaining both the moment estimates).</li>
+</ul>
+<h3 id="techniques-for-reducing-memory-usage">Techniques for reducing Memory usage.<a href="#techniques-for-reducing-memory-usage" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>To mitigate high memory consumptioon, several techniques can be employed.</p>
+<h4 id="activation-recomputation">Activation Recomputation<a href="#activation-recomputation" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>This technique involves recomputing activations during the backward pass instead of saving them in memory.
+It can significantly reduce activation memory usage, although it may increase computational cost.</p>
+
+
+
+  <div class="collapsable-code">
+    <input id="1" type="checkbox" checked />
+    <label for="1">
+      <span class="collapsable-code__language">python</span>
+      <span class="collapsable-code__title">Activation Recomputation in Linear Layer</span>
+      <span class="collapsable-code__toggle" data-label-expand="show" data-label-collapse="hide"></span>
+    </label>
+    <pre class="language-python" ><code>
+import torch
+from torch.autograd import Function
+
+class LinearFunction(Function):
+    @staticmethod
+    def forward(ctx, input, weight, bias=None):
+        ctx.save_for_backward(input, weight)
+        output = input.mm(weight.t())
+        if bias is not None:
+            output &#43;= bias.unsqueeze(0).expand_as(output)
+        return output
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        input, weight = ctx.saved_tensors
+        grad_input = grad_weight = grad_bias = None
+
+        if ctx.needs_input_grad[0]:
+            grad_input = grad_output.mm(weight)
+        if ctx.needs_input_grad[1]:
+            grad_weight = grad_output.t().mm(input)
+        if bias is not None and ctx.needs_input_grad[2]:
+            grad_bias = grad_output.sum(0)
+
+        return grad_input, grad_weight, grad_bias
+
+class Linear(torch.nn.Module):
+    def __init__(self, input_features, output_features, bias=True):
+        super(Linear, self).__init__()
+        self.input_features = input_features
+        self.output_features = output_features
+
+        # Initialize the weight and bias parameters
+        self.weight = torch.nn.Parameter(torch.Tensor(output_features, input_features))
+        if bias:
+            self.bias = torch.nn.Parameter(torch.Tensor(output_features))
+        else:
+            self.register_parameter(&#39;bias&#39;, None)
+
+    def forward(self, input):
+        return LinearFunction.apply(input, self.weight, self.bias)
+
+</code></pre>
+  </div>
+
+
+<ul>
 <li>parameter buffer optimizer</li>
 <li>second order statistics</li>
 </ul>
@@ -201,11 +291,104 @@ possible. followed by an all-reduce operaation back to the device responsible fo
 This strategy of sharing weights among GPUs essentially increases the communication required but the
 latency for these fetch operations can be overlapped with computation operations as most of the
 deep learning operations happen in linear fashion.</p>
-<p>Zero has three different implementations based on the parameters it includes in the sharding</p>
+<p>Zero has three different stages based on the parameters it includes in the sharding</p>
+<blockquote>
 <ul>
-<li>zero 1 - sharding optimizer states</li>
-<li>zero 2 - sharding gradients + optimizer</li>
-<li>zero 3 - sharding gradients + optimizer + paramters</li>
+<li>zero 1 - optimizer</li>
+<li>zero 2 - gradients + optimizer</li>
+<li>zero 3 - gradients + optimizer + parameters</li>
+</ul>
+</blockquote>
+<p>
+  <figure class="center" >
+    <img src="/images/fsdp2.png"  alt="fully sharded data parallel"   style="border-radius: 8px;"  />
+    
+      <figcaption class="center" >fully sharded data parallel</figcaption>
+    
+  </figure>
+
+
+
+  <figure class="center" >
+    <img src="/images/fsdp3.png"  alt="fully sharded data parallel"   style="border-radius: 8px;"  />
+    
+      <figcaption class="center" >fully sharded data parallel</figcaption>
+    
+  </figure>
+
+
+
+  <figure class="center" >
+    <img src="/images/fsdp4.png"  alt="fully sharded data parallel"   style="border-radius: 8px;"  />
+    
+      <figcaption class="center" >fully sharded data parallel</figcaption>
+    
+  </figure>
+
+</p>
+
+
+
+  <div class="collapsable-code">
+    <input id="2" type="checkbox" checked />
+    <label for="2">
+      <span class="collapsable-code__language">python</span>
+      <span class="collapsable-code__title">Bert Training using zero Redundancy optimizer pytorch</span>
+      <span class="collapsable-code__toggle" data-label-expand="show" data-label-collapse="hide"></span>
+    </label>
+    <pre class="language-python" ><code>
+import torch
+from transformers import BertForMaskedLM, BertTokenizerFast
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed.optim import ZeroRedundancyOptimizer
+
+# Initialize tokenizer and model
+tokenizer = BertTokenizerFast.from_pretrained(&#39;bert-base-uncased&#39;)
+model = BertForMaskedLM.from_pretrained(&#39;bert-base-uncased&#39;)
+
+# Assuming you have your dataset in the form of a list of sentences
+sentences = [&#34;Your sentence 1&#34;, &#34;Your sentence 2&#34;, ...]
+inputs = tokenizer(sentences, padding=True, truncation=True, return_tensors=&#34;pt&#34;)
+labels = inputs.input_ids.detach().clone()
+
+# Create a mask for the input ids
+rand = torch.rand(labels.shape)
+mask_arr = (rand &lt; 0.15) * (inputs.input_ids != tokenizer.pad_token_id)
+selection = []
+for i in range(labels.shape[0]):
+    selection.append(torch.flatten(mask_arr[i].nonzero()).tolist())
+for i in range(labels.shape[0]):
+    inputs.input_ids[i, selection[i]] = tokenizer.mask_token_id
+
+# Move model and input tensors to the device
+device = torch.device(&#34;cuda&#34; if torch.cuda.is_available() else &#34;cpu&#34;)
+model.to(device)
+inputs.input_ids = inputs.input_ids.to(device)
+labels = labels.to(device)
+
+# Initialize DDP and ZeroRedundancyOptimizer
+ddp_model = DDP(model, device_ids=[torch.cuda.current_device()])
+optimizer = torch.optim.AdamW(ddp_model.parameters(), lr=1e-5)
+optimizer = ZeroRedundancyOptimizer(ddp_model.parameters(), optimizer)
+
+# Training loop
+for epoch in range(num_epochs):
+    outputs = ddp_model(**inputs, labels=labels)
+    loss = outputs.loss
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+</code></pre>
+  </div>
+
+
+<p>pytorch FSDP offers variety of sharding strategies which is determined by sharding factor F number of ranks over which parameters are
+sharded by setting the sharding factor to 1</p>
+<h1 id="references">References<a href="#references" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<ul>
+<li><a href="https://tinkerd.net/blog/machine-learning/distributed-training/">https://tinkerd.net/blog/machine-learning/distributed-training/</a></li>
+<li><a href="https://arxiv.org/abs/2304.11277">PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel</a></li>
+<li><a href="https://arxiv.org/abs/2104.07857">ZeRO-Infinity: Breaking the GPU Memory Wall for Extreme Scale Deep Learning</a></li>
 </ul>
 
       </div></div>

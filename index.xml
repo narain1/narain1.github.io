@@ -296,6 +296,45 @@ out_row[j] = expf(inp_row[j] - maxval) / sum; // Normalize each element
 }
 &lt;/code>&lt;/pre>
 &lt;/div>
+&lt;div class="collapsable-code">
+&lt;input id="3" type="checkbox" checked />
+&lt;label for="3">
+&lt;span class="collapsable-code__language">C&lt;/span>
+&lt;span class="collapsable-code__title">Online Softmax implementation CUDA&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="show" data-label-collapse="hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-C" >&lt;code>
+template &amp;lt;typename T&amp;gt;
+__global__
+void softmax_kernel_v2(T* qk_buf_, /*const T* attr_mask, */const int batch_size, const int head_num,
+const int seq_len, const T scaler)
+{
+// int batch_id = blockIdx.x / head_num / seq_len;
+// int seq_id = blockIdx.x % seq_len;
+int qk_offset = blockIdx.x * seq_len;
+// int mask_offset = batch_id * seq_len * seq_len &amp;#43; seq_id * seq_len;
+__shared__ float s_sum, s_max;
+float qk = threadIdx.x &amp;lt; seq_len ? (float)qk_buf_[threadIdx.x &amp;#43; qk_offset] : 0.0f;
+// float mask_val = threadIdx.x &amp;lt; seq_len ? (float)attr_mask[threadIdx.x &amp;#43; mask_offset] : 0.0f;
+// mask_val = (1.0f - mask_val) * -10000.0f;
+// float tmp = threadIdx.x &amp;lt; seq_len ? (float)(qk * (float)scaler &amp;#43; mask_val) : -1e20f;
+float tmp = -1e20f;
+float max_val = blockReduceMax&amp;lt;float&amp;gt;(tmp);
+if(threadIdx.x == 0)
+s_max = max_val;
+__syncthreads();
+float qk_tmp = threadIdx.x &amp;lt; seq_len ? __expf((float)(tmp - s_max)) : 0.0f;
+float sum_val = blockReduceSum&amp;lt;float&amp;gt;(qk_tmp);
+if(threadIdx.x == 0)
+{
+s_sum = sum_val &amp;#43; 1e-6f;
+}
+__syncthreads();
+if(threadIdx.x &amp;lt; seq_len)
+qk_buf_[threadIdx.x &amp;#43; qk_offset] = (T)(qk_tmp / s_sum);
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
 &lt;p>This code becomes even more efficient when used on GPU&amp;rsquo;s as all tensor data can be moved to GPU&amp;rsquo;s shared memory&lt;/p>
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
