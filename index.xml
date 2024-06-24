@@ -523,4 +523,32 @@ the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;/ul>
 &lt;blockquote>
 &lt;p>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]&lt;/p>
-&lt;/blockquote></content></item></channel></rss>
+&lt;/blockquote></content></item><item><title>Why Audio Files Are Really Hard to Compress</title><link>/posts/compression1/</link><pubDate>Fri, 24 Feb 2023 03:01:20 -0700</pubDate><guid>/posts/compression1/</guid><description>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify and eliminate redundancy without losing essential information.
+Human perception of sound Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz.</description><content>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
+signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech
+and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify
+and eliminate redundancy without losing essential information.&lt;/p>
+&lt;h2 id="human-perception-of-sound">Human perception of sound&lt;/h2>
+&lt;p>Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz. Our perception of sound is also
+influenced by various factors, such as pitch, volume, and timbre. Any compression algorithm must take these perceptual
+aspects into account to ensure that the compressed audio still sounds natural to human listeners. This requirement adds
+an extra layer of complexity to the compression process.&lt;/p>
+&lt;h2 id="ineffictive-ways-we-visualize-waveforms">Ineffictive ways we visualize waveforms&lt;/h2>
+&lt;p>Due to The huge amount of data contained in waveforms we try to interpret audio using different techniques like waveforms
+spectograms these help us get heatmaps of frequency and amplitude distributions over a period of time.&lt;/p>
+&lt;h2 id="types-of-audio-compression">Types of audio compression&lt;/h2>
+&lt;h3 id="lossless-compression">Lossless Compression:&lt;/h3>
+&lt;p>Techniques like FLAC (Free Lossless Audio Codec) preserve the exact original audio data, making it possible to reconstruct
+the original audio perfectly. However, the compression ratios achieved are relatively modest, typically reducing file sizes by about 50% at best.&lt;/p>
+&lt;h3 id="lossy-compression">Lossy Compression:&lt;/h3>
+&lt;p>Formats like MP3 and AAC use psychoacoustic models to remove sounds that are less perceivable to human ears. While
+these methods achieve higher compression ratios, they do so at the cost of some loss in audio quality. The
+challenge lies in balancing compression efficiency with audio fidelity.&lt;/p>
+&lt;h3 id="applications-in-audio-compression">Applications in Audio Compression&lt;/h3>
+&lt;h4 id="mp3-encoding">MP3 Encoding:&lt;/h4>
+&lt;p>MP3 compression uses the Modified Discrete Cosine Transform (MDCT), a variation of the Fourier Transform, to convert
+audio signals into the frequency domain. It then applies psychoacoustic models to remove inaudible frequencies and quantizes the remaining
+data to achieve compression.&lt;/p>
+&lt;h4 id="spectral-analysis">Spectral Analysis:&lt;/h4>
+&lt;p>Fourier Transform is also used in various spectral analysis techniques, which help in identifying and compressing the most important
+components of the audio signal while discarding redundant or less important parts.&lt;/p></content></item></channel></rss>
