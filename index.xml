@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 20 Jun 2024 01:10:00 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Narain</title><link>/</link><description>Recent content on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 21 Jun 2024 16:24:31 -0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
 These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
 hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
 extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p>
@@ -266,32 +266,20 @@ data needs to be fetched from memory.&lt;/li>
 &lt;pre class="language-C" >&lt;code>
 {#include &amp;lt;math.h&amp;gt;
 #include &amp;lt;float.h&amp;gt; // For FLT_MAX
-void softmax_forward_online_cpu(float* out, const float* inp, int N, int C) {
-// inp is (N, C)
-// out is (N, C), each row of inp will get softmaxed
-// Iterate over each row
-for (int i = 0; i &amp;lt; N; i&amp;#43;&amp;#43;) {
-const float* inp_row = inp &amp;#43; i * C; // Pointer to the current input row
-float* out_row = out &amp;#43; i * C; // Pointer to the current output row
-float maxval = -FLT_MAX; // Initialize max value to a very small number
-float sum = 0.0f; // Initialize sum of exponentials to 0
-// First pass: find the max value and calculate the sum of exponentials
-for (int j = 0; j &amp;lt; C; j&amp;#43;&amp;#43;) {
-float maxval_prev = maxval; // Store previous max value
-if (inp_row[j] &amp;gt; maxval) {
-// Update max value if current element is greater
-maxval = inp_row[j];
-// Adjust the sum with the new max value
-sum = sum * expf(maxval_prev - maxval) &amp;#43; expf(inp_row[j] - maxval);
+void softmax_online(const float *input, float *output, int n) {
+float max_val = -INFINITY;
+float sum = 0.0f;
+for (int i = 0; i &amp;lt; n; i&amp;#43;&amp;#43;) {
+float maxval_prev = max_val;
+if (inp_row[j] &amp;gt; max_val) {
+max_val = inp_row[j];
+sum = sum &amp;#43; expf(maxval_prev - max_val) &amp;#43; expf(inp_row[j] - max_val);
 } else {
-// Update sum if max value does not change
-sum &amp;#43;= expf(inp_row[j] - maxval);
+sum &amp;#43;= expf(inp_row[j] - max_val);
 }
 }
-// Second pass: calculate the softmax probabilities
-for (int j = 0; j &amp;lt; C; j&amp;#43;&amp;#43;) {
-out_row[j] = expf(inp_row[j] - maxval) / sum; // Normalize each element
-}
+for (int i=0; i&amp;lt;n; i&amp;#43;&amp;#43;) {
+output[i] = expf(inp_row[i] - max_val) / sum;
 }
 }
 &lt;/code>&lt;/pre>

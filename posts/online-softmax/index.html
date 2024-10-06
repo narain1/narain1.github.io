@@ -42,36 +42,20 @@ data needs to be fetched from memory.</li></ul></li></ol><div class=collapsable-
 {#include &lt;math.h&gt;
 #include &lt;float.h&gt;  // For FLT_MAX
 
-void softmax_forward_online_cpu(float* out, const float* inp, int N, int C) {
-    // inp is (N, C)
-    // out is (N, C), each row of inp will get softmaxed
-
-    // Iterate over each row
-    for (int i = 0; i &lt; N; i&#43;&#43;) {
-        const float* inp_row = inp &#43; i * C; // Pointer to the current input row
-        float* out_row = out &#43; i * C;       // Pointer to the current output row
-
-        float maxval = -FLT_MAX; // Initialize max value to a very small number
-        float sum = 0.0f;        // Initialize sum of exponentials to 0
-
-        // First pass: find the max value and calculate the sum of exponentials
-        for (int j = 0; j &lt; C; j&#43;&#43;) {
-            float maxval_prev = maxval; // Store previous max value
-            if (inp_row[j] &gt; maxval) {
-                // Update max value if current element is greater
-                maxval = inp_row[j];
-                // Adjust the sum with the new max value
-                sum = sum * expf(maxval_prev - maxval) &#43; expf(inp_row[j] - maxval);
-            } else {
-                // Update sum if max value does not change
-                sum &#43;= expf(inp_row[j] - maxval);
-            }
+void softmax_online(const float *input, float *output, int n) {
+    float max_val = -INFINITY;
+    float sum = 0.0f;
+    for (int i = 0; i &lt; n; i&#43;&#43;) {
+        float maxval_prev = max_val;
+        if (inp_row[j] &gt; max_val) {
+            max_val = inp_row[j];
+            sum = sum &#43; expf(maxval_prev - max_val) &#43; expf(inp_row[j] - max_val);
+        } else {
+            sum &#43;= expf(inp_row[j] - max_val);
         }
-
-        // Second pass: calculate the softmax probabilities
-        for (int j = 0; j &lt; C; j&#43;&#43;) {
-            out_row[j] = expf(inp_row[j] - maxval) / sum; // Normalize each element
-        }
+    }
+    for (int i=0; i&lt;n; i&#43;&#43;) {
+        output[i] = expf(inp_row[i] - max_val) / sum;
     }
 }
 </code></pre></div><div class=collapsable-code><input id=3 type=checkbox checked>
