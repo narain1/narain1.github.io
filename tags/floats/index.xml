@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Floats on Narain</title>
+    <link>//localhost:1313/tags/floats/</link>
+    <description>Recent content in Floats on Narain</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 21 Mar 2024 16:24:31 -0700</lastBuildDate><atom:link href="//localhost:1313/tags/floats/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>dont misuse floating point numbers</title>
+      <link>//localhost:1313/posts/float32/</link>
+      <pubDate>Thu, 21 Mar 2024 16:24:31 -0700</pubDate>
+      
+      <guid>//localhost:1313/posts/float32/</guid>
+      <description>introduction In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile, resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the critical importance of understanding floating point numbers in computer systems. Floating point representation allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.</description>
+      <content>&lt;h2 id=&#34;introduction&#34;&gt;introduction&lt;/h2&gt;
+&lt;p&gt;In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
+resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
+accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
+critical importance of understanding floating point numbers in computer systems. Floating point representation
+allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.
+However, it also introduces complexities and potential inaccuracies that programmers must carefully navigate.&lt;/p&gt;
+&lt;p&gt;It is important to understand the way we represent floating point numbers in computers to avoid unwanted edge
+cases in programming. if you are considering to use float32 for managing your finances just because you would be able
+to represent cents be mindful that IEEE 754 skips a number after 2^24 (16,777,217). At this point you are not only missing
+numbers but errors due to calculations keeps on adding up.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Disclaimer Throughout this writeup i will be consistently switching between hardware and its usecases in 
+writing applications as we are bound by the hardware design
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;how-is-floating-point-numbers-represented-in-binary&#34;&gt;how is floating point numbers represented in binary&lt;/h3&gt;
+
+  &lt;figure class=&#34;center&#34; &gt;
+    &lt;img src=&#34;//localhost:1313/images/floatvsint.png&#34;  alt=&#34;Binary Representations&#34;   /&gt;
+    
+      &lt;figcaption class=&#34;center&#34; &gt;Binary Representations&lt;/figcaption&gt;
+    
+  &lt;/figure&gt;
+
+
+&lt;p&gt;sing base-2 (binary) representation for floating point numbers minimizes rounding errors compared to
+higher bases. Higher base systems often introduce unused bits, leading to inefficient memory usage.
+Furthermore, binary representation aligns with how electronic systems naturally process and store
+data, making it the optimal choice for computational tasks&lt;/p&gt;
+&lt;p&gt;Real numbers are infinite between any two integers, but representing them on computers with
+fixed bit widths involves trade-offs. The density of floating point numbers decays
+exponentially as we move away from zero, meaning that more precision is available near
+zero and less as values grow larger. Squeezing infinitely many real numbers into a
+fixed bit width necessitates approximations. As a result, there are more representable numbers
+between -2 and 2 than in other regions of the number line.&lt;/p&gt;
+
+
+
+  &lt;div class=&#34;collapsable-code&#34;&gt;
+    &lt;input id=&#34;1&#34; type=&#34;checkbox&#34; checked /&gt;
+    &lt;label for=&#34;1&#34;&gt;
+      &lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;
+      &lt;span class=&#34;collapsable-code__title&#34;&gt;floating point numbers skipping&lt;/span&gt;
+      &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;show&#34; data-label-collapse=&#34;hide&#34;&gt;&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;pre class=&#34;language-c&#34; &gt;&lt;code&gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;math.h&amp;gt;
+
+int main() {
+  float a = (float)pow(2, 24);
+  for (int i = 1; i &amp;lt; 10; i&amp;#43;&amp;#43;) {
+    printf(&amp;#34;%d, %f\n&amp;#34;, i, a &amp;#43; i);
+  }
+}
+
+// 2**24 &amp;#43; 1 = 16777216.000000
+// 2**24 &amp;#43; 2 = 16777218.000000
+// 2**24 &amp;#43; 3 = 16777220.000000
+// 2**24 &amp;#43; 4 = 16777220.000000
+// 2**24 &amp;#43; 5 = 16777220.000000
+// 2**24 &amp;#43; 6 = 16777222.000000
+// 2**24 &amp;#43; 7 = 16777224.000000
+// 2**24 &amp;#43; 8 = 16777224.000000
+// 2**24 &amp;#43; 9 = 16777224.000000
+
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+
+
+&lt;p&gt;From the above example we observe that as numbers get larger the spacing between consecutive
+representable numbers increases. The above case at 2^24 floating point format cannot represent every
+integer precisely beyond this point.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;2^24 + 1 the floating point precision is insufficient to capture the difference of just 1 due to rounding error&lt;/li&gt;
+&lt;li&gt;2^24 + 2 the floating point precision allows 16777218 to be represented and skips over 16777217.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;this phenomenon is called as &lt;code&gt;floating point precision loss&lt;/code&gt; at higher magnitudes, more integers are
+skipped because the system can&amp;rsquo;t represent every possible number within the limited floating point precision.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;FACT:
+javascript uses float64 to represent all numeric data types
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;history-of-floating-point-numbers&#34;&gt;History of Floating point numbers&lt;/h2&gt;
+&lt;p&gt;Computers started with support only for integers initially as time progressed the
+necassity to represent decimal numbers increased. Programmers started to emulate floating
+point arithmatic below provided code example&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;how its range changes from integers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;integer representations like int32 have a specified range and does not skip a number.
+meanwhile float32 contains multiple moving parts like sign, mantissa and exponent and
+unlike&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;how useful it is with respect to deep learning&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;efficiency-to-high-precision-calculations&#34;&gt;Efficiency to high precision calculations&lt;/h2&gt;
+&lt;p&gt;floating point operations are not commutative a + b != b + a for low precision arithmetic
+this increases rounding errors when running operations on embarassingly parallel applications
+where threads do not process operands in order.&lt;/p&gt;
+&lt;h2 id=&#34;further-reads&#34;&gt;Further reads&lt;/h2&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
