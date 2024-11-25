@@ -119,18 +119,6 @@ complex algorithms, which required more operations than simple integer addition 
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">*&lt;/span>((&lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span>)&lt;span style="color:#f92672">&amp;amp;&lt;/span>result_bits);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> num1 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3.5&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> num2 &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">1.25&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">emulate_float_add&lt;/span>(num1, num2);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Emulated addition result: %f&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, result);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Actual addition result: %f&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, num1 &lt;span style="color:#f92672">+&lt;/span> num2);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Recognizing the inefficiency of these emulations, chip manufacturers started designing dedicated hardware, such
 as floating-point registers, to execute floating-point instructions in a single cycle. These
 registers adhere to the IEEE 754 standard, which defines the floating-point format with 1 sign

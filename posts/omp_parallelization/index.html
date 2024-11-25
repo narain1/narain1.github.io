@@ -1,0 +1,390 @@
+<!doctype html><html lang=en><head><title>OMP parallelization :: Narain</title>
+<meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran. It&rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.
+OpenMP does the heavy lifting in several areas:
+Thread Management: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management. Work Distribution: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute. Synchronization: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely. Data Management: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies. OpenMP makes it easy to experiment with parallelism by:
+"><meta name=keywords content=","><meta name=robots content="noodp"><link rel=canonical href=/posts/omp_parallelization/><link rel=stylesheet href=/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css><link rel=stylesheet href=/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css><link rel=stylesheet href=/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css><link rel=stylesheet href=/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css><link rel=stylesheet href=/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css><link rel=stylesheet href=/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css><link rel=stylesheet href=/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css><link rel=stylesheet href=/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css><link rel=stylesheet href=/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css><link rel=stylesheet href=/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css><link rel=stylesheet href=/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css><link rel=stylesheet href=/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css><link rel=stylesheet href=/css/terminal.min.0b4ff4e0376896fa06ce9762c55cfe3b00fa64e8324a8fc5e3417945df607f7a.css><link rel=stylesheet href=/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css><link rel="shortcut icon" href=/favicon.png><link rel=apple-touch-icon href=/apple-touch-icon.png><meta name=twitter:card content="summary"><meta name=twitter:site content><meta name=twitter:creator content><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="og:title" content="OMP parallelization"><meta property="og:description" content="OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran. It&rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.
+OpenMP does the heavy lifting in several areas:
+Thread Management: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management. Work Distribution: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute. Synchronization: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely. Data Management: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies. OpenMP makes it easy to experiment with parallelism by:
+"><meta property="og:url" content="/posts/omp_parallelization/"><meta property="og:site_name" content="Narain"><meta property="og:image" content="/"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="627"><meta property="article:published_time" content="2024-11-20 01:15:54 -0700 MST"></head><body><div class="container center"><header class=header><div class=header__inner><div class=header__logo><a href=/><div class=logo>Narain</div></a></div><ul class="menu menu--mobile"><li class=menu__trigger>Menu&nbsp;▾</li><li><ul class=menu__dropdown><li><a href=/about>About</a></li><li><a href=https://narain1.netlify.app>portfolio</a></li></ul></li></ul></div><nav class=navigation-menu><ul class="navigation-menu__inner menu--desktop"><li><a href=/about>About</a></li><li><a href=https://narain1.netlify.app>portfolio</a></li></ul></nav></header><div class=content><article class=post><h1 class=post-title><a href=/posts/omp_parallelization/>OMP parallelization</a></h1><div class=post-meta><time class=post-date>2024-11-20</time></div><span class=post-tags>#<a href=/tags/></a>&nbsp;
+#<a href=/tags/></a>&nbsp;</span><div class=post-content><div><p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
+It&rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to
+write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.</p><p>OpenMP does the heavy lifting in several areas:</p><ol><li><strong>Thread Management</strong>: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management.</li><li><strong>Work Distribution</strong>: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute.</li><li><strong>Synchronization</strong>: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely.</li><li><strong>Data Management</strong>: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies.</li></ol><p>OpenMP makes it easy to experiment with parallelism by:</p><ol><li><strong>Incremental Parallelism</strong>: OpenMP allows developers to incrementally add parallelism to existing serial code, making it easier to test and refine parallel code.</li><li><strong>Simple Directives</strong>: OpenMP uses simple directives (e.g., <code>#pragma omp parallel</code>) to indicate parallel regions, making it easy to write parallel code.</li><li><strong>Portability</strong>: OpenMP code is portable across different platforms, including Windows, macOS, and Linux.</li></ol><p><strong>Comparison with POSIX Threads (pthreads)</strong></p><p>POSIX threads (pthreads) is a low-level, Unix-based threading API that provides a way to create and manage threads. Here&rsquo;s a comparison with OpenMP:</p><p>Note: this blog stands as a code first introduction of the directives and clauses that openmp provides
+most of the time you can get away with just using openmp for loop parallelization but when you want to
+get a little deeper into scheduling and having private and reduction variables this would stand as
+a all in place reference.</p><h3 id=openmp-directives>OpenMP Directives<a href=#openmp-directives class=hanchor arialabel=Anchor>#</a></h3><ul><li><a href=/posts/omp_parallelization/#parallel-directive>Parallel Directive</a></li><li><a href=/posts/omp_parallelization/#sections-directive>Sections Directive</a></li><li><a href=/posts/omp_parallelization/#single-directive>Single Directive</a></li><li><a href=/posts/omp_parallelization/#master-directive>Master Directive</a></li><li><a href=/posts/omp_parallelization/#critical-directive>Critical Directive</a></li><li><a href=/posts/omp_parallelization/#barrier-directive>Barrier Directive</a></li></ul><h3 id=openmp-clauses>OpenMP Clauses<a href=#openmp-clauses class=hanchor arialabel=Anchor>#</a></h3><ul><li><a href=/posts/omp_parallelization/#private-clause>Private Clause</a></li><li><a href=/posts/omp_parallelization/#firstprivate-clause>Firstprivate Clause</a></li><li><a href=/posts/omp_parallelization/#lastprivate-clause>Lastprivate Clause</a></li><li><a href=/posts/omp_parallelization/#reduction-clause>Reduction Clause</a></li><li><a href=/posts/omp_parallelization/#schedule-clause>Schedule Clause</a><ul><li><a href=/posts/omp_parallelization/#static-schedule>Static Schedule</a></li><li><a href=/posts/omp_parallelization/#dynamic-schedule>Dynamic Schedule</a></li><li><a href=/posts/omp_parallelization/#guided-schedule>Guided Schedule</a></li><li><a href=/posts/omp_parallelization/#auto-schedule>Auto Schedule</a></li><li><a href=/posts/omp_parallelization/#runtime-schedule>Runtime Schedule</a></li></ul></li></ul><h3 id=parallel-directive><strong>Parallel Directive</strong><a href=#parallel-directive class=hanchor arialabel=Anchor>#</a></h3><p>The <code>parallel</code> directive is used to specify a block of code that should be executed in parallel by multiple threads. This directive is the foundation of OpenMP programming, and it is used to create a team of threads that will execute the code within the parallel region.</p><div class=collapsable-code><input id=1 type=checkbox checked>
+<label for=1><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Parallel Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    #pragma omp parallel
+    {
+        printf(&#34;Hello from thread %d\n&#34;, omp_get_thread_num());
+    }
+    return 0;
+}
+</code></pre></div><p><strong>Note:</strong> The <code>omp_get_thread_num()</code> function is used to get the thread number of the current thread.</p><h3 id=sections-directive><strong>Sections Directive</strong><a href=#sections-directive class=hanchor arialabel=Anchor>#</a></h3><p>The <code>sections</code> directive is used to divide a block of code into multiple sections that can be executed in parallel by different threads. This directive is useful when you have multiple independent tasks that can be executed concurrently.</p><div class=collapsable-code><input id=2 type=checkbox checked>
+<label for=2><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Sections Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        {
+            printf(&#34;Section 1: Hello from thread %d\n&#34;, omp_get_thread_num());
+        }
+        #pragma omp section
+        {
+            printf(&#34;Section 2: Hello from thread %d\n&#34;, omp_get_thread_num());
+        }
+    }
+    return 0;
+}
+</code></pre></div><h3 id=single-directive><strong>Single Directive</strong><a href=#single-directive class=hanchor arialabel=Anchor>#</a></h3><p>The Single Directive is used to specify a block of code that should be executed by only one thread in a team. This directive is useful when you want to perform some operation that should only be done once, such as initializing a shared variable or printing a message.</p><blockquote><p>#pragma omp single
+{
+// code to be executed by a single thread
+}</p></blockquote><p><strong>Example</strong></p><div class=collapsable-code><input id=4 type=checkbox checked>
+<label for=4><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Single Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    #pragma omp parallel
+    {
+        #pragma omp single
+        {
+            x = 10;
+            printf(&#34;Thread %d initialized x to %d\n&#34;, omp_get_thread_num(), x);
+        }
+        printf(&#34;Thread %d sees x as %d\n&#34;, omp_get_thread_num(), x);
+    }
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><pre tabindex=0><code>Thread 0 initialized x to 10
+Thread 0 sees x as 10
+Thread 1 sees x as 10
+Thread 2 sees x as 10
+Thread 3 sees x as 10
+</code></pre><p>As you can see, only one thread (Thread 0) initializes the variable <code>x</code> to 10, and all other threads see the updated value of <code>x</code>.</p><p><strong>Note</strong></p><p>The Single Directive does not imply a barrier, so the other threads may continue executing without waiting for the single thread to finish its execution. If you need to ensure that all threads wait for the single thread to finish, you can use the <code>#pragma omp barrier</code> directive after the Single Directive.</p><p>Here&rsquo;s an updated example with a barrier:</p><div class=collapsable-code><input id=5 type=checkbox checked>
+<label for=5><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Single Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    #pragma omp parallel
+    {
+        #pragma omp single
+        {
+            x = 10;
+            printf(&#34;Thread %d initialized x to %d\n&#34;, omp_get_thread_num(), x);
+        }
+        #pragma omp barrier
+        printf(&#34;Thread %d sees x as %d\n&#34;, omp_get_thread_num(), x);
+    }
+    return 0;
+}
+</code></pre></div><p>This ensures that all threads wait for the single thread to finish initializing <code>x</code> before they continue executing.</p><h3 id=master-directive><strong>Master Directive</strong><a href=#master-directive class=hanchor arialabel=Anchor>#</a></h3><p>The <code>master</code> directive is used to specify a block of code that should be executed by the master thread only. The master thread is the thread that has a thread number of 0.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp master
+{
+// code to be executed by the master thread
+}</p></blockquote><p><strong>Example</strong></p><div class=collapsable-code><input id=6 type=checkbox checked>
+<label for=6><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Master Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    #pragma omp parallel
+    {
+        #pragma omp master
+        {
+            x = 10;
+            printf(&#34;Master thread: x = %d\n&#34;, x);
+        }
+        printf(&#34;Thread %d: x = %d\n&#34;, omp_get_thread_num(), x);
+    }
+    return 0;
+}
+</code></pre></div><p>In this example, the master thread sets the value of <code>x</code> to 10 and prints a message. All threads then print the value of <code>x</code>.</p><p><strong>Note</strong></p><p>The <code>master</code> directive does not imply a barrier, so the other threads may continue executing without waiting for the master thread to finish its execution.</p><p><strong>When to use</strong></p><p>The <code>master</code> directive is useful when you need to perform some operation that should only be done once, such as initializing a shared variable or printing a message.</p><p><strong>Comparison with Single Directive</strong></p><p>The <code>master</code> directive is similar to the <code>single</code> directive, but the <code>single</code> directive can be executed by any thread, while the <code>master</code> directive is always executed by the master thread.</p><p>Here is an example that demonstrates the difference:</p><div class=collapsable-code><input id=7 type=checkbox checked>
+<label for=7><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Master Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    #pragma omp parallel
+    {
+        #pragma omp single
+        {
+            x = 10;
+            printf(&#34;Single thread: x = %d\n&#34;, x);
+        }
+        printf(&#34;Thread %d: x = %d\n&#34;, omp_get_thread_num(), x);
+    }
+    return 0;
+}
+</code></pre></div><p>In this example, the <code>single</code> directive is used to set the value of <code>x</code> to 10. The thread that executes the <code>single</code> directive may not be the master thread.</p><h3 id=critical-directive><strong>Critical Directive</strong><a href=#critical-directive class=hanchor arialabel=Anchor>#</a></h3><p>The <code>critical</code> directive is used to specify a block of code that should be executed by only one thread at a time. This directive is useful when you need to protect a critical section of code that should not be executed concurrently by multiple threads.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp critical [(name)]
+{
+// code to be executed by only one thread at a time
+}</p></blockquote><p><strong>Example</strong></p><div class=collapsable-code><input id=8 type=checkbox checked>
+<label for=8><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Critical Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    #pragma omp parallel
+    {
+        #pragma omp critical
+        {
+            x = x &#43; 1;
+            printf(&#34;Thread %d: x = %d\n&#34;, omp_get_thread_num(), x);
+        }
+    }
+    return 0;
+}
+</code></pre></div><p>In this example, the <code>critical</code> directive is used to protect the increment of the variable <code>x</code>. Only one thread can execute the critical section at a time, ensuring that the increment is atomic.</p><p><strong>Named Critical Sections</strong></p><p>You can also specify a name for the critical section, which allows you to have multiple critical sections that can be executed concurrently.</p><blockquote><p>#pragma omp critical (name)
+{
+// code to be executed by only one thread at a time
+}</p></blockquote><p><strong>Example</strong></p><div class=collapsable-code><input id=8 type=checkbox checked>
+<label for=8><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Critical Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0;
+    int y = 0;
+    #pragma omp parallel
+    {
+        #pragma omp critical (x_lock)
+        {
+            x = x &#43; 1;
+            printf(&#34;Thread %d: x = %d\n&#34;, omp_get_thread_num(), x);
+        }
+        #pragma omp critical (y_lock)
+        {
+            y = y &#43; 1;
+            printf(&#34;Thread %d: y = %d\n&#34;, omp_get_thread_num(), y);
+        }
+    }
+    return 0;
+}
+</code></pre></div><p>In this example, we have two named critical sections, <code>x_lock</code> and <code>y_lock</code>. These critical sections can be executed concurrently, but only one thread can execute each critical section at a time.</p><p><strong>Best Practices</strong></p><ul><li>Use the <code>critical</code> directive to protect critical sections of code that should not be executed concurrently by multiple threads.</li><li>Use named critical sections to allow multiple critical sections to be executed concurrently.</li><li>Minimize the use of critical sections, as they can introduce performance overhead.</li><li>Use other synchronization mechanisms, such as locks or atomic operations, when possible.</li></ul><p>Certainly! Let&rsquo;s discuss the barrier directive in OpenMP.</p><p><strong>Barrier Directive</strong></p><p>The <code>barrier</code> directive is used to synchronize all threads in a team. When a thread reaches a barrier, it waits until all other threads in the team have also reached the barrier. Once all threads have reached the barrier, they can all proceed past it.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp barrier</p></blockquote><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating the use of the barrier directive:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Barrier Directive</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+int main() {
+    #pragma omp parallel num_threads(4)
+    {
+        int thread_num = omp_get_thread_num();
+        
+        // First part of the work
+        printf(&#34;Thread %d: Starting first part of work\n&#34;, thread_num);
+        sleep(thread_num); // Simulate different work times
+        
+        #pragma omp barrier
+        
+        // Second part of the work
+        printf(&#34;Thread %d: Starting second part of work\n&#34;, thread_num);
+    }
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><pre tabindex=0><code>Thread 0: Starting first part of work
+Thread 3: Starting first part of work
+Thread 2: Starting first part of work
+Thread 1: Starting first part of work
+Thread 0: Starting second part of work
+Thread 1: Starting second part of work
+Thread 2: Starting second part of work
+Thread 3: Starting second part of work
+</code></pre><p><strong>Explanation</strong></p><ol><li>Four threads are created.</li><li>Each thread prints a message and then sleeps for a duration equal to its thread number (simulating different work times).</li><li>The <code>barrier</code> directive ensures that all threads wait at this point until every thread has reached the barrier.</li><li>Once all threads have reached the barrier, they all proceed to print the second message.</li></ol><p><strong>Important Notes</strong></p><ol><li><p>The <code>barrier</code> directive is implicit at the end of <code>parallel</code>, <code>for</code>, <code>sections</code>, and <code>single</code> constructs, unless a <code>nowait</code> clause is specified.</p></li><li><p>Using too many barriers can negatively impact performance, as threads may spend a lot of time waiting for each other.</p></li><li><p>Barriers should be used judiciously to ensure correct program behavior while minimizing synchronization overhead.</p></li><li><p>Be cautious of potential deadlocks when using barriers, especially in complex parallel regions.</p></li></ol><p>The barrier directive is a powerful tool for synchronizing threads, but it should be used carefully to balance correctness and performance in your parallel programs.</p><p>Certainly! Let&rsquo;s discuss the private clause in OpenMP.</p><p><strong>Private Clause</strong></p><p>The <code>private</code> clause is used to specify that each thread should have its own copy of the listed variables. This is useful when you want each thread to work with its own instance of a variable, preventing data races and ensuring thread safety.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp parallel private(variable1, variable2, &mldr;)</p></blockquote><p>or</p><blockquote><p>#pragma omp for private(variable1, variable2, &mldr;)</p></blockquote><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating the use of the private clause:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Private Clause</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int i, sum = 0;
+    
+    #pragma omp parallel for private(i) reduction(&#43;:sum)
+    for (i = 1; i &lt;= 100; i&#43;&#43;) {
+        int temp = i * i;
+        sum &#43;= temp;
+        printf(&#34;Thread %d: i = %d, temp = %d\n&#34;, omp_get_thread_num(), i, temp);
+    }
+    
+    printf(&#34;Sum of squares from 1 to 100: %d\n&#34;, sum);
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><p>The output might look something like this (note that the order of thread execution may vary):</p><pre tabindex=0><code>Thread 0: i = 1, temp = 1
+Thread 0: i = 2, temp = 4
+...
+Thread 1: i = 26, temp = 676
+Thread 1: i = 27, temp = 729
+...
+Thread 2: i = 51, temp = 2601
+Thread 2: i = 52, temp = 2704
+...
+Thread 3: i = 76, temp = 5776
+Thread 3: i = 77, temp = 5929
+...
+Sum of squares from 1 to 100: 338350
+</code></pre><p><strong>Explanation</strong></p><ol><li>The <code>i</code> variable is declared as private. This means each thread gets its own copy of <code>i</code>.</li><li>Inside the parallel for loop, each thread works with its own <code>i</code>, preventing any data races.</li><li>The <code>temp</code> variable is implicitly private because it&rsquo;s declared inside the parallel region.</li><li>Each thread calculates the square of its assigned numbers and adds them to the shared <code>sum</code> variable (using the reduction clause, which we&rsquo;ll cover in a future topic).</li></ol><p><strong>Important Notes</strong></p><ol><li><p>Variables declared as private are not initialized. They contain garbage values when entering the parallel region unless explicitly initialized.</p></li><li><p>Changes made to private variables are not visible outside the parallel region.</p></li><li><p>If you need to initialize private variables or use their values after the parallel region, consider using the <code>firstprivate</code> or <code>lastprivate</code> clauses (which we&rsquo;ll cover next).</p></li><li><p>Array sections can also be made private using the syntax <code>private(array[start:length])</code>.</p></li><li><p>The <code>private</code> clause is often used with loop index variables to ensure each thread has its own copy of the loop counter.</p></li></ol><p>The <code>private</code> clause is a fundamental tool in OpenMP for managing data in parallel regions, helping to prevent data races and ensure correct parallel execution.</p><p>Certainly! Let&rsquo;s discuss the firstprivate clause in OpenMP.</p><p><strong>Firstprivate Clause</strong></p><p>The <code>firstprivate</code> clause is similar to the <code>private</code> clause, but it also initializes the private copies with the value of the original variable before entering the parallel region.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp parallel firstprivate(variable1, variable2, &mldr;)</p></blockquote><p>or</p><blockquote><p>#pragma omp for firstprivate(variable1, variable2, &mldr;)</p></blockquote><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating the use of the firstprivate clause:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Private Clause</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 5;
+    
+    #pragma omp parallel firstprivate(x)
+    {
+        printf(&#34;Thread %d: x initially = %d\n&#34;, omp_get_thread_num(), x);
+        x &#43;= omp_get_thread_num();
+        printf(&#34;Thread %d: x after modification = %d\n&#34;, omp_get_thread_num(), x);
+    }
+    
+    printf(&#34;Outside parallel region: x = %d\n&#34;, x);
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><p>The output might look something like this:</p><pre tabindex=0><code>Thread 0: x initially = 5
+Thread 1: x initially = 5
+Thread 2: x initially = 5
+Thread 3: x initially = 5
+Thread 0: x after modification = 5
+Thread 1: x after modification = 6
+Thread 2: x after modification = 7
+Thread 3: x after modification = 8
+Outside parallel region: x = 5
+</code></pre><p><strong>Explanation</strong></p><ol><li>The variable <code>x</code> is initialized to 5 before the parallel region.</li><li>Using <code>firstprivate(x)</code>, each thread gets its own copy of <code>x</code>, initialized to 5.</li><li>Each thread then modifies its private copy of <code>x</code> by adding its thread number.</li><li>After the parallel region, the original <code>x</code> remains unchanged (still 5).</li></ol><p><strong>Important Notes</strong></p><ol><li><p><code>firstprivate</code> is particularly useful when you need to use the initial value of a variable in a parallel region, but also want each thread to have its own copy.</p></li><li><p>For complex objects (like C++ objects with constructors), <code>firstprivate</code> ensures that the copy constructor is called to initialize the private copies.</p></li><li><p><code>firstprivate</code> can have a performance overhead compared to <code>private</code>, especially for large objects, as it needs to initialize each private copy.</p></li><li><p>Changes made to firstprivate variables are not visible outside the parallel region unless you use other mechanisms (like reduction or lastprivate).</p></li><li><p>You can use <code>firstprivate</code> with arrays, but be cautious with large arrays as it will create a full copy for each thread.</p></li></ol><p><strong>Comparison with <code>private</code></strong></p><ul><li><code>private</code> creates uninitialized copies for each thread.</li><li><code>firstprivate</code> creates initialized copies, with the value from before entering the parallel region.</li></ul><p>The <code>firstprivate</code> clause is very useful when you need to work with initialized private copies in your parallel regions, combining the benefits of data isolation with proper initialization.</p><h3 id=lastprivate-clause><strong>Lastprivate Clause</strong><a href=#lastprivate-clause class=hanchor arialabel=Anchor>#</a></h3><p>The <code>lastprivate</code> clause is used to specify that the value of one or more private variables should be copied back to the original variables after the parallel region or loop. Specifically, it copies the value from the last logical iteration of the loop or the last section of a sections construct.</p><p><strong>Syntax</strong></p><blockquote><p>#pragma omp parallel for lastprivate(variable1, variable2, &mldr;)</p></blockquote><p>or</p><blockquote><p>#pragma omp sections lastprivate(variable1, variable2, &mldr;)</p></blockquote><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating the use of the lastprivate clause:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Private Clause</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    int i, x = 0;
+    
+    #pragma omp parallel for lastprivate(x)
+    for (i = 0; i &lt; 100; i&#43;&#43;) {
+        x = i;
+        printf(&#34;Thread %d: i = %d, x = %d\n&#34;, omp_get_thread_num(), i, x);
+    }
+    
+    printf(&#34;After parallel for: x = %d\n&#34;, x);
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><p>The output might look something like this (note that the order of thread execution may vary):</p><pre tabindex=0><code>Thread 0: i = 0, x = 0
+Thread 1: i = 25, x = 25
+Thread 2: i = 50, x = 50
+Thread 3: i = 75, x = 75
+...
+Thread 3: i = 99, x = 99
+After parallel for: x = 99
+</code></pre><p><strong>Explanation</strong></p><ol><li>The variable <code>x</code> is declared as lastprivate.</li><li>Each thread has its own private copy of <code>x</code> during the parallel for loop.</li><li>After the loop completes, the value of <code>x</code> from the last logical iteration (i = 99) is copied back to the original <code>x</code>.</li><li>Outside the parallel region, <code>x</code> has the value from the last iteration (99).</li></ol><p><strong>Important Notes</strong></p><ol><li><p><code>lastprivate</code> is particularly useful when you need the final value of a variable after a parallel loop or sections construct.</p></li><li><p>For loops, the &ldquo;last&rdquo; iteration is determined by the logical order of the loop, not the actual last thread to finish.</p></li><li><p>For <code>sections</code> constructs, the last section in lexical order determines the lastprivate value.</p></li><li><p><code>lastprivate</code> can be combined with <code>firstprivate</code> if you need both initialization and final value preservation.</p></li><li><p>There&rsquo;s a potential performance overhead with <code>lastprivate</code>, as it requires additional synchronization to determine and copy the final value.</p></li></ol><p><strong>Comparison with <code>private</code> and <code>firstprivate</code></strong></p><ul><li><code>private</code>: Creates uninitialized copies, final values are not preserved.</li><li><code>firstprivate</code>: Creates initialized copies, final values are not preserved.</li><li><code>lastprivate</code>: May create uninitialized copies (unless combined with <code>firstprivate</code>), but preserves the final value from the logically last iteration or section.</li></ul><p>The <code>lastprivate</code> clause is valuable when you need to capture the final state of a variable after parallel execution, especially in loops where the final iteration produces an important result.</p><p>Certainly! Let&rsquo;s dive into the reduction clause in OpenMP.</p><p><strong>Reduction Clause</strong></p><p>The <code>reduction</code> clause is used to perform a reduction operation on one or more variables across all threads in a parallel region. It&rsquo;s particularly useful for operations like summing, finding the maximum or minimum, or performing logical operations across a set of values computed in parallel.</p><p><strong>Syntax</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#pragma omp parallel for reduction(operator:variable)
+</span></span></span></code></pre></div><p>Where <code>operator</code> can be:</p><ul><li><code>+</code>, <code>-</code>, <code>*</code>, <code>&</code>, <code>|</code>, <code>^</code>, <code>&&</code>, <code>||</code> for built-in types</li><li><code>max</code>, <code>min</code> for arithmetic types</li></ul><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating the use of the reduction clause to calculate the sum of squares:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Private Clause</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+int main() {
+    long long sum = 0;
+    int i, n = 1000000;
+
+    #pragma omp parallel for reduction(&#43;:sum)
+    for (i = 1; i &lt;= n; i&#43;&#43;) {
+        sum &#43;= i * i;
+    }
+
+    printf(&#34;Sum of squares from 1 to %d: %lld\n&#34;, n, sum);
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><p>The output will be:</p><pre tabindex=0><code>Sum of squares from 1 to 1000000: 333333833333500000
+</code></pre><p><strong>Explanation</strong></p><ol><li>The <code>sum</code> variable is specified as a reduction variable with the <code>+</code> operator.</li><li>Each thread computes a partial sum for its chunk of the loop.</li><li>OpenMP automatically combines these partial sums using the specified operator (<code>+</code> in this case).</li><li>The final result is stored in the original <code>sum</code> variable.</li></ol><p><strong>Important Notes</strong></p><ol><li><p>OpenMP creates a private copy of the reduction variable for each thread, initialized according to the reduction operator (e.g., 0 for <code>+</code>, 1 for <code>*</code>, etc.).</p></li><li><p>At the end of the parallel region, these private copies are combined using the specified operator to produce the final result.</p></li><li><p>Reduction operations are both thread-safe and efficient, as they avoid the need for explicit synchronization.</p></li><li><p>You can specify multiple reduction variables in one clause:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#pragma omp parallel for reduction(+:sum1,sum2) reduction(max:maxval)
+</span></span></span></code></pre></div></li><li><p>Custom reduction operations can be defined for user-defined types in C++ using the <code>declare reduction</code> directive.</p></li></ol><p><strong>Common Use Cases</strong></p><ol><li>Summing values: <code>reduction(+:sum)</code></li><li>Finding maximum: <code>reduction(max:max_value)</code></li><li>Finding minimum: <code>reduction(min:min_value)</code></li><li>Logical AND of conditions: <code>reduction(&&:all_true)</code></li><li>Logical OR of conditions: <code>reduction(||:any_true)</code></li></ol><p><strong>Performance Considerations</strong></p><p>Reductions are generally very efficient, as they allow each thread to work independently and combine results only at the end. This often leads to good scalability. However, for very small loops or when the reduction operation is very simple, the overhead of creating and managing threads might outweigh the benefits of parallelization.</p><p>The <code>reduction</code> clause is a powerful feature in OpenMP that simplifies parallel aggregation operations and helps avoid common pitfalls like race conditions when accumulating results across threads.</p><p>Certainly! Let&rsquo;s discuss the schedule clause in OpenMP.</p><p><strong>Schedule Clause</strong></p><p>The <code>schedule</code> clause is used to specify how iterations of a loop are divided among threads in a parallel region. It allows you to control the workload distribution, which can significantly impact the performance of your parallel program.</p><p><strong>Syntax</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#pragma omp parallel for schedule(kind[, chunk_size])
+</span></span></span></code></pre></div><p>Where <code>kind</code> can be:</p><ul><li><code>static</code></li><li><code>dynamic</code></li><li><code>guided</code></li><li><code>auto</code></li><li><code>runtime</code></li></ul><p><strong>Types of Schedules</strong></p><ol><li><p><strong>Static Schedule</strong></p><ul><li>Iterations are divided into chunks of size <code>chunk_size</code> and distributed to threads in a round-robin fashion.</li><li>If <code>chunk_size</code> is not specified, iterations are divided equally among threads.</li></ul></li><li><p><strong>Dynamic Schedule</strong></p><ul><li>Iterations are divided into chunks of size <code>chunk_size</code>.</li><li>Each thread requests a new chunk when it finishes its current chunk.</li></ul></li><li><p><strong>Guided Schedule</strong></p><ul><li>Similar to dynamic, but the chunk size starts large and decreases over time.</li><li>The chunk size is proportional to the number of unassigned iterations divided by the number of threads.</li></ul></li><li><p><strong>Auto Schedule</strong></p><ul><li>The decision of scheduling is delegated to the compiler and/or runtime system.</li></ul></li><li><p><strong>Runtime Schedule</strong></p><ul><li>The schedule is determined at runtime by the <code>OMP_SCHEDULE</code> environment variable.</li></ul></li></ol><p><strong>Example</strong></p><p>Here&rsquo;s an example demonstrating different schedule types:</p><div class=collapsable-code><input id=9 type=checkbox checked>
+<label for=9><span class=collapsable-code__language>c</span>
+<span class=collapsable-code__title>Private Clause</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-c><code>
+#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+
+void test_schedule(const char* schedule_type) {
+    int i, n = 20;
+
+    #pragma omp parallel for schedule(runtime)
+    for (i = 0; i &lt; n; i&#43;&#43;) {
+        printf(&#34;Thread %d executing iteration %d\n&#34;, omp_get_thread_num(), i);
+    }
+
+    printf(&#34;\nTested with schedule type: %s\n\n&#34;, schedule_type);
+}
+
+int main() {
+    const char* schedules[] = {&#34;static&#34;, &#34;static,2&#34;, &#34;dynamic&#34;, &#34;dynamic,2&#34;, &#34;guided&#34;, &#34;auto&#34;};
+    int num_schedules = sizeof(schedules) / sizeof(schedules[0]);
+
+    for (int i = 0; i &lt; num_schedules; i&#43;&#43;) {
+        omp_set_schedule(omp_sched_runtime, 0);
+        setenv(&#34;OMP_SCHEDULE&#34;, schedules[i], 1);
+        test_schedule(schedules[i]);
+    }
+
+    return 0;
+}
+</code></pre></div><p><strong>Output</strong></p><p>The output will vary depending on the number of threads and the system, but it might look something like this:</p><pre tabindex=0><code>Thread 0 executing iteration 0
+Thread 0 executing iteration 1
+Thread 0 executing iteration 2
+Thread 0 executing iteration 3
+Thread 0 executing iteration 4
+Thread 1 executing iteration 5
+Thread 1 executing iteration 6
+Thread 1 executing iteration 7
+Thread 1 executing iteration 8
+Thread 1 executing iteration 9
+...
+
+Tested with schedule type: static
+
+Thread 0 executing iteration 0
+Thread 0 executing iteration 1
+Thread 1 executing iteration 2
+Thread 1 executing iteration 3
+Thread 2 executing iteration 4
+Thread 2 executing iteration 5
+...
+
+Tested with schedule type: static,2
+
+...
+</code></pre><p><strong>Choosing the Right Schedule</strong></p><ul><li>Use <code>static</code> when iterations have similar workloads and you want to minimize scheduling overhead.</li><li>Use <code>dynamic</code> or <code>guided</code> when iterations have varying workloads to achieve better load balancing.</li><li>Use <code>auto</code> when you&rsquo;re unsure and want the system to decide.</li><li>Use <code>runtime</code> for flexibility in testing different schedules without recompiling.</li></ul><p>The choice of schedule can significantly affect performance, especially for loops with irregular workloads or when dealing with NUMA (Non-Uniform Memory Access) architectures.</p></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><a href=/posts/float32/ class="button inline next">Understanding floating point numbers</a></div></div></article></div><footer class=footer><div class=footer__inner><div class=copyright><span>© 2024 Powered by <a href=https://gohugo.io>Hugo</a></span>
+<span>:: <a href=https://github.com/panr/hugo-theme-terminal target=_blank>Theme</a> made by <a href=https://github.com/panr target=_blank>panr</a></span></div></div></footer><script type=text/javascript src=/bundle.min.js></script></div></body></html>
