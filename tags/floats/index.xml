@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Floats on Narain</title><link>/tags/floats/</link><description>Recent content in Floats on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 21 Jun 2024 16:24:31 -0700</lastBuildDate><atom:link href="/tags/floats/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>introduction In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile, resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the critical importance of understanding floating point numbers in computer systems. Floating point representation allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.</description><content>&lt;h2 id="introduction">introduction&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Floats on Narain</title><link>/tags/floats/</link><description>Recent content in Floats on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 21 Jun 2024 16:24:31 -0700</lastBuildDate><atom:link href="/tags/floats/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>&lt;h2 id="introduction">introduction&lt;/h2>
+&lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
+resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
+accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
+critical importance of understanding floating point numbers in computer systems. Floating point representation
+allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.
+However, it also introduces complexities and potential inaccuracies that programmers must carefully navigate.&lt;/p></description><content>&lt;h2 id="introduction">introduction&lt;/h2>
 &lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
 resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
 accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
@@ -69,57 +75,8 @@ javascript uses float64 to represent all numeric data types
 However, as computational needs grew, so did the necessity to represent and manipulate
 decimal numbers. To address this, programmers began emulating floating-point arithmetic through
 complex algorithms, which required more operations than simple integer addition or subtraction.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdint.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">decompose&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span> num, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>sign, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>exponent, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>mantissa) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">uint32_t&lt;/span> bits &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">*&lt;/span>((&lt;span style="color:#66d9ef">uint32_t&lt;/span>&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span>num); &lt;span style="color:#75715e">// considering floating point number as integer 32 bit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#f92672">*&lt;/span>sign &lt;span style="color:#f92672">=&lt;/span> (bits &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">31&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>exponent &lt;span style="color:#f92672">=&lt;/span> (bits &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0xFF&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>mantissa &lt;span style="color:#f92672">=&lt;/span> bits &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x7FFFFF&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>mantissa &lt;span style="color:#f92672">|=&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">float&lt;/span> &lt;span style="color:#a6e22e">emulate_float_add&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span> a, &lt;span style="color:#66d9ef">float&lt;/span> b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> sign_a, sign_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> exponent_a, exponent_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> mantissa_a, mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">decompose&lt;/span>(a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>sign_a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>exponent_a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>mantissa_a);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">decompose&lt;/span>(b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>sign_b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>exponent_b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>mantissa_b);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (exponent_a &lt;span style="color:#f92672">&amp;gt;&lt;/span> exponent_b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_b &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> (exponent_a &lt;span style="color:#f92672">-&lt;/span> exponent_b);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_b &lt;span style="color:#f92672">=&lt;/span> exponent_a;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (exponent_b &lt;span style="color:#f92672">&amp;gt;&lt;/span> exponent_a) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_a &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> (exponent_b &lt;span style="color:#f92672">-&lt;/span> exponent_a);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a &lt;span style="color:#f92672">=&lt;/span> exponent_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> mantissa_sum;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (sign_a &lt;span style="color:#f92672">==&lt;/span> sign_b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">=&lt;/span> mantissa_a &lt;span style="color:#f92672">+&lt;/span> mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">=&lt;/span> mantissa_a &lt;span style="color:#f92672">-&lt;/span> mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> result_sign &lt;span style="color:#f92672">=&lt;/span> sign_a;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;gt;=&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span>)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a&lt;span style="color:#f92672">++&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;lt;&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> mantissa_sum &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a&lt;span style="color:#f92672">--&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">uint32_t&lt;/span> result_bits &lt;span style="color:#f92672">=&lt;/span> (result_sign &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">31&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (exponent_a &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x7FFFFF&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">*&lt;/span>((&lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span>)&lt;span style="color:#f92672">&amp;amp;&lt;/span>result_bits);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Recognizing the inefficiency of these emulations, chip manufacturers started designing dedicated hardware, such
+&lt;p>&lt;a href="https://gist.github.com/narain1/1520a67646d365bd6260914ff5233bec">Float Emulator&lt;/a>&lt;/p>
+&lt;p>Recognizing the inefficiency of these emulations, chip manufacturers started designing dedicated hardware, such
 as floating-point registers, to execute floating-point instructions in a single cycle. These
 registers adhere to the IEEE 754 standard, which defines the floating-point format with 1 sign
 bit, 23 mantissa bits, and 8 exponent bits. Sticking to this standard is critical for
@@ -137,4 +94,10 @@ While floating-point arithmetic typically works well in serial execution, issues
 parallelized or when the order of operations (like in loops) is changed, leading to slight variations in results.&lt;/p>
 &lt;p>Because of these precision issues, it is a common practice not to validate floating-point results by checking
 for exact equality. Instead, computations are often considered correct if the results fall within a specified
-tolerance range, ensuring that small rounding errors do not invalidate the outcome.&lt;/p></content></item></channel></rss>
+tolerance range, ensuring that small rounding errors do not invalidate the outcome.&lt;/p>
+&lt;h2 id="further-reads">Further reads&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://nhigham.com/2020/05/04/what-is-floating-point-arithmetic/">Whis is floating point arithmetic&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://randomascii.wordpress.com/2013/07/16/floating-point-determinism/">Floating point determinism&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">How to defeat the purpose of IEEE floating point&lt;/a>&lt;/li>
+&lt;/ul></content></item></channel></rss>
