@@ -1,4 +1,821 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Narain</title><link>/posts/</link><description>Recent content in Posts on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 21 Jun 2024 16:24:31 -0700</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>introduction In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile, resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the critical importance of understanding floating point numbers in computer systems. Floating point representation allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.</description><content>&lt;h2 id="introduction">introduction&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Narain</title><link>/posts/</link><description>Recent content in Posts on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 20 Nov 2024 01:15:54 -0700</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>OMP parallelization</title><link>/posts/omp_parallelization/</link><pubDate>Wed, 20 Nov 2024 01:15:54 -0700</pubDate><guid>/posts/omp_parallelization/</guid><description>&lt;p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
+It&amp;rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to
+write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.&lt;/p>
+&lt;p>OpenMP does the heavy lifting in several areas:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Thread Management&lt;/strong>: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management.&lt;/li>
+&lt;li>&lt;strong>Work Distribution&lt;/strong>: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute.&lt;/li>
+&lt;li>&lt;strong>Synchronization&lt;/strong>: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely.&lt;/li>
+&lt;li>&lt;strong>Data Management&lt;/strong>: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies.&lt;/li>
+&lt;/ol>
+&lt;p>OpenMP makes it easy to experiment with parallelism by:&lt;/p></description><content>&lt;p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
+It&amp;rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to
+write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.&lt;/p>
+&lt;p>OpenMP does the heavy lifting in several areas:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Thread Management&lt;/strong>: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management.&lt;/li>
+&lt;li>&lt;strong>Work Distribution&lt;/strong>: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute.&lt;/li>
+&lt;li>&lt;strong>Synchronization&lt;/strong>: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely.&lt;/li>
+&lt;li>&lt;strong>Data Management&lt;/strong>: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies.&lt;/li>
+&lt;/ol>
+&lt;p>OpenMP makes it easy to experiment with parallelism by:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Incremental Parallelism&lt;/strong>: OpenMP allows developers to incrementally add parallelism to existing serial code, making it easier to test and refine parallel code.&lt;/li>
+&lt;li>&lt;strong>Simple Directives&lt;/strong>: OpenMP uses simple directives (e.g., &lt;code>#pragma omp parallel&lt;/code>) to indicate parallel regions, making it easy to write parallel code.&lt;/li>
+&lt;li>&lt;strong>Portability&lt;/strong>: OpenMP code is portable across different platforms, including Windows, macOS, and Linux.&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Comparison with POSIX Threads (pthreads)&lt;/strong>&lt;/p>
+&lt;p>POSIX threads (pthreads) is a low-level, Unix-based threading API that provides a way to create and manage threads. Here&amp;rsquo;s a comparison with OpenMP:&lt;/p>
+&lt;p>Note: this blog stands as a code first introduction of the directives and clauses that openmp provides
+most of the time you can get away with just using openmp for loop parallelization but when you want to
+get a little deeper into scheduling and having private and reduction variables this would stand as
+a all in place reference.&lt;/p>
+&lt;h3 id="openmp-directives">OpenMP Directives&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="/posts/omp_parallelization/#parallel-directive">Parallel Directive&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#sections-directive">Sections Directive&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#single-directive">Single Directive&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#master-directive">Master Directive&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#critical-directive">Critical Directive&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#barrier-directive">Barrier Directive&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="openmp-clauses">OpenMP Clauses&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="/posts/omp_parallelization/#private-clause">Private Clause&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#firstprivate-clause">Firstprivate Clause&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#lastprivate-clause">Lastprivate Clause&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#reduction-clause">Reduction Clause&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#schedule-clause">Schedule Clause&lt;/a>
+&lt;ul>
+&lt;li>&lt;a href="/posts/omp_parallelization/#static-schedule">Static Schedule&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#dynamic-schedule">Dynamic Schedule&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#guided-schedule">Guided Schedule&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#auto-schedule">Auto Schedule&lt;/a>&lt;/li>
+&lt;li>&lt;a href="/posts/omp_parallelization/#runtime-schedule">Runtime Schedule&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="parallel-directive">&lt;strong>Parallel Directive&lt;/strong>&lt;/h3>
+&lt;p>The &lt;code>parallel&lt;/code> directive is used to specify a block of code that should be executed in parallel by multiple threads. This directive is the foundation of OpenMP programming, and it is used to create a team of threads that will execute the code within the parallel region.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="1" type="checkbox" checked />
+&lt;label for="1">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Parallel Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+#pragma omp parallel
+{
+printf(&amp;#34;Hello from thread %d\n&amp;#34;, omp_get_thread_num());
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Note:&lt;/strong> The &lt;code>omp_get_thread_num()&lt;/code> function is used to get the thread number of the current thread.&lt;/p>
+&lt;h3 id="sections-directive">&lt;strong>Sections Directive&lt;/strong>&lt;/h3>
+&lt;p>The &lt;code>sections&lt;/code> directive is used to divide a block of code into multiple sections that can be executed in parallel by different threads. This directive is useful when you have multiple independent tasks that can be executed concurrently.&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="2" type="checkbox" checked />
+&lt;label for="2">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Sections Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+#pragma omp parallel sections
+{
+#pragma omp section
+{
+printf(&amp;#34;Section 1: Hello from thread %d\n&amp;#34;, omp_get_thread_num());
+}
+#pragma omp section
+{
+printf(&amp;#34;Section 2: Hello from thread %d\n&amp;#34;, omp_get_thread_num());
+}
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;h3 id="single-directive">&lt;strong>Single Directive&lt;/strong>&lt;/h3>
+&lt;p>The Single Directive is used to specify a block of code that should be executed by only one thread in a team. This directive is useful when you want to perform some operation that should only be done once, such as initializing a shared variable or printing a message.&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp single
+{
+// code to be executed by a single thread
+}&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="4" type="checkbox" checked />
+&lt;label for="4">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Single Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+#pragma omp parallel
+{
+#pragma omp single
+{
+x = 10;
+printf(&amp;#34;Thread %d initialized x to %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+printf(&amp;#34;Thread %d sees x as %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0 initialized x to 10
+Thread 0 sees x as 10
+Thread 1 sees x as 10
+Thread 2 sees x as 10
+Thread 3 sees x as 10
+&lt;/code>&lt;/pre>&lt;p>As you can see, only one thread (Thread 0) initializes the variable &lt;code>x&lt;/code> to 10, and all other threads see the updated value of &lt;code>x&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>Note&lt;/strong>&lt;/p>
+&lt;p>The Single Directive does not imply a barrier, so the other threads may continue executing without waiting for the single thread to finish its execution. If you need to ensure that all threads wait for the single thread to finish, you can use the &lt;code>#pragma omp barrier&lt;/code> directive after the Single Directive.&lt;/p>
+&lt;p>Here&amp;rsquo;s an updated example with a barrier:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="5" type="checkbox" checked />
+&lt;label for="5">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Single Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+#pragma omp parallel
+{
+#pragma omp single
+{
+x = 10;
+printf(&amp;#34;Thread %d initialized x to %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+#pragma omp barrier
+printf(&amp;#34;Thread %d sees x as %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>This ensures that all threads wait for the single thread to finish initializing &lt;code>x&lt;/code> before they continue executing.&lt;/p>
+&lt;h3 id="master-directive">&lt;strong>Master Directive&lt;/strong>&lt;/h3>
+&lt;p>The &lt;code>master&lt;/code> directive is used to specify a block of code that should be executed by the master thread only. The master thread is the thread that has a thread number of 0.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp master
+{
+// code to be executed by the master thread
+}&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="6" type="checkbox" checked />
+&lt;label for="6">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Master Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+#pragma omp parallel
+{
+#pragma omp master
+{
+x = 10;
+printf(&amp;#34;Master thread: x = %d\n&amp;#34;, x);
+}
+printf(&amp;#34;Thread %d: x = %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>In this example, the master thread sets the value of &lt;code>x&lt;/code> to 10 and prints a message. All threads then print the value of &lt;code>x&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>Note&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>master&lt;/code> directive does not imply a barrier, so the other threads may continue executing without waiting for the master thread to finish its execution.&lt;/p>
+&lt;p>&lt;strong>When to use&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>master&lt;/code> directive is useful when you need to perform some operation that should only be done once, such as initializing a shared variable or printing a message.&lt;/p>
+&lt;p>&lt;strong>Comparison with Single Directive&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>master&lt;/code> directive is similar to the &lt;code>single&lt;/code> directive, but the &lt;code>single&lt;/code> directive can be executed by any thread, while the &lt;code>master&lt;/code> directive is always executed by the master thread.&lt;/p>
+&lt;p>Here is an example that demonstrates the difference:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="7" type="checkbox" checked />
+&lt;label for="7">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Master Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+#pragma omp parallel
+{
+#pragma omp single
+{
+x = 10;
+printf(&amp;#34;Single thread: x = %d\n&amp;#34;, x);
+}
+printf(&amp;#34;Thread %d: x = %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>In this example, the &lt;code>single&lt;/code> directive is used to set the value of &lt;code>x&lt;/code> to 10. The thread that executes the &lt;code>single&lt;/code> directive may not be the master thread.&lt;/p>
+&lt;h3 id="critical-directive">&lt;strong>Critical Directive&lt;/strong>&lt;/h3>
+&lt;p>The &lt;code>critical&lt;/code> directive is used to specify a block of code that should be executed by only one thread at a time. This directive is useful when you need to protect a critical section of code that should not be executed concurrently by multiple threads.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp critical [(name)]
+{
+// code to be executed by only one thread at a time
+}&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="8" type="checkbox" checked />
+&lt;label for="8">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Critical Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+#pragma omp parallel
+{
+#pragma omp critical
+{
+x = x &amp;#43; 1;
+printf(&amp;#34;Thread %d: x = %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>In this example, the &lt;code>critical&lt;/code> directive is used to protect the increment of the variable &lt;code>x&lt;/code>. Only one thread can execute the critical section at a time, ensuring that the increment is atomic.&lt;/p>
+&lt;p>&lt;strong>Named Critical Sections&lt;/strong>&lt;/p>
+&lt;p>You can also specify a name for the critical section, which allows you to have multiple critical sections that can be executed concurrently.&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp critical (name)
+{
+// code to be executed by only one thread at a time
+}&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="8" type="checkbox" checked />
+&lt;label for="8">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Critical Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 0;
+int y = 0;
+#pragma omp parallel
+{
+#pragma omp critical (x_lock)
+{
+x = x &amp;#43; 1;
+printf(&amp;#34;Thread %d: x = %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+#pragma omp critical (y_lock)
+{
+y = y &amp;#43; 1;
+printf(&amp;#34;Thread %d: y = %d\n&amp;#34;, omp_get_thread_num(), y);
+}
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>In this example, we have two named critical sections, &lt;code>x_lock&lt;/code> and &lt;code>y_lock&lt;/code>. These critical sections can be executed concurrently, but only one thread can execute each critical section at a time.&lt;/p>
+&lt;p>&lt;strong>Best Practices&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Use the &lt;code>critical&lt;/code> directive to protect critical sections of code that should not be executed concurrently by multiple threads.&lt;/li>
+&lt;li>Use named critical sections to allow multiple critical sections to be executed concurrently.&lt;/li>
+&lt;li>Minimize the use of critical sections, as they can introduce performance overhead.&lt;/li>
+&lt;li>Use other synchronization mechanisms, such as locks or atomic operations, when possible.&lt;/li>
+&lt;/ul>
+&lt;p>Certainly! Let&amp;rsquo;s discuss the barrier directive in OpenMP.&lt;/p>
+&lt;p>&lt;strong>Barrier Directive&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>barrier&lt;/code> directive is used to synchronize all threads in a team. When a thread reaches a barrier, it waits until all other threads in the team have also reached the barrier. Once all threads have reached the barrier, they can all proceed past it.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp barrier&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating the use of the barrier directive:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Barrier Directive&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+int main() {
+#pragma omp parallel num_threads(4)
+{
+int thread_num = omp_get_thread_num();
+// First part of the work
+printf(&amp;#34;Thread %d: Starting first part of work\n&amp;#34;, thread_num);
+sleep(thread_num); // Simulate different work times
+#pragma omp barrier
+// Second part of the work
+printf(&amp;#34;Thread %d: Starting second part of work\n&amp;#34;, thread_num);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0: Starting first part of work
+Thread 3: Starting first part of work
+Thread 2: Starting first part of work
+Thread 1: Starting first part of work
+Thread 0: Starting second part of work
+Thread 1: Starting second part of work
+Thread 2: Starting second part of work
+Thread 3: Starting second part of work
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Explanation&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>Four threads are created.&lt;/li>
+&lt;li>Each thread prints a message and then sleeps for a duration equal to its thread number (simulating different work times).&lt;/li>
+&lt;li>The &lt;code>barrier&lt;/code> directive ensures that all threads wait at this point until every thread has reached the barrier.&lt;/li>
+&lt;li>Once all threads have reached the barrier, they all proceed to print the second message.&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Important Notes&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>The &lt;code>barrier&lt;/code> directive is implicit at the end of &lt;code>parallel&lt;/code>, &lt;code>for&lt;/code>, &lt;code>sections&lt;/code>, and &lt;code>single&lt;/code> constructs, unless a &lt;code>nowait&lt;/code> clause is specified.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Using too many barriers can negatively impact performance, as threads may spend a lot of time waiting for each other.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Barriers should be used judiciously to ensure correct program behavior while minimizing synchronization overhead.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Be cautious of potential deadlocks when using barriers, especially in complex parallel regions.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>The barrier directive is a powerful tool for synchronizing threads, but it should be used carefully to balance correctness and performance in your parallel programs.&lt;/p>
+&lt;p>Certainly! Let&amp;rsquo;s discuss the private clause in OpenMP.&lt;/p>
+&lt;p>&lt;strong>Private Clause&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>private&lt;/code> clause is used to specify that each thread should have its own copy of the listed variables. This is useful when you want each thread to work with its own instance of a variable, preventing data races and ensuring thread safety.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp parallel private(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>or&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp for private(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating the use of the private clause:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Private Clause&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int i, sum = 0;
+#pragma omp parallel for private(i) reduction(&amp;#43;:sum)
+for (i = 1; i &amp;lt;= 100; i&amp;#43;&amp;#43;) {
+int temp = i * i;
+sum &amp;#43;= temp;
+printf(&amp;#34;Thread %d: i = %d, temp = %d\n&amp;#34;, omp_get_thread_num(), i, temp);
+}
+printf(&amp;#34;Sum of squares from 1 to 100: %d\n&amp;#34;, sum);
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;p>The output might look something like this (note that the order of thread execution may vary):&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0: i = 1, temp = 1
+Thread 0: i = 2, temp = 4
+...
+Thread 1: i = 26, temp = 676
+Thread 1: i = 27, temp = 729
+...
+Thread 2: i = 51, temp = 2601
+Thread 2: i = 52, temp = 2704
+...
+Thread 3: i = 76, temp = 5776
+Thread 3: i = 77, temp = 5929
+...
+Sum of squares from 1 to 100: 338350
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Explanation&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>The &lt;code>i&lt;/code> variable is declared as private. This means each thread gets its own copy of &lt;code>i&lt;/code>.&lt;/li>
+&lt;li>Inside the parallel for loop, each thread works with its own &lt;code>i&lt;/code>, preventing any data races.&lt;/li>
+&lt;li>The &lt;code>temp&lt;/code> variable is implicitly private because it&amp;rsquo;s declared inside the parallel region.&lt;/li>
+&lt;li>Each thread calculates the square of its assigned numbers and adds them to the shared &lt;code>sum&lt;/code> variable (using the reduction clause, which we&amp;rsquo;ll cover in a future topic).&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Important Notes&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Variables declared as private are not initialized. They contain garbage values when entering the parallel region unless explicitly initialized.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Changes made to private variables are not visible outside the parallel region.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>If you need to initialize private variables or use their values after the parallel region, consider using the &lt;code>firstprivate&lt;/code> or &lt;code>lastprivate&lt;/code> clauses (which we&amp;rsquo;ll cover next).&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Array sections can also be made private using the syntax &lt;code>private(array[start:length])&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>The &lt;code>private&lt;/code> clause is often used with loop index variables to ensure each thread has its own copy of the loop counter.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>The &lt;code>private&lt;/code> clause is a fundamental tool in OpenMP for managing data in parallel regions, helping to prevent data races and ensure correct parallel execution.&lt;/p>
+&lt;p>Certainly! Let&amp;rsquo;s discuss the firstprivate clause in OpenMP.&lt;/p>
+&lt;p>&lt;strong>Firstprivate Clause&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>firstprivate&lt;/code> clause is similar to the &lt;code>private&lt;/code> clause, but it also initializes the private copies with the value of the original variable before entering the parallel region.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp parallel firstprivate(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>or&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp for firstprivate(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating the use of the firstprivate clause:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Private Clause&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int x = 5;
+#pragma omp parallel firstprivate(x)
+{
+printf(&amp;#34;Thread %d: x initially = %d\n&amp;#34;, omp_get_thread_num(), x);
+x &amp;#43;= omp_get_thread_num();
+printf(&amp;#34;Thread %d: x after modification = %d\n&amp;#34;, omp_get_thread_num(), x);
+}
+printf(&amp;#34;Outside parallel region: x = %d\n&amp;#34;, x);
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;p>The output might look something like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0: x initially = 5
+Thread 1: x initially = 5
+Thread 2: x initially = 5
+Thread 3: x initially = 5
+Thread 0: x after modification = 5
+Thread 1: x after modification = 6
+Thread 2: x after modification = 7
+Thread 3: x after modification = 8
+Outside parallel region: x = 5
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Explanation&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>The variable &lt;code>x&lt;/code> is initialized to 5 before the parallel region.&lt;/li>
+&lt;li>Using &lt;code>firstprivate(x)&lt;/code>, each thread gets its own copy of &lt;code>x&lt;/code>, initialized to 5.&lt;/li>
+&lt;li>Each thread then modifies its private copy of &lt;code>x&lt;/code> by adding its thread number.&lt;/li>
+&lt;li>After the parallel region, the original &lt;code>x&lt;/code> remains unchanged (still 5).&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Important Notes&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;code>firstprivate&lt;/code> is particularly useful when you need to use the initial value of a variable in a parallel region, but also want each thread to have its own copy.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>For complex objects (like C++ objects with constructors), &lt;code>firstprivate&lt;/code> ensures that the copy constructor is called to initialize the private copies.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>firstprivate&lt;/code> can have a performance overhead compared to &lt;code>private&lt;/code>, especially for large objects, as it needs to initialize each private copy.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Changes made to firstprivate variables are not visible outside the parallel region unless you use other mechanisms (like reduction or lastprivate).&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>You can use &lt;code>firstprivate&lt;/code> with arrays, but be cautious with large arrays as it will create a full copy for each thread.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Comparison with &lt;code>private&lt;/code>&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>private&lt;/code> creates uninitialized copies for each thread.&lt;/li>
+&lt;li>&lt;code>firstprivate&lt;/code> creates initialized copies, with the value from before entering the parallel region.&lt;/li>
+&lt;/ul>
+&lt;p>The &lt;code>firstprivate&lt;/code> clause is very useful when you need to work with initialized private copies in your parallel regions, combining the benefits of data isolation with proper initialization.&lt;/p>
+&lt;h3 id="lastprivate-clause">&lt;strong>Lastprivate Clause&lt;/strong>&lt;/h3>
+&lt;p>The &lt;code>lastprivate&lt;/code> clause is used to specify that the value of one or more private variables should be copied back to the original variables after the parallel region or loop. Specifically, it copies the value from the last logical iteration of the loop or the last section of a sections construct.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp parallel for lastprivate(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>or&lt;/p>
+&lt;blockquote>
+&lt;p>#pragma omp sections lastprivate(variable1, variable2, &amp;hellip;)&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating the use of the lastprivate clause:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Private Clause&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+int i, x = 0;
+#pragma omp parallel for lastprivate(x)
+for (i = 0; i &amp;lt; 100; i&amp;#43;&amp;#43;) {
+x = i;
+printf(&amp;#34;Thread %d: i = %d, x = %d\n&amp;#34;, omp_get_thread_num(), i, x);
+}
+printf(&amp;#34;After parallel for: x = %d\n&amp;#34;, x);
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;p>The output might look something like this (note that the order of thread execution may vary):&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0: i = 0, x = 0
+Thread 1: i = 25, x = 25
+Thread 2: i = 50, x = 50
+Thread 3: i = 75, x = 75
+...
+Thread 3: i = 99, x = 99
+After parallel for: x = 99
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Explanation&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>The variable &lt;code>x&lt;/code> is declared as lastprivate.&lt;/li>
+&lt;li>Each thread has its own private copy of &lt;code>x&lt;/code> during the parallel for loop.&lt;/li>
+&lt;li>After the loop completes, the value of &lt;code>x&lt;/code> from the last logical iteration (i = 99) is copied back to the original &lt;code>x&lt;/code>.&lt;/li>
+&lt;li>Outside the parallel region, &lt;code>x&lt;/code> has the value from the last iteration (99).&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Important Notes&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;code>lastprivate&lt;/code> is particularly useful when you need the final value of a variable after a parallel loop or sections construct.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>For loops, the &amp;ldquo;last&amp;rdquo; iteration is determined by the logical order of the loop, not the actual last thread to finish.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>For &lt;code>sections&lt;/code> constructs, the last section in lexical order determines the lastprivate value.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>lastprivate&lt;/code> can be combined with &lt;code>firstprivate&lt;/code> if you need both initialization and final value preservation.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>There&amp;rsquo;s a potential performance overhead with &lt;code>lastprivate&lt;/code>, as it requires additional synchronization to determine and copy the final value.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Comparison with &lt;code>private&lt;/code> and &lt;code>firstprivate&lt;/code>&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>private&lt;/code>: Creates uninitialized copies, final values are not preserved.&lt;/li>
+&lt;li>&lt;code>firstprivate&lt;/code>: Creates initialized copies, final values are not preserved.&lt;/li>
+&lt;li>&lt;code>lastprivate&lt;/code>: May create uninitialized copies (unless combined with &lt;code>firstprivate&lt;/code>), but preserves the final value from the logically last iteration or section.&lt;/li>
+&lt;/ul>
+&lt;p>The &lt;code>lastprivate&lt;/code> clause is valuable when you need to capture the final state of a variable after parallel execution, especially in loops where the final iteration produces an important result.&lt;/p>
+&lt;p>Certainly! Let&amp;rsquo;s dive into the reduction clause in OpenMP.&lt;/p>
+&lt;p>&lt;strong>Reduction Clause&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>reduction&lt;/code> clause is used to perform a reduction operation on one or more variables across all threads in a parallel region. It&amp;rsquo;s particularly useful for operations like summing, finding the maximum or minimum, or performing logical operations across a set of values computed in parallel.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#pragma omp parallel for reduction(operator:variable)
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>operator&lt;/code> can be:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>+&lt;/code>, &lt;code>-&lt;/code>, &lt;code>*&lt;/code>, &lt;code>&amp;amp;&lt;/code>, &lt;code>|&lt;/code>, &lt;code>^&lt;/code>, &lt;code>&amp;amp;&amp;amp;&lt;/code>, &lt;code>||&lt;/code> for built-in types&lt;/li>
+&lt;li>&lt;code>max&lt;/code>, &lt;code>min&lt;/code> for arithmetic types&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating the use of the reduction clause to calculate the sum of squares:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Private Clause&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+int main() {
+long long sum = 0;
+int i, n = 1000000;
+#pragma omp parallel for reduction(&amp;#43;:sum)
+for (i = 1; i &amp;lt;= n; i&amp;#43;&amp;#43;) {
+sum &amp;#43;= i * i;
+}
+printf(&amp;#34;Sum of squares from 1 to %d: %lld\n&amp;#34;, n, sum);
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;p>The output will be:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Sum of squares from 1 to 1000000: 333333833333500000
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Explanation&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>The &lt;code>sum&lt;/code> variable is specified as a reduction variable with the &lt;code>+&lt;/code> operator.&lt;/li>
+&lt;li>Each thread computes a partial sum for its chunk of the loop.&lt;/li>
+&lt;li>OpenMP automatically combines these partial sums using the specified operator (&lt;code>+&lt;/code> in this case).&lt;/li>
+&lt;li>The final result is stored in the original &lt;code>sum&lt;/code> variable.&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Important Notes&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>OpenMP creates a private copy of the reduction variable for each thread, initialized according to the reduction operator (e.g., 0 for &lt;code>+&lt;/code>, 1 for &lt;code>*&lt;/code>, etc.).&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>At the end of the parallel region, these private copies are combined using the specified operator to produce the final result.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Reduction operations are both thread-safe and efficient, as they avoid the need for explicit synchronization.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>You can specify multiple reduction variables in one clause:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#pragma omp parallel for reduction(+:sum1,sum2) reduction(max:maxval)
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Custom reduction operations can be defined for user-defined types in C++ using the &lt;code>declare reduction&lt;/code> directive.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Common Use Cases&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>Summing values: &lt;code>reduction(+:sum)&lt;/code>&lt;/li>
+&lt;li>Finding maximum: &lt;code>reduction(max:max_value)&lt;/code>&lt;/li>
+&lt;li>Finding minimum: &lt;code>reduction(min:min_value)&lt;/code>&lt;/li>
+&lt;li>Logical AND of conditions: &lt;code>reduction(&amp;amp;&amp;amp;:all_true)&lt;/code>&lt;/li>
+&lt;li>Logical OR of conditions: &lt;code>reduction(||:any_true)&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Performance Considerations&lt;/strong>&lt;/p>
+&lt;p>Reductions are generally very efficient, as they allow each thread to work independently and combine results only at the end. This often leads to good scalability. However, for very small loops or when the reduction operation is very simple, the overhead of creating and managing threads might outweigh the benefits of parallelization.&lt;/p>
+&lt;p>The &lt;code>reduction&lt;/code> clause is a powerful feature in OpenMP that simplifies parallel aggregation operations and helps avoid common pitfalls like race conditions when accumulating results across threads.&lt;/p>
+&lt;p>Certainly! Let&amp;rsquo;s discuss the schedule clause in OpenMP.&lt;/p>
+&lt;p>&lt;strong>Schedule Clause&lt;/strong>&lt;/p>
+&lt;p>The &lt;code>schedule&lt;/code> clause is used to specify how iterations of a loop are divided among threads in a parallel region. It allows you to control the workload distribution, which can significantly impact the performance of your parallel program.&lt;/p>
+&lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#pragma omp parallel for schedule(kind[, chunk_size])
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>kind&lt;/code> can be:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>static&lt;/code>&lt;/li>
+&lt;li>&lt;code>dynamic&lt;/code>&lt;/li>
+&lt;li>&lt;code>guided&lt;/code>&lt;/li>
+&lt;li>&lt;code>auto&lt;/code>&lt;/li>
+&lt;li>&lt;code>runtime&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Types of Schedules&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Static Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Iterations are divided into chunks of size &lt;code>chunk_size&lt;/code> and distributed to threads in a round-robin fashion.&lt;/li>
+&lt;li>If &lt;code>chunk_size&lt;/code> is not specified, iterations are divided equally among threads.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Dynamic Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Iterations are divided into chunks of size &lt;code>chunk_size&lt;/code>.&lt;/li>
+&lt;li>Each thread requests a new chunk when it finishes its current chunk.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Guided Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Similar to dynamic, but the chunk size starts large and decreases over time.&lt;/li>
+&lt;li>The chunk size is proportional to the number of unassigned iterations divided by the number of threads.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Auto Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The decision of scheduling is delegated to the compiler and/or runtime system.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Runtime Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The schedule is determined at runtime by the &lt;code>OMP_SCHEDULE&lt;/code> environment variable.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;strong>Example&lt;/strong>&lt;/p>
+&lt;p>Here&amp;rsquo;s an example demonstrating different schedule types:&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="9" type="checkbox" checked />
+&lt;label for="9">
+&lt;span class="collapsable-code__language">c&lt;/span>
+&lt;span class="collapsable-code__title">Private Clause&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-c" >&lt;code>
+#include &amp;lt;omp.h&amp;gt;
+#include &amp;lt;stdio.h&amp;gt;
+void test_schedule(const char* schedule_type) {
+int i, n = 20;
+#pragma omp parallel for schedule(runtime)
+for (i = 0; i &amp;lt; n; i&amp;#43;&amp;#43;) {
+printf(&amp;#34;Thread %d executing iteration %d\n&amp;#34;, omp_get_thread_num(), i);
+}
+printf(&amp;#34;\nTested with schedule type: %s\n\n&amp;#34;, schedule_type);
+}
+int main() {
+const char* schedules[] = {&amp;#34;static&amp;#34;, &amp;#34;static,2&amp;#34;, &amp;#34;dynamic&amp;#34;, &amp;#34;dynamic,2&amp;#34;, &amp;#34;guided&amp;#34;, &amp;#34;auto&amp;#34;};
+int num_schedules = sizeof(schedules) / sizeof(schedules[0]);
+for (int i = 0; i &amp;lt; num_schedules; i&amp;#43;&amp;#43;) {
+omp_set_schedule(omp_sched_runtime, 0);
+setenv(&amp;#34;OMP_SCHEDULE&amp;#34;, schedules[i], 1);
+test_schedule(schedules[i]);
+}
+return 0;
+}
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
+&lt;p>The output will vary depending on the number of threads and the system, but it might look something like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Thread 0 executing iteration 0
+Thread 0 executing iteration 1
+Thread 0 executing iteration 2
+Thread 0 executing iteration 3
+Thread 0 executing iteration 4
+Thread 1 executing iteration 5
+Thread 1 executing iteration 6
+Thread 1 executing iteration 7
+Thread 1 executing iteration 8
+Thread 1 executing iteration 9
+...
+Tested with schedule type: static
+Thread 0 executing iteration 0
+Thread 0 executing iteration 1
+Thread 1 executing iteration 2
+Thread 1 executing iteration 3
+Thread 2 executing iteration 4
+Thread 2 executing iteration 5
+...
+Tested with schedule type: static,2
+...
+&lt;/code>&lt;/pre>&lt;p>&lt;strong>Choosing the Right Schedule&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Use &lt;code>static&lt;/code> when iterations have similar workloads and you want to minimize scheduling overhead.&lt;/li>
+&lt;li>Use &lt;code>dynamic&lt;/code> or &lt;code>guided&lt;/code> when iterations have varying workloads to achieve better load balancing.&lt;/li>
+&lt;li>Use &lt;code>auto&lt;/code> when you&amp;rsquo;re unsure and want the system to decide.&lt;/li>
+&lt;li>Use &lt;code>runtime&lt;/code> for flexibility in testing different schedules without recompiling.&lt;/li>
+&lt;/ul>
+&lt;p>The choice of schedule can significantly affect performance, especially for loops with irregular workloads or when dealing with NUMA (Non-Uniform Memory Access) architectures.&lt;/p></content></item><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>&lt;h2 id="introduction">introduction&lt;/h2>
+&lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
+resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
+accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
+critical importance of understanding floating point numbers in computer systems. Floating point representation
+allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.
+However, it also introduces complexities and potential inaccuracies that programmers must carefully navigate.&lt;/p></description><content>&lt;h2 id="introduction">introduction&lt;/h2>
 &lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
 resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
 accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
@@ -69,57 +886,8 @@ javascript uses float64 to represent all numeric data types
 However, as computational needs grew, so did the necessity to represent and manipulate
 decimal numbers. To address this, programmers began emulating floating-point arithmetic through
 complex algorithms, which required more operations than simple integer addition or subtraction.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;stdint.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">decompose&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span> num, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>sign, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>exponent, &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span>mantissa) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">uint32_t&lt;/span> bits &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">*&lt;/span>((&lt;span style="color:#66d9ef">uint32_t&lt;/span>&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span>num); &lt;span style="color:#75715e">// considering floating point number as integer 32 bit
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#f92672">*&lt;/span>sign &lt;span style="color:#f92672">=&lt;/span> (bits &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">31&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>exponent &lt;span style="color:#f92672">=&lt;/span> (bits &lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0xFF&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>mantissa &lt;span style="color:#f92672">=&lt;/span> bits &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x7FFFFF&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>mantissa &lt;span style="color:#f92672">|=&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">float&lt;/span> &lt;span style="color:#a6e22e">emulate_float_add&lt;/span>(&lt;span style="color:#66d9ef">float&lt;/span> a, &lt;span style="color:#66d9ef">float&lt;/span> b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> sign_a, sign_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> exponent_a, exponent_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> mantissa_a, mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">decompose&lt;/span>(a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>sign_a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>exponent_a, &lt;span style="color:#f92672">&amp;amp;&lt;/span>mantissa_a);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">decompose&lt;/span>(b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>sign_b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>exponent_b, &lt;span style="color:#f92672">&amp;amp;&lt;/span>mantissa_b);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (exponent_a &lt;span style="color:#f92672">&amp;gt;&lt;/span> exponent_b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_b &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> (exponent_a &lt;span style="color:#f92672">-&lt;/span> exponent_b);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_b &lt;span style="color:#f92672">=&lt;/span> exponent_a;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (exponent_b &lt;span style="color:#f92672">&amp;gt;&lt;/span> exponent_a) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_a &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> (exponent_b &lt;span style="color:#f92672">-&lt;/span> exponent_a);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a &lt;span style="color:#f92672">=&lt;/span> exponent_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> mantissa_sum;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (sign_a &lt;span style="color:#f92672">==&lt;/span> sign_b) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">=&lt;/span> mantissa_a &lt;span style="color:#f92672">+&lt;/span> mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">=&lt;/span> mantissa_a &lt;span style="color:#f92672">-&lt;/span> mantissa_b;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> result_sign &lt;span style="color:#f92672">=&lt;/span> sign_a;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;gt;=&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">24&lt;/span>)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">&amp;gt;&amp;gt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a&lt;span style="color:#f92672">++&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;lt;&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> mantissa_sum &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> mantissa_sum &lt;span style="color:#f92672">&amp;lt;&amp;lt;=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exponent_a&lt;span style="color:#f92672">--&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">uint32_t&lt;/span> result_bits &lt;span style="color:#f92672">=&lt;/span> (result_sign &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">31&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (exponent_a &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#ae81ff">23&lt;/span>) &lt;span style="color:#f92672">|&lt;/span> (mantissa_sum &lt;span style="color:#f92672">&amp;amp;&lt;/span> &lt;span style="color:#ae81ff">0x7FFFFF&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">float&lt;/span> result &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">*&lt;/span>((&lt;span style="color:#66d9ef">float&lt;/span>&lt;span style="color:#f92672">*&lt;/span>)&lt;span style="color:#f92672">&amp;amp;&lt;/span>result_bits);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> result;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Recognizing the inefficiency of these emulations, chip manufacturers started designing dedicated hardware, such
+&lt;p>&lt;a href="https://gist.github.com/narain1/1520a67646d365bd6260914ff5233bec">Float Emulator&lt;/a>&lt;/p>
+&lt;p>Recognizing the inefficiency of these emulations, chip manufacturers started designing dedicated hardware, such
 as floating-point registers, to execute floating-point instructions in a single cycle. These
 registers adhere to the IEEE 754 standard, which defines the floating-point format with 1 sign
 bit, 23 mantissa bits, and 8 exponent bits. Sticking to this standard is critical for
@@ -137,7 +905,16 @@ While floating-point arithmetic typically works well in serial execution, issues
 parallelized or when the order of operations (like in loops) is changed, leading to slight variations in results.&lt;/p>
 &lt;p>Because of these precision issues, it is a common practice not to validate floating-point results by checking
 for exact equality. Instead, computations are often considered correct if the results fall within a specified
-tolerance range, ensuring that small rounding errors do not invalidate the outcome.&lt;/p></content></item><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
+tolerance range, ensuring that small rounding errors do not invalidate the outcome.&lt;/p>
+&lt;h2 id="further-reads">Further reads&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://nhigham.com/2020/05/04/what-is-floating-point-arithmetic/">Whis is floating point arithmetic&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://randomascii.wordpress.com/2013/07/16/floating-point-determinism/">Floating point determinism&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">How to defeat the purpose of IEEE floating point&lt;/a>&lt;/li>
+&lt;/ul></content></item><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
+These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
+hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
+extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p></description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
 These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
 hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
 extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p>
@@ -293,7 +1070,11 @@ process communication, enhancing the overall efficiency and effictiveness of dis
 &lt;li>&lt;a href="https://arxiv.org/pdf/2006.15704">Pytorch Distributed: Experiences on Accelerating Data Parallel Training&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/">Deep Speed Zero&lt;/a>&lt;/li>
 &lt;li>&lt;/li>
-&lt;/ul></content></item><item><title>Online Softmax</title><link>/posts/online-softmax/</link><pubDate>Mon, 26 Feb 2024 16:32:46 -0700</pubDate><guid>/posts/online-softmax/</guid><description>One of the most important task in deep learning is classification. This involves predicting the class to which a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers. These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into probabilities that sum to one, making them interpretable</description><content>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
+&lt;/ul></content></item><item><title>Online Softmax</title><link>/posts/online-softmax/</link><pubDate>Mon, 26 Feb 2024 16:32:46 -0700</pubDate><guid>/posts/online-softmax/</guid><description>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
+a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers.
+These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be
+any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
+probabilities that sum to one, making them interpretable&lt;/p></description><content>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
 a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers.
 These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be
 any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
@@ -457,7 +1238,13 @@ qk_buf_[threadIdx.x &amp;#43; qk_offset] = (T)(qk_tmp / s_sum);
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1805.02867">Online normalizer calculation for softmax Paper&lt;/a>&lt;/li>
-&lt;/ul></content></item><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+&lt;/ul></content></item><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
+hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
+the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can
+interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool
+that efficiently handles diverse languages without relying on predefined word boundaries.&lt;/p></description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
 hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
@@ -641,8 +1428,15 @@ the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;/ul>
 &lt;blockquote>
 &lt;p>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]&lt;/p>
-&lt;/blockquote></content></item><item><title>Why Audio Files Are Really Hard to Compress</title><link>/posts/compression1/</link><pubDate>Fri, 24 Feb 2023 03:01:20 -0700</pubDate><guid>/posts/compression1/</guid><description>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify and eliminate redundancy without losing essential information.
-Human perception of sound Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz.</description><content>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
+&lt;/blockquote></content></item><item><title>Why Audio Files Are Really Hard to Compress</title><link>/posts/compression1/</link><pubDate>Fri, 24 Feb 2023 03:01:20 -0700</pubDate><guid>/posts/compression1/</guid><description>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
+signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech
+and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify
+and eliminate redundancy without losing essential information.&lt;/p>
+&lt;h2 id="human-perception-of-sound">Human perception of sound&lt;/h2>
+&lt;p>Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz. Our perception of sound is also
+influenced by various factors, such as pitch, volume, and timbre. Any compression algorithm must take these perceptual
+aspects into account to ensure that the compressed audio still sounds natural to human listeners. This requirement adds
+an extra layer of complexity to the compression process.&lt;/p></description><content>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
 signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech
 and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify
 and eliminate redundancy without losing essential information.&lt;/p>
