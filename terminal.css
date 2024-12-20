@@ -1,10 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Fira+Code:wght@400;700&display=swap");
+
 :root {
-  --background: #1a170f;
+  --background: #000000;
   --foreground: #00ff00;
   --accent: #ff00ff;
   --font-size: 1rem;
   --line-height: 1.54rem;
-  --radius: 1px;
+  --radius: 0px;
 }
 
 html {
@@ -22,7 +24,12 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: "Fira Code", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-family:
+    "Fira Code",
+    Monaco,
+    Consolas,
+     "Ubuntu Mono",
+    monospace;
   font-size: 1rem;
   font-weight: 400;
   line-height: var(--line-height);
@@ -31,6 +38,8 @@ body {
   color: var(--foreground);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-feature-settings: "liga", "tnum", "zero", "ss01", "locl";
+  font-variant-ligatures: contextual;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
 }

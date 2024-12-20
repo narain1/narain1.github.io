@@ -1,14 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Narain</title><link>/posts/</link><description>Recent content in Posts on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 20 Nov 2024 01:15:54 -0700</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>OMP parallelization</title><link>/posts/omp_parallelization/</link><pubDate>Wed, 20 Nov 2024 01:15:54 -0700</pubDate><guid>/posts/omp_parallelization/</guid><description>&lt;p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
-It&amp;rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to
-write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.&lt;/p>
-&lt;p>OpenMP does the heavy lifting in several areas:&lt;/p>
-&lt;ol>
-&lt;li>&lt;strong>Thread Management&lt;/strong>: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management.&lt;/li>
-&lt;li>&lt;strong>Work Distribution&lt;/strong>: OpenMP provides a way to distribute work among threads, ensuring that each thread has a portion of the work to execute.&lt;/li>
-&lt;li>&lt;strong>Synchronization&lt;/strong>: OpenMP provides built-in synchronization mechanisms, such as barriers and locks, to ensure that threads access shared data safely.&lt;/li>
-&lt;li>&lt;strong>Data Management&lt;/strong>: OpenMP provides a way to manage data sharing between threads, reducing the risk of data corruption and inconsistencies.&lt;/li>
-&lt;/ol>
-&lt;p>OpenMP makes it easy to experiment with parallelism by:&lt;/p></description><content>&lt;p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Narain</title><link>/posts/</link><description>Recent content in Posts on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 20 Nov 2024 01:15:54 -0700</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>OMP parallelization</title><link>/posts/omp_parallelization/</link><pubDate>Wed, 20 Nov 2024 01:15:54 -0700</pubDate><guid>/posts/omp_parallelization/</guid><description>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran. It&amp;rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.
+OpenMP does the heavy lifting in several areas:
+Thread Management: OpenMP automatically manages thread creation, synchronization, and termination, freeing the developer from the complexity of thread management.</description><content>&lt;p>OpenMP (Open Multi-Processing) is an High level API for parallel programming in C, C++, and Fortran.
 It&amp;rsquo;s a widely-used, open-standard, and platform-independent library that allows developers to
 write parallel code that can run on multiple CPU cores, reducing the overall execution time of a program.&lt;/p>
 &lt;p>OpenMP does the heavy lifting in several areas:&lt;/p>
@@ -327,7 +319,6 @@ return 0;
 &lt;li>Minimize the use of critical sections, as they can introduce performance overhead.&lt;/li>
 &lt;li>Use other synchronization mechanisms, such as locks or atomic operations, when possible.&lt;/li>
 &lt;/ul>
-&lt;p>Certainly! Let&amp;rsquo;s discuss the barrier directive in OpenMP.&lt;/p>
 &lt;p>&lt;strong>Barrier Directive&lt;/strong>&lt;/p>
 &lt;p>The &lt;code>barrier&lt;/code> directive is used to synchronize all threads in a team. When a thread reaches a barrier, it waits until all other threads in the team have also reached the barrier. Once all threads have reached the barrier, they can all proceed past it.&lt;/p>
 &lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
@@ -394,7 +385,6 @@ Thread 3: Starting second part of work
 &lt;/li>
 &lt;/ol>
 &lt;p>The barrier directive is a powerful tool for synchronizing threads, but it should be used carefully to balance correctness and performance in your parallel programs.&lt;/p>
-&lt;p>Certainly! Let&amp;rsquo;s discuss the private clause in OpenMP.&lt;/p>
 &lt;p>&lt;strong>Private Clause&lt;/strong>&lt;/p>
 &lt;p>The &lt;code>private&lt;/code> clause is used to specify that each thread should have its own copy of the listed variables. This is useful when you want each thread to work with its own instance of a variable, preventing data races and ensuring thread safety.&lt;/p>
 &lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
@@ -471,7 +461,6 @@ Sum of squares from 1 to 100: 338350
 &lt;/li>
 &lt;/ol>
 &lt;p>The &lt;code>private&lt;/code> clause is a fundamental tool in OpenMP for managing data in parallel regions, helping to prevent data races and ensure correct parallel execution.&lt;/p>
-&lt;p>Certainly! Let&amp;rsquo;s discuss the firstprivate clause in OpenMP.&lt;/p>
 &lt;p>&lt;strong>Firstprivate Clause&lt;/strong>&lt;/p>
 &lt;p>The &lt;code>firstprivate&lt;/code> clause is similar to the &lt;code>private&lt;/code> clause, but it also initializes the private copies with the value of the original variable before entering the parallel region.&lt;/p>
 &lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
@@ -624,7 +613,6 @@ After parallel for: x = 99
 &lt;li>&lt;code>lastprivate&lt;/code>: May create uninitialized copies (unless combined with &lt;code>firstprivate&lt;/code>), but preserves the final value from the logically last iteration or section.&lt;/li>
 &lt;/ul>
 &lt;p>The &lt;code>lastprivate&lt;/code> clause is valuable when you need to capture the final state of a variable after parallel execution, especially in loops where the final iteration produces an important result.&lt;/p>
-&lt;p>Certainly! Let&amp;rsquo;s dive into the reduction clause in OpenMP.&lt;/p>
 &lt;p>&lt;strong>Reduction Clause&lt;/strong>&lt;/p>
 &lt;p>The &lt;code>reduction&lt;/code> clause is used to perform a reduction operation on one or more variables across all threads in a parallel region. It&amp;rsquo;s particularly useful for operations like summing, finding the maximum or minimum, or performing logical operations across a set of values computed in parallel.&lt;/p>
 &lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
@@ -698,7 +686,6 @@ return 0;
 &lt;p>&lt;strong>Performance Considerations&lt;/strong>&lt;/p>
 &lt;p>Reductions are generally very efficient, as they allow each thread to work independently and combine results only at the end. This often leads to good scalability. However, for very small loops or when the reduction operation is very simple, the overhead of creating and managing threads might outweigh the benefits of parallelization.&lt;/p>
 &lt;p>The &lt;code>reduction&lt;/code> clause is a powerful feature in OpenMP that simplifies parallel aggregation operations and helps avoid common pitfalls like race conditions when accumulating results across threads.&lt;/p>
-&lt;p>Certainly! Let&amp;rsquo;s discuss the schedule clause in OpenMP.&lt;/p>
 &lt;p>&lt;strong>Schedule Clause&lt;/strong>&lt;/p>
 &lt;p>The &lt;code>schedule&lt;/code> clause is used to specify how iterations of a loop are divided among threads in a parallel region. It allows you to control the workload distribution, which can significantly impact the performance of your parallel program.&lt;/p>
 &lt;p>&lt;strong>Syntax&lt;/strong>&lt;/p>
@@ -779,43 +766,14 @@ return 0;
 }
 &lt;/code>&lt;/pre>
 &lt;/div>
-&lt;p>&lt;strong>Output&lt;/strong>&lt;/p>
-&lt;p>The output will vary depending on the number of threads and the system, but it might look something like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>Thread 0 executing iteration 0
-Thread 0 executing iteration 1
-Thread 0 executing iteration 2
-Thread 0 executing iteration 3
-Thread 0 executing iteration 4
-Thread 1 executing iteration 5
-Thread 1 executing iteration 6
-Thread 1 executing iteration 7
-Thread 1 executing iteration 8
-Thread 1 executing iteration 9
-...
-Tested with schedule type: static
-Thread 0 executing iteration 0
-Thread 0 executing iteration 1
-Thread 1 executing iteration 2
-Thread 1 executing iteration 3
-Thread 2 executing iteration 4
-Thread 2 executing iteration 5
-...
-Tested with schedule type: static,2
-...
-&lt;/code>&lt;/pre>&lt;p>&lt;strong>Choosing the Right Schedule&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>Choosing the Right Schedule&lt;/strong>&lt;/p>
 &lt;ul>
 &lt;li>Use &lt;code>static&lt;/code> when iterations have similar workloads and you want to minimize scheduling overhead.&lt;/li>
 &lt;li>Use &lt;code>dynamic&lt;/code> or &lt;code>guided&lt;/code> when iterations have varying workloads to achieve better load balancing.&lt;/li>
 &lt;li>Use &lt;code>auto&lt;/code> when you&amp;rsquo;re unsure and want the system to decide.&lt;/li>
 &lt;li>Use &lt;code>runtime&lt;/code> for flexibility in testing different schedules without recompiling.&lt;/li>
 &lt;/ul>
-&lt;p>The choice of schedule can significantly affect performance, especially for loops with irregular workloads or when dealing with NUMA (Non-Uniform Memory Access) architectures.&lt;/p></content></item><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>&lt;h2 id="introduction">introduction&lt;/h2>
-&lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
-resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
-accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
-critical importance of understanding floating point numbers in computer systems. Floating point representation
-allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.
-However, it also introduces complexities and potential inaccuracies that programmers must carefully navigate.&lt;/p></description><content>&lt;h2 id="introduction">introduction&lt;/h2>
+&lt;p>The choice of schedule can significantly affect performance, especially for loops with irregular workloads or when dealing with NUMA (Non-Uniform Memory Access) architectures.&lt;/p></content></item><item><title>Understanding floating point numbers</title><link>/posts/float32/</link><pubDate>Fri, 21 Jun 2024 16:24:31 -0700</pubDate><guid>/posts/float32/</guid><description>introduction In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile, resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the critical importance of understanding floating point numbers in computer systems. Floating point representation allows computers to work with a wide range of real numbers, from the microscopic to the astronomical.</description><content>&lt;h2 id="introduction">introduction&lt;/h2>
 &lt;p>In 1991, a Patriot missile defense system in Saudi Arabia failed to intercept an incoming Scud missile,
 resulting in the tragic deaths of 28 American soldiers. The cause? A tiny floating point error that
 accumulated over time, throwing off the system&amp;rsquo;s timing by just 0.34 seconds. This incident highlights the
@@ -911,10 +869,7 @@ tolerance range, ensuring that small rounding errors do not invalidate the outco
 &lt;li>&lt;a href="https://nhigham.com/2020/05/04/what-is-floating-point-arithmetic/">Whis is floating point arithmetic&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://randomascii.wordpress.com/2013/07/16/floating-point-determinism/">Floating point determinism&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">How to defeat the purpose of IEEE floating point&lt;/a>&lt;/li>
-&lt;/ul></content></item><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
-These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
-hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
-extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p></description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
+&lt;/ul></content></item><item><title>Distributed Training</title><link>/posts/torchdistributed/</link><pubDate>Sun, 07 Apr 2024 12:44:46 -0700</pubDate><guid>/posts/torchdistributed/</guid><description>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges. These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.</description><content>&lt;p>Training advanced neural networks, particularly deep learning models such as transformers, presents significant computational challenges.
 These sophisticated models require substantial computational power, often exceeding the capabilities of the single GPU machine. The primary
 hurdles stem from the immense number of parameters that need to be calculated and updated during the training process. This not only demands
 extensive GPU memory but also nencassitates the use of large batch sizes to achieve efficient learning and convergence.&lt;/p>
@@ -1070,11 +1025,7 @@ process communication, enhancing the overall efficiency and effictiveness of dis
 &lt;li>&lt;a href="https://arxiv.org/pdf/2006.15704">Pytorch Distributed: Experiences on Accelerating Data Parallel Training&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/">Deep Speed Zero&lt;/a>&lt;/li>
 &lt;li>&lt;/li>
-&lt;/ul></content></item><item><title>Online Softmax</title><link>/posts/online-softmax/</link><pubDate>Mon, 26 Feb 2024 16:32:46 -0700</pubDate><guid>/posts/online-softmax/</guid><description>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
-a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers.
-These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be
-any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
-probabilities that sum to one, making them interpretable&lt;/p></description><content>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
+&lt;/ul></content></item><item><title>Online Softmax</title><link>/posts/online-softmax/</link><pubDate>Mon, 26 Feb 2024 16:32:46 -0700</pubDate><guid>/posts/online-softmax/</guid><description>One of the most important task in deep learning is classification. This involves predicting the class to which a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers. These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into probabilities that sum to one, making them interpretable</description><content>&lt;p>One of the most important task in deep learning is classification. This involves predicting the class to which
 a given input data belongs. Models such as convolution neural networks (CNN) and Large language models use classification layers.
 These models produce output predictions for all possible classes, but these predictions are not immediately usable as they can be
 any floating point number. The softmax function is essential in converting these raw model outputs, known as logits, into
@@ -1238,13 +1189,7 @@ qk_buf_[threadIdx.x &amp;#43; qk_offset] = (T)(qk_tmp / s_sum);
 &lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1805.02867">Online normalizer calculation for softmax Paper&lt;/a>&lt;/li>
-&lt;/ul></content></item><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
-&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
-hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
-the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can
-interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool
-that efficiently handles diverse languages without relying on predefined word boundaries.&lt;/p></description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
+&lt;/ul></content></item><item><title>Sentencepiece Tokenizer</title><link>/posts/sentencepiece-tokenizer/</link><pubDate>Mon, 15 Jan 2024 04:56:12 -0700</pubDate><guid>/posts/sentencepiece-tokenizer/</guid><description>Sentencepiece tokenizer Introduction In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is the process of tokenization, a crucial step where raw text is transformed into a structured format that the models can interpret from. Among the variety of tokenization methods, the sentencepiece tokenizer stands out as a versatile tool that efficiently handles diverse languages without relying on predefined word boundaries.</description><content>&lt;h1 id="sentencepiece-tokenizer">Sentencepiece tokenizer&lt;/h1>
 &lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In the rapidly evolving field of natural language processing (NLP), the efficiency and accuracy of language models
 hinge significantly on how text data is prepared and processed before training. At the heart of this preparation is
@@ -1428,15 +1373,8 @@ the original text can be perfectly reconstructed from the tokens.&lt;/p>
 &lt;/ul>
 &lt;blockquote>
 &lt;p>Tokenized text: [th, is, _, is, _, a, _, si, mple, _, ex, amp, le]&lt;/p>
-&lt;/blockquote></content></item><item><title>Why Audio Files Are Really Hard to Compress</title><link>/posts/compression1/</link><pubDate>Fri, 24 Feb 2023 03:01:20 -0700</pubDate><guid>/posts/compression1/</guid><description>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
-signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech
-and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify
-and eliminate redundancy without losing essential information.&lt;/p>
-&lt;h2 id="human-perception-of-sound">Human perception of sound&lt;/h2>
-&lt;p>Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz. Our perception of sound is also
-influenced by various factors, such as pitch, volume, and timbre. Any compression algorithm must take these perceptual
-aspects into account to ensure that the compressed audio still sounds natural to human listeners. This requirement adds
-an extra layer of complexity to the compression process.&lt;/p></description><content>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
+&lt;/blockquote></content></item><item><title>Why Audio Files Are Really Hard to Compress</title><link>/posts/compression1/</link><pubDate>Fri, 24 Feb 2023 03:01:20 -0700</pubDate><guid>/posts/compression1/</guid><description>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify and eliminate redundancy without losing essential information.
+Human perception of sound Human ears are sensitive to a wide range of frequencies, from about 20 Hz to 20 kHz.</description><content>&lt;p>Audio data is inherently complex and dense. Unlike text, where redundancy is common (think repeated words or phrases), audio
 signals are continuous streams of varying frequencies and amplitudes. These signals can include everything from human speech
 and music to ambient noises and complex soundscapes. The richness and variety in audio data make it challenging to identify
 and eliminate redundancy without losing essential information.&lt;/p>
