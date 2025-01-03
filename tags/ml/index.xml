@@ -13,11 +13,8 @@
       <pubDate>Sun, 07 Apr 2024 11:49:20 -0700</pubDate>
       
       <guid>//localhost:1313/posts/tensorparallel/</guid>
-      <description>&lt;p&gt;Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models
-unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time&lt;/p&gt;
-&lt;p&gt;As of now, PyTorch doesn&amp;rsquo;t support tensors to be directly split across multiple devices. However, as an alternative, we can partition
-large tensors and perform operations on them across multiple devices by splitting or tiling tensors. This approach helps reduce the time taken
-to complete performance-critical operations.&lt;/p&gt;</description>
+      <description>Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time
+As of now, PyTorch doesn&amp;rsquo;t support tensors to be directly split across multiple devices. However, as an alternative, we can partition large tensors and perform operations on them across multiple devices by splitting or tiling tensors.</description>
       <content>&lt;p&gt;Tensor parallel is a method in distributed computing where a large tensor operation is divided accross multiple gpus. Particularly useful in training large models
 unlike model parallelism or pipeline parallism maintains load over all gpus without a separate scheduler or inefficiency in compute time&lt;/p&gt;
 &lt;p&gt;As of now, PyTorch doesn&amp;rsquo;t support tensors to be directly split across multiple devices. However, as an alternative, we can partition

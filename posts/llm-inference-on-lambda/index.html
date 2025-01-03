@@ -1,0 +1,94 @@
+<!doctype html><html lang=en><head><title>Llm Inference on Lambda :: Narain</title>
+<meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="when it comes to deploying machine learning models, there are varied options to choose from depending on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment for serving models but often falls short in scalability, making it less ideal for workloads with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.
+What does Lambda provide AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only pay for the actual computation times used."><meta name=keywords content=","><meta name=robots content="noodp"><link rel=canonical href=/posts/llm-inference-on-lambda/><link rel=stylesheet href=/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css><link rel=stylesheet href=/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css><link rel=stylesheet href=/css/fonts.min.90c955c31dd7c0e05aae3d4f583d4d8a2af799d69c961337eaf2a825063a55dd.css><link rel=stylesheet href=/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css><link rel=stylesheet href=/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css><link rel=stylesheet href=/css/header.min.b6fb4423cf82a9f9d7abc9cd010223fa3d70a6526a3f28f8e17d814c06e18f9e.css><link rel=stylesheet href=/css/main.min.1d8be2dd1b5de9fdaed058c8c59fcf4485f36619574abfb47ed0cfda4812c16d.css><link rel=stylesheet href=/css/menu.min.83637a90d903026bc280d3f82f96ceb06c5fc72b7c1a8d686afb5bbf818a29f7.css><link rel=stylesheet href=/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css><link rel=stylesheet href=/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css><link rel=stylesheet href=/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css><link rel=stylesheet href=/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css><link rel=stylesheet href=/css/terminal.min.736caf886baa67df630c4cde30fbdc5115122eb74c6246f15a31401344bfa2f0.css><link rel=stylesheet href=/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css><link rel=stylesheet href=/terminal.css><link rel="shortcut icon" href=/favicon.png><link rel=apple-touch-icon href=/apple-touch-icon.png><meta name=twitter:card content="summary"><meta name=twitter:site content><meta name=twitter:creator content><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="og:title" content="Llm Inference on Lambda"><meta property="og:description" content="when it comes to deploying machine learning models, there are varied options to choose from depending on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment for serving models but often falls short in scalability, making it less ideal for workloads with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.
+What does Lambda provide AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only pay for the actual computation times used."><meta property="og:url" content="/posts/llm-inference-on-lambda/"><meta property="og:site_name" content="Narain"><meta property="og:image" content="/"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="627"><meta property="article:published_time" content="0001-01-01 00:00:00 +0000 UTC"></head><body><div class="container center"><header class=header><div class=header__inner><div class=header__logo><a href=/><div class=logo>Narain</div></a></div><ul class="menu menu--mobile"><li class=menu__trigger>Menu&nbsp;▾</li><li><ul class=menu__dropdown><li><a href=/about>About</a></li><li><a href=https://narain1.netlify.app>portfolio</a></li></ul></li></ul></div><nav class=navigation-menu><ul class="navigation-menu__inner menu--desktop"><li><a href=/about>About</a></li><li><a href=https://narain1.netlify.app>portfolio</a></li></ul></nav></header><div class=content><article class=post><h1 class=post-title><a href=/posts/llm-inference-on-lambda/>Llm Inference on Lambda</a></h1><div class=post-meta></div><span class=post-tags>#<a href=/tags/></a>&nbsp;
+#<a href=/tags/></a>&nbsp;</span><div class=post-content><div><p>when it comes to deploying machine learning models, there are varied options to choose from depending
+on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment
+for serving models but often falls short in scalability, making it less ideal for workloads
+with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.</p><h3 id=what-does-lambda-provide>What does Lambda provide<a href=#what-does-lambda-provide class=hanchor arialabel=Anchor>#</a></h3><p>AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only
+pay for the actual computation times used. For lightweight and quantized machine learning models.
+especially those finetuned for specific tasks, Lambda provides an efficient deployment option. with its
+support for up to 6 vCPUs and 10 GB of memory, it can handle smaller models effectively, sufficient to
+run some mobile YOLO models and llm models which are optimized for inference using GGML.</p><p>However deploying complex models like llama-cpp in a virtualized Lambda environment comes with unique
+challeges.</p><ul><li>Restrictions on specialized CPU instructions (such as AVX512 and AMX) which are available on some of
+the servers that AWS provides but are not available for use.</li><li>If some lambda function is idle it will go to cold start state and the next time it is invoked it
+requires a startup time to allocate a machine and start up the server.</li></ul><p>running machine learning models which are compute demanding require some careful configuration.</p><div class=collapsable-code><input id=1 type=checkbox checked>
+<label for=1><span class=collapsable-code__language>python</span>
+<span class=collapsable-code__title>inference script</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-python><code>
+from llama_cpp import Llama
+
+def download_model_to_tmp():
+    pass
+
+def initialize_model():
+    if model_exists_in_tmp(): download_model_to_tmp()
+    llm = Llama(
+        model_path=&#34;/tmp/lama-model.gguf&#34;,
+    )
+    return True
+
+def lambda_handler(event, context):
+    if event[&#39;body&#39;][&#39;health_check&#39;]: return initialize_model()
+    response = llm(
+        &#34;Q: Name the planets in the solar system? A: &#34;, # Prompt
+        max_tokens=32,
+        stop=[&#34;Q:&#34;, &#34;\n&#34;],
+        echo=True 
+    ) 
+    return response
+</code></pre></div><div class=collapsable-code><input id=1 type=checkbox checked>
+<label for=1><span class=collapsable-code__language>dockerfile</span>
+<span class=collapsable-code__title>dockerfile for building the image</span>
+<span class=collapsable-code__toggle data-label-expand=Show data-label-collapse=Hide></span></label><pre class=language-dockerfile><code>
+
+FROM --platform=linux/amd64 python:3.11-slim as build-image
+
+ARG FUNCTION_DIR=&#34;/function&#34;
+
+RUN mkdir -p ${FUNCTION_DIR}
+WORKDIR ${FUNCTION_DIR}
+
+COPY inference.py .
+
+RUN apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    libopenblas-dev \
+    libgomp1 \
+    pkg-config \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+RUN CMAKE_ARGS=&#34;-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS \
+        -DCMAKE_CXX_FLAGS=\&#34;-march=x86-64\&#34; -DLLAMA_AVX512=OFF \ 
+        -DLLAMA_AVX2=OFF -DLLAMA_AVX=OFF -DLLAMA_FMA=OFF \ 
+        -DLLAMA_F16C=OFF -DLLAMA_BUILD_SERVER=1 \ 
+        -DLLAMA_CUBLAS=OFF -DGGML_NATIVE=OFF&#34; \
+        pip install --target ${FUNCTION_DIR} llama-cpp-python
+
+RUN pip install --target ${FUNCTION_DIR} --no-cache-dir boto3
+RUN pip install --target ${FUNCTION_DIR} --no-cache-dir awslambdaric==2.0.7
+
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/runtime /var/runtime
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/lang /var/lang
+COPY --from=public.ecr.aws/lambda/python:3.11 /usr/lib64 /usr/lib64
+COPY --from=public.ecr.aws/lambda/python:3.11 /opt /opt
+
+FROM --platform=linux/amd64 python:3.11-slim as runtime-image
+
+ARG FUNCTION_DIR=&#34;/function&#34;
+WORKDIR ${FUNCTION_DIR}
+
+RUN apt-get update \
+    &amp;&amp; apt-get -y install libopenblas-dev libgomp1 \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/runtime /var/runtime
+
+ENTRYPOINT [ &#34;/usr/local/bin/python&#34;, &#34;-m&#34;, &#34;awslambdaric&#34; ]
+CMD [ &#34;inference.lambda_handler&#34; ]
+</code></pre></div><h1 id=references>References<a href=#references class=hanchor arialabel=Anchor>#</a></h1><ul><li><a href=https://github.com/abetlen/llama-cpp-python>llama cpp python</a></li><li><a href=https://github.com/ggerganov/llama.cpp>llama cpp</a></li></ul></div></div><div class=pagination><div class=pagination__title><span class=pagination__title-h>Read other posts</span><hr></div><div class=pagination__buttons><a href=/posts/compression1/ class="button inline prev">Why Audio Files Are Really Hard to Compress</a></div></div></article></div><footer class=footer><div class=footer__inner><div class=copyright><span>© 2025 Powered by <a href=https://gohugo.io>Hugo</a></span>
+<span>:: <a href=https://github.com/panr/hugo-theme-terminal target=_blank>Theme</a> made by <a href=https://github.com/panr target=_blank>panr</a></span></div></div></footer><script type=text/javascript src=/bundle.min.js></script></div></body></html>
