@@ -13,16 +13,8 @@
       <pubDate>Thu, 20 Jun 2024 01:10:00 -0700</pubDate>
       
       <guid>//localhost:1313/posts/torchdistributed2/</guid>
-      <description>&lt;p&gt;In the ever-evolving landscape of artificial intelligence and machine learning, the
-demand for training larger and more complex models continues to grow. Traditional
-techniques such as data parallelism, model parallelism, and tensor parallelism have
-played crucial roles in enabling this growth by distributing the training workload
-across multiple GPUs and machines. These methods are foundational in making large-scale
-training feasible by addressing issues related to computation and memory distribution.&lt;/p&gt;
-&lt;h2 id=&#34;memory-consumption-in-neural-networks-where-did-all-the-memory-go&#34;&gt;Memory Consumption in Neural Networks: Where Did All the Memory Go?&lt;/h2&gt;
-&lt;p&gt;When training large neural network models like GPT-2, understanding memory consumption
-is crucial. Let&amp;rsquo;s breakdown where all the memory goes and how different techniques can help
-manage it more efficiently.&lt;/p&gt;</description>
+      <description>In the ever-evolving landscape of artificial intelligence and machine learning, the demand for training larger and more complex models continues to grow. Traditional techniques such as data parallelism, model parallelism, and tensor parallelism have played crucial roles in enabling this growth by distributing the training workload across multiple GPUs and machines. These methods are foundational in making large-scale training feasible by addressing issues related to computation and memory distribution.
+Memory Consumption in Neural Networks: Where Did All the Memory Go?</description>
       <content>&lt;p&gt;In the ever-evolving landscape of artificial intelligence and machine learning, the
 demand for training larger and more complex models continues to grow. Traditional
 techniques such as data parallelism, model parallelism, and tensor parallelism have
