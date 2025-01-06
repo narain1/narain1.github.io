@@ -50,15 +50,7 @@ return response
 &lt;/code>&lt;/pre>
 &lt;/div>
 &lt;h4 id="code-of-the-dockerfile-which-is-required-for-the-build">Code of the dockerfile which is required for the build&lt;/h4>
-&lt;div class="collapsable-code">
-&lt;input id="1" type="checkbox" checked />
-&lt;label for="1">
-&lt;span class="collapsable-code__language">dockerfile&lt;/span>
-&lt;span class="collapsable-code__title">dockerfile for building the image&lt;/span>
-&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
-&lt;/label>
-&lt;pre class="language-dockerfile" >&lt;code>
-FROM --platform=linux/amd64 python:3.11-slim as build-image
+&lt;pre tabindex="0">&lt;code>FROM --platform=linux/amd64 python:3.11-slim as build-image
 ARG FUNCTION_DIR=&amp;#34;/function&amp;#34;
 RUN mkdir -p ${FUNCTION_DIR}
 WORKDIR ${FUNCTION_DIR}
@@ -93,9 +85,7 @@ COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 COPY --from=public.ecr.aws/lambda/python:3.11 /var/runtime /var/runtime
 ENTRYPOINT [ &amp;#34;/usr/local/bin/python&amp;#34;, &amp;#34;-m&amp;#34;, &amp;#34;awslambdaric&amp;#34; ]
 CMD [ &amp;#34;inference.lambda_handler&amp;#34; ]
-&lt;/code>&lt;/pre>
-&lt;/div>
-&lt;h1 id="references">References&lt;/h1>
+&lt;/code>&lt;/pre>&lt;h1 id="references">References&lt;/h1>
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/abetlen/llama-cpp-python">llama cpp python&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://github.com/ggerganov/llama.cpp">llama cpp&lt;/a>&lt;/li>
