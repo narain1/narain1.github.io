@@ -18,6 +18,9 @@ the servers that AWS provides but are not available for use.&lt;/li>
 requires a startup time to allocate a machine and start up the server.&lt;/li>
 &lt;/ul>
 &lt;p>running machine learning models which are compute demanding require some careful configuration.&lt;/p>
+&lt;p>below i have provided some basic configuration of running llama cpp on lambda on aws. with this setup
+you should be good enough to run nearly all machine learning models on lambda once it is converted to gguf
+format&lt;/p>
 &lt;div class="collapsable-code">
 &lt;input id="1" type="checkbox" checked />
 &lt;label for="1">
@@ -46,6 +49,7 @@ echo=True
 return response
 &lt;/code>&lt;/pre>
 &lt;/div>
+&lt;h4 id="code-of-the-dockerfile-which-is-required-for-the-build">Code of the dockerfile which is required for the build&lt;/h4>
 &lt;div class="collapsable-code">
 &lt;input id="1" type="checkbox" checked />
 &lt;label for="1">
