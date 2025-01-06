@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Inference on Narain</title><link>/tags/inference/</link><description>Recent content in Inference on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 03 Jan 2025 01:01:19 -0700</lastBuildDate><atom:link href="/tags/inference/index.xml" rel="self" type="application/rss+xml"/><item><title>Llm Inference on Lambda</title><link>/posts/llm-inference-on-lambda/</link><pubDate>Fri, 03 Jan 2025 01:01:19 -0700</pubDate><guid>/posts/llm-inference-on-lambda/</guid><description>when it comes to deploying machine learning models, there are varied options to choose from depending on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment for serving models but often falls short in scalability, making it less ideal for workloads with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.
+What does Lambda provide AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only pay for the actual computation times used.</description><content>&lt;p>when it comes to deploying machine learning models, there are varied options to choose from depending
+on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment
+for serving models but often falls short in scalability, making it less ideal for workloads
+with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.&lt;/p>
+&lt;h3 id="what-does-lambda-provide">What does Lambda provide&lt;/h3>
+&lt;p>AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only
+pay for the actual computation times used. For lightweight and quantized machine learning models.
+especially those finetuned for specific tasks, Lambda provides an efficient deployment option. with its
+support for up to 6 vCPUs and 10 GB of memory, it can handle smaller models effectively, sufficient to
+run some mobile YOLO models and llm models which are optimized for inference using GGML.&lt;/p>
+&lt;p>However deploying complex models like llama-cpp in a virtualized Lambda environment comes with unique
+challeges.&lt;/p>
+&lt;ul>
+&lt;li>Restrictions on specialized CPU instructions (such as AVX512 and AMX) which are available on some of
+the servers that AWS provides but are not available for use.&lt;/li>
+&lt;li>If some lambda function is idle it will go to cold start state and the next time it is invoked it
+requires a startup time to allocate a machine and start up the server.&lt;/li>
+&lt;/ul>
+&lt;p>running machine learning models which are compute demanding require some careful configuration.&lt;/p>
+&lt;p>below i have provided some basic configuration of running llama cpp on lambda on aws. with this setup
+you should be good enough to run nearly all machine learning models on lambda once it is converted to gguf
+format&lt;/p>
+&lt;div class="collapsable-code">
+&lt;input id="1" type="checkbox" checked />
+&lt;label for="1">
+&lt;span class="collapsable-code__language">python&lt;/span>
+&lt;span class="collapsable-code__title">inference script&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-python" >&lt;code>
+from llama_cpp import Llama
+def download_model_to_tmp():
+pass
+def initialize_model():
+if model_exists_in_tmp(): download_model_to_tmp()
+llm = Llama(
+model_path=&amp;#34;/tmp/lama-model.gguf&amp;#34;,
+)
+return True
+def lambda_handler(event, context):
+if event[&amp;#39;body&amp;#39;][&amp;#39;health_check&amp;#39;]: return initialize_model()
+response = llm(
+&amp;#34;Q: Name the planets in the solar system? A: &amp;#34;, # Prompt
+max_tokens=32,
+stop=[&amp;#34;Q:&amp;#34;, &amp;#34;\n&amp;#34;],
+echo=True
+)
+return response
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;h4 id="code-of-the-dockerfile-which-is-required-for-the-build">Code of the dockerfile which is required for the build&lt;/h4>
+&lt;div class="collapsable-code">
+&lt;input id="1" type="checkbox" checked />
+&lt;label for="1">
+&lt;span class="collapsable-code__language">dockerfile&lt;/span>
+&lt;span class="collapsable-code__title">dockerfile for building the image&lt;/span>
+&lt;span class="collapsable-code__toggle" data-label-expand="Show" data-label-collapse="Hide">&lt;/span>
+&lt;/label>
+&lt;pre class="language-dockerfile" >&lt;code>
+FROM --platform=linux/amd64 python:3.11-slim as build-image
+ARG FUNCTION_DIR=&amp;#34;/function&amp;#34;
+RUN mkdir -p ${FUNCTION_DIR}
+WORKDIR ${FUNCTION_DIR}
+COPY inference.py .
+RUN apt-get update \
+&amp;amp;&amp;amp; apt-get install -y --no-install-recommends \
+build-essential \
+cmake \
+libopenblas-dev \
+libgomp1 \
+pkg-config \
+&amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/*
+RUN CMAKE_ARGS=&amp;#34;-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS \
+-DCMAKE_CXX_FLAGS=\&amp;#34;-march=x86-64\&amp;#34; -DLLAMA_AVX512=OFF \
+-DLLAMA_AVX2=OFF -DLLAMA_AVX=OFF -DLLAMA_FMA=OFF \
+-DLLAMA_F16C=OFF -DLLAMA_BUILD_SERVER=1 \
+-DLLAMA_CUBLAS=OFF -DGGML_NATIVE=OFF&amp;#34; \
+pip install --target ${FUNCTION_DIR} llama-cpp-python
+RUN pip install --target ${FUNCTION_DIR} --no-cache-dir boto3
+RUN pip install --target ${FUNCTION_DIR} --no-cache-dir awslambdaric==2.0.7
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/runtime /var/runtime
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/lang /var/lang
+COPY --from=public.ecr.aws/lambda/python:3.11 /usr/lib64 /usr/lib64
+COPY --from=public.ecr.aws/lambda/python:3.11 /opt /opt
+FROM --platform=linux/amd64 python:3.11-slim as runtime-image
+ARG FUNCTION_DIR=&amp;#34;/function&amp;#34;
+WORKDIR ${FUNCTION_DIR}
+RUN apt-get update \
+&amp;amp;&amp;amp; apt-get -y install libopenblas-dev libgomp1 \
+&amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/*
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+COPY --from=public.ecr.aws/lambda/python:3.11 /var/runtime /var/runtime
+ENTRYPOINT [ &amp;#34;/usr/local/bin/python&amp;#34;, &amp;#34;-m&amp;#34;, &amp;#34;awslambdaric&amp;#34; ]
+CMD [ &amp;#34;inference.lambda_handler&amp;#34; ]
+&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/abetlen/llama-cpp-python">llama cpp python&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/ggerganov/llama.cpp">llama cpp&lt;/a>&lt;/li>
+&lt;/ul></content></item></channel></rss>
