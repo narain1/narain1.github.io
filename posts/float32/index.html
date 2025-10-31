@@ -56,7 +56,7 @@ registers adhere to the IEEE 754 standard, which defines the floating-point form
 bit, 23 mantissa bits, and 8 exponent bits. Sticking to this standard is critical for
 ensuring consistency across platforms, allowing programmers to achieve identical results on different
 systems—vital for reliable and predictable computation.</p><h5 id=evolution>Evolution<a href=#evolution class=hanchor arialabel=Anchor>#</a></h5><p>With the rising concern of the <code>memory wall</code> chip manufacturers build custom low precision floating point
-arithmatic such as float8, float16, bfloat16 and tensor-float32.</p><h2 id=efficiency-to-high-precision-calculations>Efficiency to high precision calculations<a href=#efficiency-to-high-precision-calculations class=hanchor arialabel=Anchor>#</a></h2><p>Floating-point operations, due to the limitations of their representation, come with some inherent drawbacks.
+arithmatic such as float8, float16, bfloat16 and tensor-float32.</p><p>where float32 is the standard representation</p><h2 id=efficiency-to-high-precision-calculations>Efficiency to high precision calculations<a href=#efficiency-to-high-precision-calculations class=hanchor arialabel=Anchor>#</a></h2><p>Floating-point operations, due to the limitations of their representation, come with some inherent drawbacks.
 One key issue is that they are not strictly commutative—meaning a+b≠b+a in certain cases, particularly in
 low-precision arithmetic. This non-commutativity increases rounding errors, especially in
 embarrassingly parallel applications, where threads process operands out of order.
