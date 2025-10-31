@@ -79,6 +79,7 @@ systems—vital for reliable and predictable computation.&lt;/p>
 &lt;h5 id="evolution">Evolution&lt;/h5>
 &lt;p>With the rising concern of the &lt;code>memory wall&lt;/code> chip manufacturers build custom low precision floating point
 arithmatic such as float8, float16, bfloat16 and tensor-float32.&lt;/p>
+&lt;p>where float32 is the standard representation&lt;/p>
 &lt;h2 id="efficiency-to-high-precision-calculations">Efficiency to high precision calculations&lt;/h2>
 &lt;p>Floating-point operations, due to the limitations of their representation, come with some inherent drawbacks.
 One key issue is that they are not strictly commutative—meaning a+b≠b+a in certain cases, particularly in
