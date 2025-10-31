@@ -4,7 +4,7 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;p>I also want to thank all fellow competitors for their thoughtful contributions and active engagement throughout the event particularly those who participated in Discord threads, shared early insights, or offered peer feedback. Your collaboration elevated the entire experience.&lt;/p>
 &lt;p>Special thanks to EDA Danial and Sanyam for dedicating significant time to evaluate submissions, provide nuanced feedback, and help realign judging frameworks as needed.&lt;/p>
 &lt;h2 id="problem-context-why-synthetic-data">Problem Context: Why Synthetic Data?&lt;/h2>
-&lt;p>The core challenge of this hackathon centered around generating high-quality, domain-relevant synthetic datasets to train or fine-tune LLMs specifically for reasoning tasks involving character relationships, logical inference, and narrative coherence.&lt;/p>
+&lt;p>The core challenge of this hackathon centered around generating high-quality, domain-relevant synthetic datasets to train or fine-tune LLMs specifically for reasoning tasks involving character relationships and seating arrangement (linear and circular).&lt;/p>
 &lt;p>Initial approaches involved Synthetic data generation involving a assorted set of aptitude like questions from &lt;a href="https://huggingface.co/datasets/nvidia/OpenMathReasoning">nvidia/OpenMathReasoning&lt;/a> .&lt;/p>
 &lt;p>Early attempts at brute-force data generation using generic Aptitude datasets (including math, logic puzzles, and general knowledge Q&amp;amp;A) failed to produce usable training material because:&lt;/p>
 &lt;ul>
@@ -14,6 +14,7 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;/ul>
 &lt;p>This led us to abandon “scrape-and-prompt” approaches and instead design a &lt;strong>multi-stage, relationship-aware synthetic data pipeline&lt;/strong> grounded in structured generation, guided prompting, and iterative refinement.&lt;/p>
 &lt;h2 id="methodology-multi-stage-question-answer-pair-generation-pipeline">Methodology: Multi-Stage Question-Answer Pair Generation Pipeline&lt;/h2>
+&lt;p>Prior to embarking on synthetic data generation, we dedicated substantial effort to curating a robust initial dataset. We recognized that a high-quality foundation maximizes training efficiency and long-term returns. Unsloth&amp;rsquo;s integration was pivotal throughout the hackathon, enabling seamless workflows without NaN errors—issues typically plaguing fp16 and quantized setups.&lt;/p>
 &lt;p>We designed a three-phase framework to generate synthetic QA pairs that encode meaningful relationships between characters and plot elements mimicking the kind of reasoning required in story-based or logic-driven tasks.&lt;/p>
 &lt;h3 id="phase-1-relationship-definition-layer">Phase 1: Relationship Definition Layer&lt;/h3>
 &lt;p>Before generating any questions, we defined &lt;strong>semantic relationships&lt;/strong> between key characters from selected narratives (e.g., &lt;em>Alice in Wonderland&lt;/em>). For example:&lt;/p>
@@ -23,7 +24,8 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;p>We mapped out relationships such as:&lt;/p>
 &lt;ul>
 &lt;li>Parent-child&lt;/li>
-&lt;li>Niece-nephey&lt;/li>
+&lt;li>GrandParent-GrandChild&lt;/li>
+&lt;li>Niece-nephew&lt;/li>
 &lt;li>In-laws&lt;/li>
 &lt;/ul>
 &lt;p>These relationships formed the backbone of our prompt engineering strategy.&lt;/p>
@@ -32,7 +34,7 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;p>&lt;code>Alice&lt;/code>, &lt;code>White Rabbit&lt;/code>, &lt;code>Cheshire Cat&lt;/code>, &lt;code>Mad Hatter&lt;/code>, &lt;code>March Hare&lt;/code>.&lt;/p>
 &lt;p>Each question was then framed around these roles, ensuring consistency across generations. Prompts included explicit instructions like:&lt;/p>
 &lt;blockquote>
-&lt;p>“Generate a multiple-choice question where the correct answer reflects the relationship between [Character A] and [Character B], based on their established roles in the story.”&lt;/p>
+&lt;p>“Generate a multiple-choice question where the correct answer reflects the relationship between [Character A] and [Character B], based on their established roles in the story involving the path of Character C, E, D.”&lt;/p>
 &lt;/blockquote>
 &lt;p>This helped reduce hallucination and increased alignment with expected outputs.&lt;/p>
 &lt;h3 id="phase-3-guided-llm-inference-for-relational-reasoning">Phase 3: Guided LLM Inference for Relational Reasoning&lt;/h3>
@@ -42,6 +44,11 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;li>Then, we reversed the process: gave only the question + relationship context, and asked the LLM to generate plausible distractors (wrong answers) that still made sense narratively — increasing dataset diversity without sacrificing relevance.&lt;/li>
 &lt;/ul>
 &lt;p>This two-way validation loop significantly improved output quality and reduced noise.&lt;/p>
+&lt;h4 id="one-of-the-largely-found-exploit-in-arrangement-was-sorting">One of the largely found exploit in arrangement was sorting&lt;/h4>
+&lt;blockquote>
+&lt;p>Thanks to the tokenisation of Language models.&lt;/p>
+&lt;/blockquote>
+&lt;p>A prominent vulnerability in seating arrangement tasks (linear or circular) involves alphabetical sorting of entity names. LLMs frequently err by defaulting to sorted orders when given random names, leading to incorrect inferences. We excluded such patterns from our training data to avoid propagating these flaws, as generated answers often replicated the errors.&lt;/p>
 &lt;h2 id="technical-implementation-details">Technical Implementation details&lt;/h2>
 &lt;h3 id="model-selection--training-setup">Model Selection &amp;amp; Training Setup&lt;/h3>
 &lt;p>We experimented with several open-source LLMs known for strong reasoning capabilities:&lt;/p>
@@ -50,34 +57,29 @@ I also want to thank all fellow competitors for their thoughtful contributions a
 &lt;tr>
 &lt;th>&lt;/th>
 &lt;th>&lt;/th>
-&lt;th>&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
 &lt;td>Llama 2 70B&lt;/td>
 &lt;td>70B parameters&lt;/td>
-&lt;td>Primary generator for complex relational QA&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>Qwen3-Next 80B MoE&lt;/td>
 &lt;td>80B MoE&lt;/td>
-&lt;td>High-diversity sampling, creative distractor generation&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>Phi-4&lt;/td>
 &lt;td>Smaller, efficient&lt;/td>
-&lt;td>Fast iteration, lightweight validation loops&lt;/td>
 &lt;/tr>
 &lt;tr>
 &lt;td>R1-based LLMs&lt;/td>
 &lt;td>Custom fine-tuned variants&lt;/td>
-&lt;td>Used for post-processing and format normalization&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
 &lt;p>All models were run locally or via cloud APIs with controlled temperature settings (typically 0.3–0.7) to balance creativity vs. accuracy.&lt;/p>
-&lt;h3 id="structured-output-enforcement">Structured Output Enforcement&lt;/h3>
+&lt;h3 id="structured-output-grammar-enforcement">Structured Output (grammar) Enforcement&lt;/h3>
 &lt;p>One critical breakthrough was enforcing &lt;strong>structured output formats&lt;/strong> during generation. Instead of free-form text, we required LLMs to return JSON-like structures containing:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What is the relationship between Alice and the Cheshire Cat?&amp;#34;&lt;/span>,
@@ -160,12 +162,12 @@ time_limit = 5 seconds ~100 tokens per second&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;reasoning&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;... step-by-step derivation ...&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;C&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We used &lt;strong>multi-stage SFT&lt;/strong>:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We had two training phases here&lt;/p>
 &lt;ol>
-&lt;li>First stage: Train on basic reasoning patterns (family trees, symbolic notation)&lt;/li>
-&lt;li>Second stage: Add complexity — nested relationships, indirect inferences&lt;/li>
-&lt;li>Third stage: Introduce distractor-aware training — teach model to recognize why wrong options are incorrect&lt;/li>
+&lt;li>longer reasoning context&lt;/li>
+&lt;li>Shorter reasoning context&lt;/li>
 &lt;/ol>
+&lt;p>The shorter reasoning helps us in reducing the token output.&lt;/p>
 &lt;h2 id="grpo-reward-functions-1">GRPO Reward Functions&lt;/h2>
 &lt;p>Applied during iterative tuning to refine behavior beyond basic accuracy:&lt;/p>
 &lt;table>
@@ -199,7 +201,7 @@ time_limit = 5 seconds ~100 tokens per second&lt;/p>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>This weighting strategy prioritized &lt;strong>correctness &amp;gt; structure &amp;gt; completeness&lt;/strong>, which aligned with our goal: build a reliable validator for the Question Generator.&lt;/p>
+&lt;p>This weighting strategy prioritized &lt;strong>correctness &amp;gt; structure &amp;gt; completeness&lt;/strong>, which aligned with our goal: build a reliable validator for the Question Generator (TODO).&lt;/p>
 &lt;h2 id="why-reasoning-matters-more-than-just-answer">Why Reasoning Matters More Than Just Answer&lt;/h2>
 &lt;p>We found that &lt;strong>the reasoning field is crucial for labeling correctness&lt;/strong>.&lt;/p>
 &lt;p>Example:&lt;/p>
@@ -210,14 +212,16 @@ Reasoning: “P – M → P is brother of M; M + N → M is mother of N; N × Q 
 &lt;/blockquote>
 &lt;p>Without the reasoning, you can’t verify whether option C is truly correct — especially when symbolic notation varies.&lt;/p>
 &lt;p>Thus, we treated reasoning as a &lt;strong>core component of ground truth&lt;/strong>, not just an explanation.&lt;/p>
-&lt;h2 id="what-didnt-work-for-grpo">What Didn’t Work for GRPO&lt;/h2>
+&lt;h2 id="what-didnt-work-1">What Didn’t Work&lt;/h2>
 &lt;h3 id="rewarding-low-token-usage-in-reasoning">Rewarding Low Token Usage in Reasoning&lt;/h3>
 &lt;p>We initially tried rewarding shorter reasoning traces to encourage efficiency.&lt;/p>
 &lt;p>Failed because:&lt;/p>
 &lt;ul>
 &lt;li>Often led to skipped steps or unjustified conclusions&lt;/li>
 &lt;li>Reduced model confidence and increased error rates - removed this reward entirely. Instead, focused on &lt;strong>logical completeness&lt;/strong> and &lt;strong>clarity of inference chain&lt;/strong>.&lt;/li>
-&lt;/ul></content></item><item><title>Llm Inference on Lambda</title><link>/posts/llm-inference-on-lambda/</link><pubDate>Fri, 03 Jan 2025 01:01:19 -0700</pubDate><guid>/posts/llm-inference-on-lambda/</guid><description>when it comes to deploying machine learning models, there are varied options to choose from depending on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment for serving models but often falls short in scalability, making it less ideal for workloads with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.
+&lt;/ul>
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;p>For final submissions, the question model used a base, unfine-tuned Phi-4 14B, while the answering model employed Qwen3 14B with LoRA training via SFT and GRPO. To ensure compatibility and fairness, we adhered closely to the provided submission code templates, minimizing deviations.&lt;/p></content></item><item><title>Llm Inference on Lambda</title><link>/posts/llm-inference-on-lambda/</link><pubDate>Fri, 03 Jan 2025 01:01:19 -0700</pubDate><guid>/posts/llm-inference-on-lambda/</guid><description>when it comes to deploying machine learning models, there are varied options to choose from depending on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment for serving models but often falls short in scalability, making it less ideal for workloads with unpredictable traffic patterns. This is where a scalable distributed system like AWS Lambda.
 What does Lambda provide AWS Lambda offers a serverless architecture that scales automatically with demand, ensuring you only pay for the actual computation times used.</description><content>&lt;p>when it comes to deploying machine learning models, there are varied options to choose from depending
 on your scalability and cost requirements. A dedicated instance, for example, offers a stable environment
 for serving models but often falls short in scalability, making it less ideal for workloads

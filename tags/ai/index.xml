@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Narain</title><link>/tags/ai/</link><description>Recent content in AI on Narain</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Fri, 31 Oct 2025 17:15:52 +0000</lastBuildDate><atom:link href="/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Synthetic Data Hackathon - AMD</title><link>/posts/synthetic-data-hackathon/</link><pubDate>Fri, 31 Oct 2025 17:15:52 +0000</pubDate><guid>/posts/synthetic-data-hackathon/</guid><description>Finalist Submission Methodology &amp;amp; Technical Deep Dive First and foremost, I’d like to extend my sincere gratitude to the AMD Hackathon organizers for orchestrating this intensive, high-impact competition especially for investing time in evaluating submissions, facilitating discussions, and reorganizing logistics to ensure fairness and transparency.
+I also want to thank all fellow competitors for their thoughtful contributions and active engagement throughout the event particularly those who participated in Discord threads, shared early insights, or offered peer feedback.</description><content>&lt;h1 id="finalist-submission-methodology--technical-deep-dive">Finalist Submission Methodology &amp;amp; Technical Deep Dive&lt;/h1>
+&lt;p>First and foremost, I’d like to extend my sincere gratitude to the AMD Hackathon organizers for orchestrating this intensive, high-impact competition especially for investing time in evaluating submissions, facilitating discussions, and reorganizing logistics to ensure fairness and transparency.&lt;/p>
+&lt;p>I also want to thank all fellow competitors for their thoughtful contributions and active engagement throughout the event particularly those who participated in Discord threads, shared early insights, or offered peer feedback. Your collaboration elevated the entire experience.&lt;/p>
+&lt;p>Special thanks to EDA Danial and Sanyam for dedicating significant time to evaluate submissions, provide nuanced feedback, and help realign judging frameworks as needed.&lt;/p>
+&lt;h2 id="problem-context-why-synthetic-data">Problem Context: Why Synthetic Data?&lt;/h2>
+&lt;p>The core challenge of this hackathon centered around generating high-quality, domain-relevant synthetic datasets to train or fine-tune LLMs specifically for reasoning tasks involving character relationships and seating arrangement (linear and circular).&lt;/p>
+&lt;p>Initial approaches involved Synthetic data generation involving a assorted set of aptitude like questions from &lt;a href="https://huggingface.co/datasets/nvidia/OpenMathReasoning">nvidia/OpenMathReasoning&lt;/a> .&lt;/p>
+&lt;p>Early attempts at brute-force data generation using generic Aptitude datasets (including math, logic puzzles, and general knowledge Q&amp;amp;A) failed to produce usable training material because:&lt;/p>
+&lt;ul>
+&lt;li>The semantic relationships between entities were either absent or inconsistent.&lt;/li>
+&lt;li>Outputs suffered from heavy repetition due to over-reliance on a single base model without diversification strategies.&lt;/li>
+&lt;li>Generated samples lacked contextual grounding making them unsuitable for fine-tuning models intended for relational reasoning.&lt;/li>
+&lt;/ul>
+&lt;p>This led us to abandon “scrape-and-prompt” approaches and instead design a &lt;strong>multi-stage, relationship-aware synthetic data pipeline&lt;/strong> grounded in structured generation, guided prompting, and iterative refinement.&lt;/p>
+&lt;h2 id="methodology-multi-stage-question-answer-pair-generation-pipeline">Methodology: Multi-Stage Question-Answer Pair Generation Pipeline&lt;/h2>
+&lt;p>Prior to embarking on synthetic data generation, we dedicated substantial effort to curating a robust initial dataset. We recognized that a high-quality foundation maximizes training efficiency and long-term returns. Unsloth&amp;rsquo;s integration was pivotal throughout the hackathon, enabling seamless workflows without NaN errors—issues typically plaguing fp16 and quantized setups.&lt;/p>
+&lt;p>We designed a three-phase framework to generate synthetic QA pairs that encode meaningful relationships between characters and plot elements mimicking the kind of reasoning required in story-based or logic-driven tasks.&lt;/p>
+&lt;h3 id="phase-1-relationship-definition-layer">Phase 1: Relationship Definition Layer&lt;/h3>
+&lt;p>Before generating any questions, we defined &lt;strong>semantic relationships&lt;/strong> between key characters from selected narratives (e.g., &lt;em>Alice in Wonderland&lt;/em>). For example:&lt;/p>
+&lt;blockquote>
+&lt;p>“Who is the mother of the White Rabbit?” → Answer: &lt;em>Not explicitly stated&lt;/em>, but we can infer based on narrative context or assign fictional roles for training purposes.&lt;/p>
+&lt;/blockquote>
+&lt;p>We mapped out relationships such as:&lt;/p>
+&lt;ul>
+&lt;li>Parent-child&lt;/li>
+&lt;li>GrandParent-GrandChild&lt;/li>
+&lt;li>Niece-nephew&lt;/li>
+&lt;li>In-laws&lt;/li>
+&lt;/ul>
+&lt;p>These relationships formed the backbone of our prompt engineering strategy.&lt;/p>
+&lt;h3 id="phase-2-character-assignment--prompt-structuring">Phase 2: Character Assignment &amp;amp; Prompt Structuring&lt;/h3>
+&lt;p>Once relationships were defined, we assigned specific names to each role. Example:&lt;/p>
+&lt;p>&lt;code>Alice&lt;/code>, &lt;code>White Rabbit&lt;/code>, &lt;code>Cheshire Cat&lt;/code>, &lt;code>Mad Hatter&lt;/code>, &lt;code>March Hare&lt;/code>.&lt;/p>
+&lt;p>Each question was then framed around these roles, ensuring consistency across generations. Prompts included explicit instructions like:&lt;/p>
+&lt;blockquote>
+&lt;p>“Generate a multiple-choice question where the correct answer reflects the relationship between [Character A] and [Character B], based on their established roles in the story involving the path of Character C, E, D.”&lt;/p>
+&lt;/blockquote>
+&lt;p>This helped reduce hallucination and increased alignment with expected outputs.&lt;/p>
+&lt;h3 id="phase-3-guided-llm-inference-for-relational-reasoning">Phase 3: Guided LLM Inference for Relational Reasoning&lt;/h3>
+&lt;p>Instead of letting the LLM freely generate answers, we used &lt;strong>constrained generation techniques&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>We provided the LLM with both the question AND the correct answer, asking it to explain &lt;em>why&lt;/em> that answer is correct based on character relationships.&lt;/li>
+&lt;li>Then, we reversed the process: gave only the question + relationship context, and asked the LLM to generate plausible distractors (wrong answers) that still made sense narratively — increasing dataset diversity without sacrificing relevance.&lt;/li>
+&lt;/ul>
+&lt;p>This two-way validation loop significantly improved output quality and reduced noise.&lt;/p>
+&lt;h4 id="one-of-the-largely-found-exploit-in-arrangement-was-sorting">One of the largely found exploit in arrangement was sorting&lt;/h4>
+&lt;blockquote>
+&lt;p>Thanks to the tokenisation of Language models.&lt;/p>
+&lt;/blockquote>
+&lt;p>A prominent vulnerability in seating arrangement tasks (linear or circular) involves alphabetical sorting of entity names. LLMs frequently err by defaulting to sorted orders when given random names, leading to incorrect inferences. We excluded such patterns from our training data to avoid propagating these flaws, as generated answers often replicated the errors.&lt;/p>
+&lt;h2 id="technical-implementation-details">Technical Implementation details&lt;/h2>
+&lt;h3 id="model-selection--training-setup">Model Selection &amp;amp; Training Setup&lt;/h3>
+&lt;p>We experimented with several open-source LLMs known for strong reasoning capabilities:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Llama 2 70B&lt;/td>
+&lt;td>70B parameters&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Qwen3-Next 80B MoE&lt;/td>
+&lt;td>80B MoE&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Phi-4&lt;/td>
+&lt;td>Smaller, efficient&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>R1-based LLMs&lt;/td>
+&lt;td>Custom fine-tuned variants&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>All models were run locally or via cloud APIs with controlled temperature settings (typically 0.3–0.7) to balance creativity vs. accuracy.&lt;/p>
+&lt;h3 id="structured-output-grammar-enforcement">Structured Output (grammar) Enforcement&lt;/h3>
+&lt;p>One critical breakthrough was enforcing &lt;strong>structured output formats&lt;/strong> during generation. Instead of free-form text, we required LLMs to return JSON-like structures containing:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;What is the relationship between Alice and the Cheshire Cat?&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Observer/Advisor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;distractors&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;Mother&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Enemy&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Student&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;relationship_type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;narrative_role&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;context_hint&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;The Cheshire Cat provides cryptic advice but does not directly influence Alice&amp;#39;s actions.&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This enabled automated parsing, deduplication, and downstream integration into training pipelines.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;topic&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TopicEnum.FAMILY_TREE&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Symbolic notation: A + B → A is mother of B; A – B → A is brother of B; A % B → A is father of B; A × B → A is sister of B. Which of the following shows that P is the maternal uncle of Q?, answer=C&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;reasoning&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;P – M → P is brother of M; M + N → M is mother of N; N × Q → N is sister of Q. So, P is brother of Q’s mother → maternal uncle.&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;options&amp;#34;&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;A. Q – N + M × P&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;B. P + S × N – Q&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;C. P – M + N × Q&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;D. Q – S % P&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="question-generation-model">Question Generation model&lt;/h2>
+&lt;p>// constraints&lt;/p>
+&lt;blockquote>
+&lt;p>max_token_limit = 1024
+timelimit for generation = 10 seconds ~100 tokens/s&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="modeling-strategy">Modeling Strategy&lt;/h2>
+&lt;h3 id="initial-training-phase-sft-with-system-prompts">Initial Training Phase: SFT with System Prompts&lt;/h3>
+&lt;p>We began by fine-tuning base LLMs (Llama 3 70B, Qwen3-Next 80B MoE) using &lt;strong>system prompts similar to starter notebooks&lt;/strong> :&lt;/p>
+&lt;blockquote>
+&lt;p>“You are a logic puzzle generator. Your task is to create one multiple-choice question per output. The question must involve symbolic relationships between entities (e.g., A + B → A is mother of B). Include a clear reasoning trace explaining how to derive the correct answer. Return output in strict JSON format.”&lt;/p>
+&lt;/blockquote>
+&lt;p>We also added &lt;strong>format enforcement instructions&lt;/strong> such as:&lt;/p>
+&lt;blockquote>
+&lt;p>“Always include exactly four options labeled A, B, C, D. Never omit any keys. Do not use markdown or plain text only valid JSON.”&lt;/p>
+&lt;/blockquote>
+&lt;p>This reduced early-stage hallucinations and format violations.&lt;/p>
+&lt;h3 id="grpo-reward-functions">GRPO Reward Functions&lt;/h3>
+&lt;p>To overcome issues with output format and missing parts of the questions, we applied &lt;strong>Guided Reinforcement Policy Optimization (GRPO)&lt;/strong> with custom rewards:&lt;/p>
+&lt;p>1.&lt;strong>JSON Format Compliance&lt;/strong>
+2.&lt;strong>Presence of All Required Keys&lt;/strong> - Enforces inclusion of&lt;code>topic&lt;/code>,&lt;code>question&lt;/code>,&lt;code>reasoning&lt;/code>,&lt;code>options&lt;/code>
+3.&lt;strong>Single-Character Answer Enum (A/B/C/D)&lt;/strong> -Prevents invalid answer labels like “Option C” or “C.”&lt;/p>
+&lt;p>These rewards were weighted during reinforcement learning phases to nudge the model toward clean, machine-readable outputs.&lt;/p>
+&lt;h3 id="what-didnt-work">What Didn’t Work&lt;/h3>
+&lt;p>Despite initial success, we encountered critical issues:&lt;/p>
+&lt;h4 id="repetitive-outputs-due-to-static-system-prompts">Repetitive Outputs Due to Static System Prompts&lt;/h4>
+&lt;p>Even after SFT, the model would generate near-identical questions repeatedly because the system prompt remained constant across generations.&lt;/p>
+&lt;h4 id="flawed-questions-with-invalid-logic">Flawed Questions With Invalid Logic&lt;/h4>
+&lt;p>Some generated questions had internal contradictions or unsolvable logic (e.g., “If A is brother of B and B is sister of C, then A is sister of C” false!).&lt;/p>
+&lt;h4 id="unfinished-experimentation-cross-validation-via-answer-model">Unfinished Experimentation: Cross-Validation via Answer Model&lt;/h4>
+&lt;p>Started with the idea of exploring using the &lt;strong>trained Answer Generation Model&lt;/strong> as a &lt;strong>validator&lt;/strong>:&lt;/p>
+&lt;blockquote>
+&lt;p>For every generated question, we passed it to the Answer Model and checked:&lt;/p>
+&lt;ul>
+&lt;li>Does it return a valid JSON?&lt;/li>
+&lt;li>Is the answer among A/B/C/D?&lt;/li>
+&lt;li>Does the reasoning match the expected logic?&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;p>This could creaties a &lt;strong>self-correcting pipeline&lt;/strong> if the Answer Model couldn’t solve the question, the Question Model was penalized during GRPO updates.&lt;/p>
+&lt;p>This significantly improved logical consistency and reduced flawed samples.&lt;/p>
+&lt;h2 id="answer-generation-model">Answer Generation model&lt;/h2>
+&lt;p>// constraints&lt;/p>
+&lt;blockquote>
+&lt;p>max_token_limit = 512
+time_limit = 5 seconds ~100 tokens per second&lt;/p>
+&lt;/blockquote>
+&lt;h1 id="answer-generation-model-1">ANSWER GENERATION MODEL&lt;/h1>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// constraints
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;max_token_limit&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">512&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;time_limit&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;5 seconds (~100 tokens/sec)&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="modeling-strategy-1">Modeling Strategy&lt;/h2>
+&lt;h3 id="intuition-behind-design">Intuition Behind Design&lt;/h3>
+&lt;p>Rather than treating this as a simple “answer extraction” task, we modeled it as a &lt;strong>reasoning-first, answer-second&lt;/strong> process mimicking human problem-solving:&lt;/p>
+&lt;blockquote>
+&lt;p>“First understand the logic. Then deduce the answer. Only then present it clearly.”&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="supervised-fine-tuning-sft">Supervised Fine-Tuning (SFT)&lt;/h3>
+&lt;p>Trained on curated &lt;strong>question-answer-reasoning triplets&lt;/strong> from our own dataset.&lt;/p>
+&lt;p>Each sample followed this schema:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;question&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;reasoning&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;... step-by-step derivation ...&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;#34;answer&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;C&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We had two training phases here&lt;/p>
+&lt;ol>
+&lt;li>longer reasoning context&lt;/li>
+&lt;li>Shorter reasoning context&lt;/li>
+&lt;/ol>
+&lt;p>The shorter reasoning helps us in reducing the token output.&lt;/p>
+&lt;h2 id="grpo-reward-functions-1">GRPO Reward Functions&lt;/h2>
+&lt;p>Applied during iterative tuning to refine behavior beyond basic accuracy:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>&lt;/th>
+&lt;th>&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>1.&lt;strong>Exact JSON Pattern Match&lt;/strong>&lt;/td>
+&lt;td>1.0&lt;/td>
+&lt;td>Must match predefined schema exactly&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2.&lt;strong>Correct Answer Letter&lt;/strong>&lt;/td>
+&lt;td>2.0&lt;/td>
+&lt;td>Highest weight — getting the right choice matters most&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>3.&lt;strong>Approximate JSON Pattern&lt;/strong>&lt;/td>
+&lt;td>0.5&lt;/td>
+&lt;td>Tolerates minor formatting deviations if meaning preserved&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4.&lt;strong>Presence of All Expected Keys&lt;/strong>&lt;/td>
+&lt;td>0.1 per key&lt;/td>
+&lt;td>Encourages completeness without over-penalizing&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>This weighting strategy prioritized &lt;strong>correctness &amp;gt; structure &amp;gt; completeness&lt;/strong>, which aligned with our goal: build a reliable validator for the Question Generator (TODO).&lt;/p>
+&lt;h2 id="why-reasoning-matters-more-than-just-answer">Why Reasoning Matters More Than Just Answer&lt;/h2>
+&lt;p>We found that &lt;strong>the reasoning field is crucial for labeling correctness&lt;/strong>.&lt;/p>
+&lt;p>Example:&lt;/p>
+&lt;blockquote>
+&lt;p>Question: “Who is P’s maternal uncle?”&lt;br>
+Option C: “P – M + N × Q”&lt;br>
+Reasoning: “P – M → P is brother of M; M + N → M is mother of N; N × Q → N is sister of Q. So P is brother of Q’s mother → maternal uncle.”&lt;/p>
+&lt;/blockquote>
+&lt;p>Without the reasoning, you can’t verify whether option C is truly correct — especially when symbolic notation varies.&lt;/p>
+&lt;p>Thus, we treated reasoning as a &lt;strong>core component of ground truth&lt;/strong>, not just an explanation.&lt;/p>
+&lt;h2 id="what-didnt-work-1">What Didn’t Work&lt;/h2>
+&lt;h3 id="rewarding-low-token-usage-in-reasoning">Rewarding Low Token Usage in Reasoning&lt;/h3>
+&lt;p>We initially tried rewarding shorter reasoning traces to encourage efficiency.&lt;/p>
+&lt;p>Failed because:&lt;/p>
+&lt;ul>
+&lt;li>Often led to skipped steps or unjustified conclusions&lt;/li>
+&lt;li>Reduced model confidence and increased error rates - removed this reward entirely. Instead, focused on &lt;strong>logical completeness&lt;/strong> and &lt;strong>clarity of inference chain&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;p>For final submissions, the question model used a base, unfine-tuned Phi-4 14B, while the answering model employed Qwen3 14B with LoRA training via SFT and GRPO. To ensure compatibility and fairness, we adhered closely to the provided submission code templates, minimizing deviations.&lt;/p></content></item></channel></rss>
